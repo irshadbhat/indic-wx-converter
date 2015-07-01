@@ -106,7 +106,7 @@ Example
     
     >>> 
 
-3. work with conll:
+3. Work with conll:
 
 ::
 
@@ -132,7 +132,7 @@ Example
     7   .	.   punc    SYM	cat-punc|gen-|num-|pers-|case-|vib-|tam-|chunkId-BLK|chunkType-head|stype-|voicetype-	6   rsym    __
     >>> 
 
-4. work with tnt:
+4. Work with tnt:
 
 ::
 
@@ -172,22 +172,24 @@ Example
     
     >>> 
 
-5. work with bio:
+5. Work with bio:
 
 ::
 
     same as tnt or conll
 
-6. work with ssf:
+6. Work with ssf:
 
 ::
     
     to be implemented soon
 
-7. work directly on files
+7. Work directly on files
 
 ::
 
+    python runConverter.py --f text --l hin --s utf --t wx --i tests/text/hin-utf.txt --o tests/text/hin-wx.txt
+    
     python runConverter.py --h
     usage: convertor_indic [-h] [--v] [--l language] --s source --t target
                            [--i input] [--f format] [--o output]
@@ -204,5 +206,4 @@ Example
       --f format    select output format [text|ssf|conll|bio|tnt]
       --o output    <output-file>
 
-    python runConverter.py --f text --l hin --s utf --t wx --i tests/text/hin-utf.txt --o tests/text/hin-wx.txt
 
