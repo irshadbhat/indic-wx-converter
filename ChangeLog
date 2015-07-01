@@ -1,0 +1,144 @@
+Jul-2015	Irshad Ahmad	<irshad.bhat@research.iiit.ac.in>
+	
+	* Version 1.5.0
+
+	- Python implementation
+	-
+
+Jan-2012	Rashid Ahmad	<rashid101b@gmail.com>
+	
+	* Version 1.4.9
+
+	- Oriya language support added.
+	- 
+
+29-Dec-2011	Rashid Ahmad	<rashid101b@gmail.com>
+	
+	* Version 1.4.8
+
+	- reading and writting utf8 file issue solved by putting -C option in perl
+	  command as argument. (e.g. perl -C prog.pl <options> <input-file>)
+	- fix the issue consonant+nukata+halant in Hindi (e.g. word: wanaKZvaxara)
+	- head and name conversion in ssf is avoided as per HCU-CALTS feedback.
+
+14-Mar-2011	Rashid Ahmad	<rashid101b@gmail.com>
+	
+	* Version 1.4.7
+
+	- In wx2utf the words start with ^ or ^@ just leave as it is.
+	- In case of tamil wx2utf 0BB6 (S) mapped to 0BB7 (R)
+	- M map is changed m+halant (as per Dr. Ramnan feedback)
+
+7-Mar-2011	Rashid Ahmad	<rashid101b@gmail.com>
+	
+	* Version 1.4.6
+
+	- iscii2unicode_tel function some mapping commented like ऴ etc.
+
+28-Feb-2011	Rashid Ahmad	<rashid101b@gmail.com>
+	
+	* Version 1.4.5
+
+	- fix ऩ issue from wx2utf in telugu.
+	- case added in tests directory (sampale-cases-tel-wx.txt)
+	- tamil normailze issue two-part dependent vowel signs solved.
+
+21-Feb-2011	Rashid Ahmad	<rashid101b@gmail.com>
+	
+	* Version 1.4.4
+
+	- fix punc issue in ssf input.
+	- fix ~ issue in input and output file path.
+
+06-Apr-2010     Rashid Ahmad    <rashid101b@gmail.com>
+
+	* Version 1.4.3
+
+	- incorporate the output option from the command line option.
+	- create convertor_indic_lib.pl for convertor library.
+	- create sample-convertor-call.pl for how to call convertor library.
+
+28-Feb-2011	Rashid Ahmad	<rashid101b@gmail.com>
+	
+	* Version 1.4.5
+
+	- fix ऩ issue from wx2utf in telugu.
+	- case added in tests directory (sampale-cases-tel-wx.txt)
+	- tamil normailze issue two-part dependent vowel signs solved.
+
+21-Feb-2011	Rashid Ahmad	<rashid101b@gmail.com>
+	
+	* Version 1.4.4
+
+	- fix punc issue in ssf input.
+	- fix ~ issue in input and output file path.
+
+06-Apr-2010     Rashid Ahmad    <rashid101b@gmail.com>
+
+	* Version 1.4.3
+
+	- incorporate the output option from the command line option.
+	- create convertor_indic_lib.pl for convertor library.
+	- create sample-convertor-call.pl for how to call convertor library.
+
+18-Mar-2010	Rashid Ahmad	<rashid101b@gmail.com>
+	
+	* Version 1.4.2
+
+	- wx2utf.pl and utf2wx.pl files function are moved in lib/IndicCC.pl.
+	- incorporate the small code in wx2utf function in lib/IndicCC.pl.
+	- to escap the other language string as it is.
+
+
+18-Mar-2010	Rashid Ahmad	<rashid101b@gmail.com>
+	
+	* Version 1.4.1
+
+	- tested 1050 uniq words. input file in tests/tam/uniq-words-tam-aukbc-[wx|utf].txt
+	- isuue related wx2utf are fixed by incorporating the variou case in wx2iscii sub. in lib/IndicCC.pl
+	- issue reagrding utf2wx are fixed by incorporating 3-lines in iscii2wx sub. in lib/IndicCC.pl
+	- "\x{D0}"=> rY, "\x{C7}"=>nY, "\x{D3}"=>lYY
+	- added the support of tamil language.
+
+15-Mar-2010	Rashid Ahmad	<rashid101b@gmail.com>
+	
+	* Version 1.4.0
+
+
+	- test wx2utf-tel, utf2wx-tel and fix the various cases like lYa,lYi, lY[MHz] etc. 
+	- resolve full stop issue from wx2utf direction for hindi.
+	- we have compare the changed IndicCC.pl to old one and undo the changes
+	  that Harika Indu did.
+
+
+08-May-2010	Rashid Ahmad	<rashid101b@gmail.com>
+	
+	* Version 1.3.0
+
+	- text conversion incorporated.
+	- input option incorporated in command line argument parsing.
+	- tel ssf test data incorporated.
+
+03-03-2010	Rashid Ahmad	<rashid101b@gmail.com>
+	
+	* Version 1.2.0
+
+	- changed as per requirement of ILMT project Sampark.
+	- this version is currently working on SSF format only.
+	- test on hindi data ONLY.
+
+
+08-02-10        Rashid Ahmad    <rashid101b@gmail.com>
+
+	* Version 1.1.0
+
+	- This version is modified of the base version.
+	- created the sample pl file for test convertor.
+	- Base version is developed in perl by Pawan Kumar, Rashid Ahmad and Avinesh.
+
+10-Aug-09       Pawan Kumar     <hawahawai@gmail.com>
+
+	* Version 1.0.0
+
+	- Base Version.
+
