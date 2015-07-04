@@ -27,7 +27,7 @@ Install
 ::
 
     tar xvfz python-converter-indic.tar.gz
-    cd python-recsys
+    cd python-converter-indic
     sudo python setup.py install
 
 Example
