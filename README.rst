@@ -184,7 +184,7 @@ Example
     
     to be implemented soon
 
-7. work directly on files
+7. work with text files
 
 ::
 
