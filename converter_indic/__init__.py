@@ -1,0 +1,9 @@
+__name__ = "converter-indic"
+__doc__ = "python-converter-indic: Converts Indian languages to WX (ASCII) and vice-versa"
+__author__ = "Irshad Ahmad"
+__version__ = "1.5.0"
+__license__ = "MIT"
+__maintainer__ = "Irshad Ahmad"
+__email__ = "irshad.bhat@research.iiit.ac.in"
+__status__ = "Beta"
+__all__ = ["converter_indic.py", "wxILP.py"]
