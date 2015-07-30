@@ -33,7 +33,7 @@ Install
 Example
 ~~~~~~~
 
-1. utf to wx (plain text):
+1. `utf` to `wx` (plain text):
 
 ::
 
