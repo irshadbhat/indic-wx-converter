@@ -33,7 +33,7 @@ Install
 Example
 ~~~~~~~
 
-1. **utf** to **wx** (plain text):
+1. **utf to wx (plain text):**
 
 ::
 
@@ -82,7 +82,7 @@ Example
     
     >>> 
 
-2. **wx** to **utf**:
+2. **wx to utf:**
 
 ::
 
@@ -106,7 +106,7 @@ Example
     
     >>> 
 
-3. work with **conll**:
+3. **work with conll:**
 
 ::
 
@@ -132,7 +132,7 @@ Example
     7   .	.   punc    SYM	cat-punc|gen-|num-|pers-|case-|vib-|tam-|chunkId-BLK|chunkType-head|stype-|voicetype-	6   rsym    __
     >>> 
 
-4. work with **tnt**:
+4. **work with tnt:**
 
 ::
 
@@ -172,19 +172,19 @@ Example
     
     >>> 
 
-5. work with **bio**:
+5. **work with bio:**
 
 ::
 
     same as tnt or conll
 
-6. work with **ssf**:
+6. **work with ssf:**
 
 ::
     
     to be implemented soon
 
-7. work with **text files**
+7. **work with text files:**
 
 ::
 
