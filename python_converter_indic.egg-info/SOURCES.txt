@@ -1,9 +1,0 @@
-README.rst
-setup.py
-converter_indic/__init__.py
-converter_indic/ilp.py
-converter_indic/wxILP.py
-python_converter_indic.egg-info/PKG-INFO
-python_converter_indic.egg-info/SOURCES.txt
-python_converter_indic.egg-info/dependency_links.txt
-python_converter_indic.egg-info/top_level.txt
