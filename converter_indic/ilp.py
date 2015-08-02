@@ -55,7 +55,7 @@ class wxConvert():
     	        trans_LINES.append("")
 		continue
     	    if len(line_) != 10:
-    	        print >>sys.stderr, "Warning: length mismatch at line" 
+    	        sys.stderr.write("Warning: length mismatch at line\n")
     	    FORM, LEMMA, FEATS = line_[1], line_[2], line_[5].split("|")
     	    vib_id = [idx for idx,feat in enumerate(FEATS) if feat[:4]=="vib-"][0]
     	    vib = FEATS[vib_id].lstrip("vib-")
@@ -80,7 +80,7 @@ class wxConvert():
 	    trans_string = self.transform(line)
 	    return trans_string
 	elif self.format_=="ssf":
-	    print >>sys.stderr, "to be implemented soon"
+	    sys.stderr.write("to be implemented soon\n")
 	    sys.exit(0)
 	elif self.format_=="conll":
 	    return self.convert_conll(line)
@@ -97,5 +97,5 @@ class wxConvert():
 		trans_LINES.append("%s" %"\t".join(line_))
 	    return "\n".join(trans_LINES)
 	else: 
-	    print >>sys.stderr, "FormatError: invalid format :: %s" %self.format_
+	    sys.stderr("FormatError: invalid format :: %s\n" %self.format_)
 	    sys.exit(0)

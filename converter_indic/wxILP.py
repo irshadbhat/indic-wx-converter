@@ -36,7 +36,7 @@ class wxilp():
 	elif order == "wx2utf":
 	    self.initialize_wx2utf_hash()
 	else:
-	    print >>sys.stderr, "EncodingError: invalid source/target encoding"
+	    sys.stderr.write("EncodingError: invalid source/target encoding\n")
 	    sys.exit(0)
     
     def initialize_wx2utf_hash(self):
@@ -2192,7 +2192,7 @@ class wxilp():
         elif self.lang_tag == "ori":
 	    unicode_ = self.iscii2unicode_ori(iscii)
         else:
-	    print >>sys.stderr, "LanguageError: invalid language code"
+	    sys.stderr.write("LanguageError: invalid language code\n")
 	    sys.exit(0)
         return unicode_
     
@@ -2247,7 +2247,7 @@ class wxilp():
         elif self.lang_tag == "ori":
             iscii = self.unicode2iscii_ori(unicode_)
         else:
-	    print >>sys.stderr, "LanguageError: invalid language code"
+	    sys.stderr.write("LanguageError: invalid language code\n")
 	    sys.exit(0)
         return iscii
     
