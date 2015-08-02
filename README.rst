@@ -188,17 +188,8 @@ Example
 
 ::
 
-    python runConverter.py --f text --l hin --s utf --t wx --i tests/text/hin-utf.txt --o tests/text/hin-wx.txt
+    python runConverterIndic.py --f text --l hin --s utf --t wx --i tests/text/hin-utf.txt --o tests/text/hin-wx.txt
 
-    python runConverter.py --h
-    usage: convertor_indic [-h] [--v] [--l language] --s source --t target
-                           [--i input] [--f format] [--o output]
-    
-    wx-utf convertor for Indain languages
-    
-    optional arguments:
-      -h, --help    show this help message and exit
-      --v           show program's version number and exit
       --l language  select language [hin|tel|...] (3 letter ISO-639 code)
       --s source    select input-file encoding [utf|wx]
       --t target    select output-file encoding [utf|wx]
