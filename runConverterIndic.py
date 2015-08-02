@@ -32,7 +32,7 @@ def main():
     elif args.src_enc=="wx" and args.trg_enc=="utf":
         src_trg = "wx2utf"
     else:
-        print "EncodingError: source encoding is same as target encoding!"
+        sys.stderr.write("EncodingError: source encoding is same as target encoding!\n")
         sys.exit(0)
 
     # initialize convertor object
