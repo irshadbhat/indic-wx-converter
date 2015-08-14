@@ -4,13 +4,13 @@
 """An implementation for converting unicode strings in Indian languages to WX-Roman 
 and vice-versa.
 
-This is a python implementation of convertor-indic tool developed by Rashid Ahmad
-(written in Perl). This module is a direct coversion of 'IndicCC.pl' script from
-convertor-indic tool.
+This is a python implementation of convertor-indic tool (written in Perl) developed 
+by Rashid Ahmad. This module is a direct coversion of 'IndicCC.pl' script from
+convertor-indic tool-kit.
 
-NOTE: This class is generates same results as IndicCC.pl. I have tested it against
-      implementation from Rashid Ahmad to ensure that the same output is generated 
-      by both scripts.
+NOTE: This class generates same results as IndicCC.pl from Rashid's implementation 
+except that there were few minor issues with Perl code which I've fixed in this 
+Python implementation.
 """
 
 __version__    = "1.5"
@@ -40,7 +40,7 @@ class wxilp():
 	    sys.exit(0)
     
     def initialize_wx2utf_hash(self):
-	# CONSTANTS
+	# CONSONANTS
     	self.hashc_w2i = {
     	        u"k":u"\xB3",
     	        u"K":u"\xB4", 
@@ -877,6 +877,7 @@ class wxilp():
     	self.cccoV = re.compile(u"([%s])([%s])([%s])oV" %(const, const, const))
 
     	self.cOY = re.compile(u"([%s])OY" %const)
+    	self.cZOY = re.compile(u"([%s])ZOY" %const)  #NOTE consonant+ZOY case added
     	self.ccOY = re.compile(u"([%s])([%s])OY" %(const, const))
     	self.cccOY = re.compile(u"([%s])([%s])([%s])OY" %(const, const, const))
 
@@ -892,11 +893,13 @@ class wxilp():
 
     	self.camd = re.compile(u"([%s])a([MHz])" %const)
     	self.cZamd = re.compile(u"([%s])Za([MHz])" %const)
+    	self.cZmd = re.compile(u"([%s])Z([MHz])" %const) #NOTE consonant+Z+[MHz] case added
     	self.ccamd = re.compile(u"([%s])([%s])a([MHz])" %(const, const))
 	self.cccamd = re.compile(u"([%s])([%s])([%s])a([MHz])" %(const, const, const))
 
     	self.ca = re.compile(u"([%s])a" %const)
     	self.cZa = re.compile(u"([%s])Za" %const)
+    	self.cYZa = re.compile(u"([%s])YZa" %const) #NOTE consonant+YZa case added
     	self.cca = re.compile(u"([%s])([%s])a" %(const, const))
     	self.ccca = re.compile(u"([%s])([%s])([%s])a" %(const, const, const))
 
@@ -908,6 +911,7 @@ class wxilp():
     	self.aqmd = re.compile(u"aq([MHz])")
     	self.cq = re.compile(u"([%s])q" %const)
 	self.cqmd = re.compile(u"([%s])q([MHz])" %const)
+	self.qmd = re.compile(u"q([MHz])")    #NOTE q+[MHz]
 
 	self.i2u_h = re.compile(u'([\xA1-\xFA])')
 	self.i2u_t = re.compile(u'([\xA1-\xFA])')
@@ -917,6 +921,12 @@ class wxilp():
 	self.i2u_b = re.compile(u'([\xA1-\xFA])')
 	self.i2u_o = re.compile(u'([\xA1-\xFA])')
 	self.i2u_ta = re.compile(u'([\xA1-\xFA])')
+
+	#NOTE Handle pre-present iscii characters
+	self.iscii_num = dict(zip([unichr(i) for i in range(161, 251)], ['@~%s~@'%i for i in range(0, 90)]))
+	self.num_iscii = dict(zip(['@~%s~@'%i for i in range(0, 90)], [unichr(i) for i in range(161, 251)]))
+	self.isc = re.compile(u'([\xA1-\xFA])')
+	self.num = re.compile(u'(%s)' %'|'.join(['@~%s~@'%i for i in range(0, 90)]))
 
     def initialize_utf2wx_hash(self):
     	self.hashc_i2w = {
@@ -1090,6 +1100,7 @@ class wxilp():
     	        u"\u094D":u"\xE8",	# Halant
     	        u"\u0950":u"",		#Consonant
     	        u"\u0964":u"\xEA",	#Consonant
+    	        u"\u0960":u"\xAA",	#Vowel Sanskrit
     	        u"\u0966":u"\xF1",	#Devanagari Digit 0
     	        u"\u0967":u"\xF2",	#Devanagari Digit 1
     	        u"\u0968":u"\xF3",	#Devanagari Digit 2
@@ -1796,7 +1807,7 @@ class wxilp():
         Z, _u_ = u'Z' in my_string, u'_' in my_string
 	MHz = u'M' in my_string or u'H' in my_string or u'z' in my_string 
         eV, EY, oV, OY = u'eV' in my_string, u'EY' in my_string, u'oV' in my_string, u'OY' in my_string
-	q, l, n, r, a = u'q' in my_string, u'l' in my_string, u'n' in my_string, u'r' in my_string, u'a' in my_string
+	q, l, n, rY, a = u'q' in my_string, u'l' in my_string, u'n' in my_string, u'rY' in my_string, u'a' in my_string
         if _u_:
 	    my_string = re.sub(u'k_ReV([MHz])', lambda m: self.hashc_w2i[u"k"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"R"]+
 			self.hashm_w2i[u"eV"]+self.hashmd_w2i[m.group(1)], my_string)
@@ -1935,9 +1946,7 @@ class wxilp():
 			    self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(3)]+self.hashmd_w2i[m.group(4)], my_string)
 	    my_string = self.ccca.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
 			self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(3)], my_string)
-
-	my_string = self.ccc.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-		    self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(3)]+self.hashc_w2i[u"_"], my_string)
+	#NOTE consonant+consonant+consonant moved from here
         if eV:
 	    if MHz:
 		my_string = self.cceVmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
@@ -1987,6 +1996,8 @@ class wxilp():
 		my_string = self.coVmd.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"oV"]+self.hashmd_w2i[m.group(2)], my_string)
             my_string = self.coV.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"oV"], my_string)
         if OY:
+	    if Z:   #NOTE Case ZOY added
+		my_string = self.cZOY.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+self.hashm_w2i[u"OY"], my_string)
 	    if MHz:
 		my_string = self.cOYmd.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"OY"]+self.hashmd_w2i[m.group(2)], my_string)
             my_string = self.cOY.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"OY"], my_string)
@@ -1998,17 +2009,24 @@ class wxilp():
             my_string = self.cZv.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+self.hashm_w2i[m.group(2)], my_string)
 	    if MHz:
 		my_string = self.cZamd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+self.hashmd_w2i[m.group(2)], my_string)
+		my_string = self.cZmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+self.hashmd_w2i[m.group(2)], my_string)
             my_string = self.cZa.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"], my_string)
+	    #NOTE consonant+YZa case added
+            my_string = self.cYZa.sub(lambda m: self.hashc_w2i[m.group(1)+u"Y"]+self.hashc_w2i[u"Z"], my_string)
             my_string = self.cZ.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+self.hashc_w2i[u"_"], my_string)
+	#NOTE consonant+consonant+consonant replaced
+	my_string = self.ccc.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
+		    self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(3)]+self.hashc_w2i[u"_"], my_string)
         if q:
 	    if MHz:
 		my_string = self.cqmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"q"]+self.hashmd_w2i[m.group(2)], my_string)
+		#NOTE q+[MHz] case added
+		my_string = self.qmd.sub(lambda m: self.hashv_w2i[u"q"]+self.hashmd_w2i[m.group(1)], my_string)
             my_string = self.cq.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"q"], my_string)
             #Added for the case Vowel(U090B)+Modifier
 	    if MHz:
 		my_string = self.aqmd.sub(lambda m: self.hashv_w2i[u"aq"]+self.hashmd_w2i[m.group(1)], my_string)
-            my_string = my_string.replace(u'aq', self.hashv_w2i[u"aq"])
-            my_string = my_string.replace(u'q', self.hashv_w2i[u"aq"])
+	    #NOTE q, aq removed from here
         #Added for the case lYYa,lYY[AiIuUeEoO],lYY[MHz]
         if l:
 	    if MHz:
@@ -2087,7 +2105,7 @@ class wxilp():
 	    my_string = re.sub(u'(nY)a', lambda m: self.hashc_w2i[m.group(1)], my_string)
 	    my_string = re.sub(u'(nY)', lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"], my_string)
         #Added for tamil -by Rashid
-        if r:
+        if rY:
 	    if MHz:
 		my_string = re.sub(u'(rY)eV([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"eV"]+
 			    self.hashmd_w2i[m.group(2)], my_string)
@@ -2116,11 +2134,19 @@ class wxilp():
 	if MHz:
 	    my_string = self.cvmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[m.group(2)]+
 			self.hashmd_w2i[m.group(3)], my_string)
+        #my_string = self.cvm.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[m.group(2)]+self.hashm_w2i[m.group(3)], my_string)
+	#if Z:
+	#    my_string = self.cZvm.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[m.group(2)]+self.hashm_w2i[m.group(3)], my_string)
         my_string = self.cv.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[m.group(2)], my_string)
         if a:
 	    if MHz:
 		my_string = self.camd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashmd_w2i[m.group(2)], my_string)
             my_string = self.ca.sub(lambda m: self.hashc_w2i[m.group(1)], my_string)
+	
+	if q:
+	    #NOTE q, aq replaced 
+            my_string = my_string.replace(u'aq', self.hashv_w2i[u"aq"])
+            my_string = my_string.replace(u'q', self.hashv_w2i[u"aq"])
 
         my_string = self.c.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"], my_string)
         #Added for the case of U0946
@@ -2157,15 +2183,25 @@ class wxilp():
 	    my_string = my_string.replace(u'OY', self.hashv_w2i[u"OY"])
     
 	if a:
-	    my_string = my_string.replace(u'aA', self.hashv_w2i[u"aA"])
-            my_string = my_string.replace(u'ai', self.hashv_w2i[u"ai"])
-            my_string = my_string.replace(u'aI', self.hashv_w2i[u"aI"])
-            my_string = my_string.replace(u'au', self.hashv_w2i[u"au"])
-            my_string = my_string.replace(u'aU', self.hashv_w2i[u"aU"])
-            my_string = my_string.replace(u'ae', self.hashv_w2i[u"ae"])
-            my_string = my_string.replace(u'aE', self.hashv_w2i[u"aE"])
-            my_string = my_string.replace(u'ao', self.hashv_w2i[u"ao"])
-            my_string = my_string.replace(u'aO', self.hashv_w2i[u"aO"])
+	    #NOTE zero-width non-word boundary added on the left of string
+	    #my_string = my_string.replace(u'aA', self.hashv_w2i[u"aA"])
+            my_string = re.sub(u'\BaA', self.hashv_w2i[u"aA"], my_string)
+            #my_string = my_string.replace(u'ai', self.hashv_w2i[u"ai"])
+            my_string = re.sub(u'\Bai', self.hashv_w2i[u"ai"], my_string)
+            #my_string = my_string.replace(u'aI', self.hashv_w2i[u"aI"])
+            my_string = re.sub(u'\BaI', self.hashv_w2i[u"aI"], my_string)
+            #my_string = my_string.replace(u'au', self.hashv_w2i[u"au"])
+            my_string = re.sub(u'\Bau', self.hashv_w2i[u"au"], my_string)
+            #my_string = my_string.replace(u'aU', self.hashv_w2i[u"aU"])
+            my_string = re.sub(u'\BaU', self.hashv_w2i[u"aU"], my_string)
+            #my_string = my_string.replace(u'ae', self.hashv_w2i[u"ae"])
+            my_string = re.sub(u'\Bae', self.hashv_w2i[u"ae"], my_string)
+            #my_string = my_string.replace(u'aE', self.hashv_w2i[u"aE"])
+            my_string = re.sub(u'\BaE', self.hashv_w2i[u"aE"], my_string)
+            #my_string = my_string.replace(u'ao', self.hashv_w2i[u"ao"])
+            my_string = re.sub(u'\Bao', self.hashv_w2i[u"ao"], my_string)
+            #my_string = my_string.replace(u'aO', self.hashv_w2i[u"aO"])
+            my_string = re.sub(u'\BaO', self.hashv_w2i[u"aO"], my_string)
 
 	if MHz:
 	    my_string = re.sub(u'([aAiIuUeEoO])([MHz])', lambda m: self.hashv_w2i[m.group(1)]+self.hashmd_w2i[m.group(2)], my_string)
@@ -2255,37 +2291,37 @@ class wxilp():
 	"""Convert ISCII to WX"""
         # CONSONANT+HALANT
         my_string = self.ch.sub(lambda m:self.hashc_i2w[m.group(1)], my_string)
-        # CONSONANT+NUKTA+MATRA+MODIFIER 
+	# CONSONANT+NUKTA+MATRA+MODIFIER 
         my_string = self.cnmmd.sub(lambda m:self.hashc_i2w[m.group(1)]+self.hashc_i2w[u"\xE9"]+
 		    self.hashm_i2w[m.group(2)]+self.hashmd_i2w[m.group(3)], my_string)
-        # CONSONANT+NUKTA+MATRA 
+	# CONSONANT+NUKTA+MATRA 
         my_string = self.cnm.sub(lambda m:self.hashc_i2w[m.group(1)]+self.hashc_i2w[u"\xE9"]+self.hashm_i2w[m.group(2)], my_string)
-        # CONSONANT+NUKTA+MODIFIER 
+	# CONSONANT+NUKTA+MODIFIER 
         my_string = self.cnmd.sub(lambda m:self.hashc_i2w[m.group(1)]+self.hashc_i2w[u"\xE9"]+self.hashmd_i2w[m.group(2)], my_string)
-        # CONSONANT+NUKTA+HALANT (added -Rashid 29-December-11 wanaKZvaxara)
+	# CONSONANT+NUKTA+HALANT (added -Rashid 29-December-11 wanaKZvaxara)
         my_string = self.cnh.sub(lambda m:self.hashc_i2w[m.group(1)]+self.hashc_i2w[u"\xE9"], my_string)
-        # CONSONANT+NUKTA 
+	# CONSONANT+NUKTA 
         my_string = self.cn.sub(lambda m:self.hashc_i2w[m.group(1)]+self.hashc_i2w[u"\xE9"]+u"a", my_string)
-        # CONSONANT+MATRA+MODIFIER 
+	# CONSONANT+MATRA+MODIFIER 
         my_string = self.cmmd.sub(lambda m:self.hashc_i2w[m.group(1)]+self.hashm_i2w[m.group(2)]+self.hashmd_i2w[m.group(3)], my_string)
-        # CONSONANT+MATRA 
+	# CONSONANT+MATRA 
         my_string = self.cm.sub(lambda m:self.hashc_i2w[m.group(1)]+self.hashm_i2w[m.group(2)], my_string)
-        #CONSONANT+MODIFIER 
+	#CONSONANT+MODIFIER 
         my_string = self.cmd.sub(lambda m:self.hashc_i2w[m.group(1)]+u"a"+self.hashmd_i2w[m.group(2)], my_string)
-        #CONSONANT 
+	#CONSONANT 
         my_string = self.c.sub(lambda m:self.hashc_i2w[m.group(1)]+u"a", my_string)
-        #VOWEL+MODIFIER, VOWEL 
+	#VOWEL+MODIFIER, VOWEL, MATRA
         my_string = self.vmd.sub(lambda m:self.hashv_i2w[m.group(1)]+self.hashmd_i2w[m.group(2)], my_string)
-        my_string = self.amd.sub(lambda m: u"a"+self.hashmd_i2w[m.group(1)], my_string)
-        my_string = self.v.sub(lambda m:self.hashv_i2w[m.group(1)], my_string)
-        #VOWEL A, FULL STOP or VIRAM Northern Scripts 
+	my_string = self.amd.sub(lambda m: u"a"+self.hashmd_i2w[m.group(1)], my_string)
+	my_string = self.v.sub(lambda m:self.hashv_i2w[m.group(1)], my_string)
+	#VOWEL A, FULL STOP or VIRAM Northern Scripts 
         my_string = my_string.replace(u"\xA4", u"a")
-        my_string = my_string.replace(u"\xEA", u".")
-        #For PUNJABI ADDAK 
+	my_string = my_string.replace(u"\xEA", u".")
+	#For PUNJABI ADDAK 
         my_string = my_string.replace(u"\xFB", u"Y")
-        #Replace ISCII Digits with Roman
+	#Replace ISCII Digits with Roman
         my_string = self.dig.sub(lambda m:self.digits_i2w[m.group(1)], my_string)
-        return my_string
+	return my_string
     				
     def unicode2iscii_hin(self, unicode_):
         # Normalize Unicode values (NUKTA variations)
@@ -2351,14 +2387,20 @@ class wxilp():
     	iscii = self.unicode2iscii(unicode_)
     	#Convert ISCII to WX-Roman
     	wx = self.iscii2wx(iscii)
+	#NOTE Consecutive Vowel Normalization
+	wx = re.sub(u'[\xA0-\xFA]+', u'', wx)
     	return wx.encode('utf-8')
     
     def wx2utf(self, wx):
     	"""Convert WX-Roman to ISCII"""
     	if not isinstance(wx, unicode):
     	    wx = wx.decode('utf-8')
+	#NOTE Handle pre-present iscii characters iscii-to-num
+	wx = self.isc.sub(lambda m: self.iscii_num[m.group(1)], wx)
     	iscii = self.wx2iscii(wx)
     	# Convert ISCII to Unicode
     	unicode_ = self.iscii2unicode(iscii)
+	#NOTE Handle pre-present iscii characters num-to-iscii (back conversion)
+	unicode_ = self.num.sub(lambda m: self.num_iscii[m.group(1)], unicode_)
     	#Convert Unicode to utf-8
     	return unicode_.encode('utf-8')

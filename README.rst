@@ -188,11 +188,10 @@ Example
 
 ::
 
-    python runConverterIndic.py --f text --l hin --s utf --t wx --i tests/text/hin-utf.txt --o tests/text/hin-wx.txt
+    converter-indic --f text --l hin --s utf --i tests/text/hin-utf.txt --o tests/text/hin-wx.txt
 
       --l language  select language [hin|tel|...] (3 letter ISO-639 code)
       --s source    select input-file encoding [utf|wx]
-      --t target    select output-file encoding [utf|wx]
       --i input     <input-file>
       --f format    select output format [text|ssf|conll|bio|tnt]
       --o output    <output-file>
