@@ -26,7 +26,7 @@ def main():
     languages = ["hin", "tel", "tam", "mal", "kan", "ben", "ori", "pan", "mar"]
 
     # parse command line arguments 
-    parser = argparse.ArgumentParser(prog="convertor_indic", description="wx-utf convertor for Indain languages")
+    parser = argparse.ArgumentParser(prog="converter-indic", description="wx-utf converter for Indain languages")
     parser.add_argument('--v', action="version", version="%(prog)s 1.5")
     parser.add_argument('--l', metavar='language', dest="lang", choices=languages, default="hin", help="%s" %lang_help)
     parser.add_argument('--s', metavar='source', dest="src_enc", choices=["utf","wx"], default="utf", help="%s" %src_enc_help)
@@ -34,6 +34,11 @@ def main():
     parser.add_argument('--f', metavar='format', dest="format_", choices=format_list, default="text", help="%s" %format_help)
     parser.add_argument('--i', metavar='input', dest="INFILE", type=argparse.FileType('r'), default=sys.stdin, help="<input-file>")
     parser.add_argument('--o', metavar='output', dest="OUTFILE", type=argparse.FileType('w'), default=sys.stdout, help="<output-file>")
+
+    if len(sys.argv) == 1:
+	parser.print_usage()
+	sys.exit(0)
+
     args = parser.parse_args()
 
     # set conversion direction
@@ -42,7 +47,7 @@ def main():
     else: #args.src_enc=="wx" and args.trg_enc=="utf":
         src_trg = "wx2utf"
 
-    # initialize convertor object
+    # initialize converter object
     con = wxConvert(src_trg, args.format_, args.lang)
     # convert text
     for line in args.INFILE:
