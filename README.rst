@@ -2,17 +2,10 @@
 python-converter-indic
 ======================
 
-A python library for implementing UTF to WX converter and vice-versa for Indian languages.
+Python library for implementing UTF to WX converter and vice-versa for Indian languages.
 
 Installation
 ============
-
-Dependencies
-~~~~~~~~~~~~
-
-::
-
-    None
 
 Download
 ~~~~~~~~
