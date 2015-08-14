@@ -10,5 +10,5 @@ if __package__ is None and not hasattr(sys, "frozen"):
 
 import converter_indic
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     converter_indic.main()
