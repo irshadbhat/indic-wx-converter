@@ -44,7 +44,7 @@ def main():
 
     # initialize convertor object
     con = wxConvert(src_trg, args.format_, args.lang)
-    # convert data
+    # convert text
     for line in args.INFILE:
         line = con.convert(line)
         args.OUTFILE.write(line)
