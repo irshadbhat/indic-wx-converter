@@ -1626,7 +1626,7 @@ class wxilp():
     	        u"\u0BAD":u"",		#Consonant BHA
     	        u"\u0BAE":u"\xCC",	#Consonant MA
     	        u"\u0BAF":u"\xCD",	#Consonant YA
-    	        u"\u0BB0":u"\xCF`",	#Consonant RA
+    	        u"\u0BB0":u"\xCF",	#Consonant RA
     	        u"\u0BB1":u"\xD0",	#Consonant RRA
     	        u"\u0BB2":u"\xD1",	#Consonant LA
     	        u"\u0BB3":u"\xD2",	#Consonant LLA
@@ -2337,7 +2337,7 @@ class wxilp():
     
     def unicode2iscii_pan(self, unicode_):
         # Normalize Unicode values (NUKTA variations)
-        iscii_pan = self.u2i_pn.sub(lambda m:self.unicode_norm_hashp_u2i.get(m.group(1), u""), unicode_)
+        iscii_pan = self.u2i_pn.sub(lambda m:self.unicode_norm_hashp_u2i.get(m.group(1), u"")+u"\u0A3C", unicode_)
         #Convert Unicode values 0x0A5C to ISCII 
         iscii_pan = iscii_pan.replace(u"\u0A5C", u"\xBF\xE9")
         #Convert Unicode Devanagari VIRAM to ISCII
