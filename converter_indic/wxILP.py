@@ -2395,12 +2395,12 @@ class wxilp():
     	"""Convert WX-Roman to ISCII"""
     	if not isinstance(wx, unicode):
     	    wx = wx.decode('utf-8')
-	#NOTE Handle pre-present iscii characters iscii-to-num
+	#NOTE Map iscii characters (if any) to some highly unlikely strings
 	wx = self.isc.sub(lambda m: self.iscii_num[m.group(1)], wx)
     	iscii = self.wx2iscii(wx)
     	# Convert ISCII to Unicode
     	unicode_ = self.iscii2unicode(iscii)
-	#NOTE Handle pre-present iscii characters num-to-iscii (back conversion)
+	#NOTE Convert back the mapped iscii characters
 	unicode_ = self.num.sub(lambda m: self.num_iscii[m.group(1)], unicode_)
     	#Convert Unicode to utf-8
     	return unicode_.encode('utf-8')
