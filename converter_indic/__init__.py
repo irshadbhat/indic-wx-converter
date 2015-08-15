@@ -35,10 +35,6 @@ def main():
     parser.add_argument('--i', metavar='input', dest="INFILE", type=argparse.FileType('r'), default=sys.stdin, help="<input-file>")
     parser.add_argument('--o', metavar='output', dest="OUTFILE", type=argparse.FileType('w'), default=sys.stdout, help="<output-file>")
 
-    if len(sys.argv) == 1:
-	parser.print_usage()
-	sys.exit(0)
-
     args = parser.parse_args()
 
     # set conversion direction
