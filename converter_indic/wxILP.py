@@ -929,6 +929,15 @@ class wxilp():
 	self.num = re.compile(u'(%s)' %'|'.join(['@~%s~@'%i for i in range(0, 90)]))
 
     def initialize_utf2wx_hash(self):
+
+	self.BYTE_ORDER_MARK = u'\uFEFF'
+    	self.BYTE_ORDER_MARK_2 = u'\uFFFE'
+    	self.WORD_JOINER = u'\u2060'
+    	self.SOFT_HYPHEN = u'\u00AD'
+
+    	self.ZERO_WIDTH_NON_JOINER = u'\u200C'
+    	self.ZERO_WIDTH_JOINER = u'\u200D'
+
     	self.hashc_i2w = {
     	        u"\xB3":u"k",
     	        u"\xB4":u"K",
@@ -1802,6 +1811,22 @@ class wxilp():
 	self.u2i_kn = re.compile(u"([\u0958-\u095F])")
 	self.u2i_pn = re.compile(u"([\u0A59-\u0A5B\u0A5E])")
 
+    def normalize(self,text):
+        """
+        Performs some common normalization, which includes: 
+        - Byte order mark, word joiner, etc. removal 
+        - ZERO_WIDTH_NON_JOINER and ZERO_WIDTH_JOINER removal 
+        """
+        text = text.replace(self.BYTE_ORDER_MARK,'')
+        text = text.replace(self.BYTE_ORDER_MARK_2,'')
+        text = text.replace(self.WORD_JOINER,'')
+        text = text.replace(self.SOFT_HYPHEN,'')
+
+        text = text.replace(self.ZERO_WIDTH_NON_JOINER, '')
+        text = text.replace(self.ZERO_WIDTH_JOINER,'')
+
+        return text
+
     def wx2iscii(self, my_string):
 	"""Convert WX to ISCII"""
         Z, _u_ = u'Z' in my_string, u'_' in my_string
@@ -2383,6 +2408,7 @@ class wxilp():
         """Convert UTF-8 string to Unicode"""
     	if not isinstance(unicode_, unicode):
     	    unicode_ = unicode_.decode('utf-8')
+	unicode_ = self.normalize(unicode_)
 	#Convert Unicode values with ISCII values
     	iscii = self.unicode2iscii(unicode_)
     	#Convert ISCII to WX-Roman
