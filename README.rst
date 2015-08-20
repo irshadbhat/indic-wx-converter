@@ -19,7 +19,7 @@ Install
 
 ::
 
-    tar xvfz python-converter-indic.tar.gz
+    tar -xvzf python-converter-indic.tar.gz
     cd python-converter-indic
     sudo python setup.py install
 
