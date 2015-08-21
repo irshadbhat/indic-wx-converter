@@ -183,10 +183,8 @@ Example
 
     converter-indic --f text --l hin --s utf --i tests/text/hin-utf.txt --o tests/text/hin-wx.txt
 
-    --l language  select language [hin|tel|tam|mal|kan|ben|ori|pan|mar|nep] (3
-                letter ISO-639 code)
+    --l language  select language [hin|tel|tam|mal|kan|ben|ori|pan|mar|nep] (3 letter ISO-639 code)
     --s source    select input-file encoding [utf|wx]
     --f format    select output format [text|ssf|conll|bio|tnt]
     --i input     <input-file>
     --o output    <output-file>
-
