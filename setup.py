@@ -80,7 +80,7 @@ setup(
     description="UTF to WX converter and vice-versa for Indian Languages",
     long_description = open('README.rst', 'rb').read().decode('utf8'),
     keywords = ['UTF', 'WX', 'Unicode', 'Computational Linguistics',
-		'Indic', 'ASCII', 'conll', 'ssf', 'bio', 'tnt'],
+                'Indic', 'ASCII', 'conll', 'ssf', 'bio', 'tnt'],
     author='Irshad Ahmad',
     author_email='irshad.bhat@research.iiit.ac.in',
     maintainer='Irshad Ahmad',
@@ -89,6 +89,19 @@ setup(
     url="https://github.com/irshadbhat/python-converter-indic",
     package_dir={'converter_indic':'converter_indic'},
     packages=['converter_indic'],
+
+    classifiers=[
+        "Topic :: Indian Languages :: Text Processing",
+        "Development Status :: 5 - Production/Stable",
+        "Environment :: Console",
+        "License :: Public Domain",
+        "Programming Language :: Python :: 2.6",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.2",
+        "Programming Language :: Python :: 3.3",
+        "Programming Language :: Python :: 3.4",
+    ],
 
     **params
 )
