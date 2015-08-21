@@ -16,14 +16,13 @@ __status__     = "Beta"
 __all__        = ["ilp", "wxILP", "main"]
 
 def main():
+    format_list = ["text", "ssf", "conll", "bio","tnt"]
+    languages = ["hin", "tel", "tam", "mal", "kan", "ben", "ori", "pan", "mar", "nep"]
     # help messages
     src_enc_help = "select input-file encoding [utf|wx]"
     #trg_enc_help = "select output-file encoding [utf|wx]"
     format_help  = "select output format [text|ssf|conll|bio|tnt]"
-    lang_help    = "select language [hin|tel|...] (3 letter ISO-639 code)"
-
-    format_list = ["text", "ssf", "conll", "bio","tnt"]
-    languages = ["hin", "tel", "tam", "mal", "kan", "ben", "ori", "pan", "mar"]
+    lang_help    = "select language [%s] (3 letter ISO-639 code)" %('|'.join(languages))
 
     # parse command line arguments 
     parser = argparse.ArgumentParser(prog="converter-indic", description="wx-utf converter for Indain languages")
