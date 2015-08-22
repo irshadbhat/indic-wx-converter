@@ -30,7 +30,7 @@ Example
 
 ::
 
-    >>> from converter_indic.ilp import wxConvert
+    >>> from converter_indic import wxConvert
     >>> 
     >>> # class wxConvert(order="utf2wx", format_="text", lang="hin")
     ... # Parameters: order:str, (default="utf2wx"), source2target encoding [wx2utf|utf2wx]
