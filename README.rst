@@ -28,7 +28,7 @@ Example
 
 1. **utf to wx (plain text):**
 
-::
+.. code:: python
 
     >>> from converter_indic import wxConvert
     >>> 
@@ -77,7 +77,7 @@ Example
 
 2. **wx to utf:**
 
-::
+.. code:: python
 
     >>> con = wxConvert(order='wx2utf', lang='hin')
     >>> 
@@ -101,7 +101,7 @@ Example
 
 3. **work with conll:**
 
-::
+.. code:: python
 
     >>> con = wxConvert(order='utf2wx', lang='hin', format_='conll')
     >>> 
@@ -127,7 +127,7 @@ Example
 
 4. **work with tnt:**
 
-::
+.. code:: python
 
     >>> tnt = """
     ... यों       RB
