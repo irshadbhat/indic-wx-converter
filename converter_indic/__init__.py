@@ -53,7 +53,7 @@ def main():
 	    sentence = sentence.strip()
 	    args.OUTFILE.write('%s\n' %sid)
 	    consen = con.convert(sentence)
-	    args.OUTFILE.write('%s\n' %consen)
+	    args.OUTFILE.write('%s' %consen)
 	    args.OUTFILE.write("</Sentence>\n\n")
     else:
 	for line in args.INFILE:
