@@ -30,6 +30,7 @@ import re
 import sys
 
 from wxILP import wxilp
+from ssf_reader import SSFReader
 
 class wxConvert():
     """WX convertor (UTF to WX and vice-versa)
@@ -44,6 +45,52 @@ class wxConvert():
         self.format_ = format_
         wxp = wxilp(self.lang, order)
         self.transform = wxp.wx2utf if order=="wx2utf" else wxp.utf2wx
+
+    def convert_ssf(self, sentence):
+	"""Convert SSF data"""
+	consen = str()
+	obj = SSFReader(sentence)
+	obj.getAnnotations()
+        for node,order in zip(obj.nodeList, obj.fs_order):
+	    name = self.transform(node.name) if node.name not in self.special else node.name
+	    parent = self.transform(node.parent) if node.parent not in self.special else node.parent
+	    wordForm = self.transform(node.wordForm) if node.wordForm not in self.special else node.wordForm
+            dmrel_ = 'dmrel' if node.dmrel else 'drel'
+            ssfNode = [node.id, wordForm, node.posTag]
+            if isinstance(node.af, tuple):
+                nL = node.af
+		lemma = self.transform(nL.lemma) if nL.lemma not in self.special else nL.lemma
+		vib = self.transform(nL.vib) if nL.vib not in self.special else nL.vib
+                features = ",".join((lemma, nL.cat, nL.gen, nL.num, nL.per, nL.case, vib, nL.tam))
+            else:
+                features = node.af
+            fs = [
+                    "af='%s'" % (features) if node.af else '',
+                    "name='%s'" % (name) if name else None,
+                    "head='%s'" % (node.head) if node.head else None,
+                    "chunkId='%s'" % (node.chunkId) if (node.chunkId and node.chunkType == 'head') else None,
+                    "chunkType='%s:%s'" % (node.chunkType, node.chunkId) if node.chunkType else None,
+                    "posn='%s'" % (node.posn) if node.posn else None,
+                    "vpos='%s'" % (node.vpos) if node.vpos else None,
+                    "%s='%s:%s'" % (dmrel_, node.drel, parent) if node.drel else None,
+                    "coref='%s:%s'" % (node.corel, node.coref) if node.coref else None,
+                    "stype='%s'" % (node.stype) if node.stype else None,
+                    "voicetype='%s'" % (node.voicetype) if node.voicetype else None,
+                    "poslcat='%s'" % (node.poslcat) if node.poslcat else None,
+                    "mtype='%s'" % (node.mtype) if node.mtype else None,
+                    "troot='%s'" % (node.troot) if node.troot else None
+                  ]
+            fs_ = fs[:]
+            for idx in order:
+                fs.remove(fs_[idx])
+                fs.insert(0, fs_[idx])
+            fs = "<fs %s>" % (" ".join(filter(None, fs)))
+            if node.id:
+                consen += "%s\n" %("\t".join(ssfNode+[fs]))
+            else:
+                consen += "%s\n" %("\t))\t\t")
+
+	return consen
 
     def convert_conll(self, line):
         """Convert CONLL data"""
@@ -77,11 +124,10 @@ class wxConvert():
 
     def convert(self, line):
         if self.format_=="text":
-            trans_string = self.transform(line)
-            return trans_string
+            return self.transform(line)
         elif self.format_=="ssf":
-            sys.stderr.write("to be implemented soon\n")
-            sys.exit(0)
+	    self.special = set(['null', 'NULL', 'COMMA', 'SINGLE_QUOTE'])
+	    return self.convert_ssf(line)
         elif self.format_=="conll":
             return self.convert_conll(line)
         elif self.format_ in ["bio", "tnt"]:
