@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+import re
 import sys
 import argparse
 
@@ -45,9 +46,19 @@ def main():
     # initialize converter object
     con = wxConvert(src_trg, args.format_, args.lang)
     # convert text
-    for line in args.INFILE:
-        line = con.convert(line)
-        args.OUTFILE.write(line)
+    if args.format_ == "ssf":
+	sentences = re.finditer("(<Sentence id=.*?>)(.*?)</Sentence>", args.INFILE.read(), re.S)
+	sentences = ((g.group(1), g.group(2)) for g in sentences)
+	for sid, sentence in sentences:
+	    sentence = sentence.strip()
+	    args.OUTFILE.write('%s\n' %sid)
+	    consen = con.convert(sentence)
+	    args.OUTFILE.write('%s\n' %consen)
+	    args.OUTFILE.write("</Sentence>\n\n")
+    else:
+	for line in args.INFILE:
+	    line = con.convert(line)
+	    args.OUTFILE.write(line)
 
     # close files 
     args.INFILE.close()
