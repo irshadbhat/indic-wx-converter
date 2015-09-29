@@ -126,7 +126,7 @@ class wxConvert():
         if self.format_=="text":
             return self.transform(line)
         elif self.format_=="ssf":
-	    self.special = set(['null', 'NULL', 'COMMA', 'SINGLE_QUOTE'])
+	    self.special = set(['null', 'NULL', 'COMMA', 'SINGLE_QUOTE', '-JOIN'])
 	    return self.convert_ssf(line)
         elif self.format_=="conll":
             return self.convert_conll(line)
