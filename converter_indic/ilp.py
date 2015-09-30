@@ -55,8 +55,10 @@ class wxConvert():
         for node,order in zip(obj.nodeList, obj.fs_order):
 	    if self.ssf_type == 'intra' or (self.ssf_type == 'inter' and not node.id.isdigit()):
 		name = self.transform(node.name) if node.name not in self.special else node.name
+		head = node.head
 	    else:
 		name = node.name
+		head = self.transform(node.head) if node.head not in self.special else node.head
 	    if self.ssf_type == 'intra':
 		parent = self.transform(node.parent) if node.parent not in self.special else node.parent
 	    else:
@@ -74,7 +76,7 @@ class wxConvert():
             fs = [
                     "af='%s'" % (features) if node.af else '',
                     "name='%s'" % (name) if name else None,
-                    "head='%s'" % (node.head) if node.head else None,
+                    "head='%s'" % (head) if head else None,
                     "chunkId='%s'" % (node.chunkId) if (node.chunkId and node.chunkType == 'head') else None,
                     "chunkType='%s:%s'" % (node.chunkType, node.chunkId) if node.chunkType else None,
                     "posn='%s'" % (node.posn) if node.posn else None,
