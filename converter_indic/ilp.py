@@ -40,9 +40,10 @@ class wxConvert():
     Marathi and Nepali in 5 data formats viz. plain-text, ssf, conll, bio and tnt.
     """
 
-    def __init__(self, order="wx2utf", format_="text", lang="hin"):
+    def __init__(self, order="wx2utf", format_="text", lang="hin", ssf_type=None):
         self.lang = lang
         self.format_ = format_
+	self.ssf_type = ssf_type
         wxp = wxilp(self.lang, order)
         self.transform = wxp.wx2utf if order=="wx2utf" else wxp.utf2wx
 
@@ -52,8 +53,14 @@ class wxConvert():
 	obj = SSFReader(sentence)
 	obj.getAnnotations()
         for node,order in zip(obj.nodeList, obj.fs_order):
-	    name = self.transform(node.name) if node.name not in self.special else node.name
-	    parent = self.transform(node.parent) if node.parent not in self.special else node.parent
+	    if self.ssf_type == 'intra' or (self.ssf_type == 'inter' and not node.id.isdigit()):
+		name = self.transform(node.name) if node.name not in self.special else node.name
+	    else:
+		name = node.name
+	    if self.ssf_type == 'intra':
+		parent = self.transform(node.parent) if node.parent not in self.special else node.parent
+	    else:
+		parent = node.parent
 	    wordForm = self.transform(node.wordForm) if node.wordForm not in self.special else node.wordForm
             dmrel_ = 'dmrel' if node.dmrel else 'drel'
             ssfNode = [node.id, wordForm, node.posTag]
