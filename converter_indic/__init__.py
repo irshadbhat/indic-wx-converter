@@ -24,7 +24,7 @@ def main():
     #trg_enc_help = "select output-file encoding [utf|wx]"
     format_help  = "select output format [text|ssf|conll|bio|tnt]"
     lang_help    = "select language [%s] (3 letter ISO-639 code)" %('|'.join(languages))
-    ssf_help     = "Specify ssf-type [inter|intra]"
+    ssf_help     = "specify ssf-type [inter|intra] in case file format (--f) is ssf"
 
     # parse command line arguments 
     parser = argparse.ArgumentParser(prog="converter-indic", description="wx-utf converter for Indain languages")
