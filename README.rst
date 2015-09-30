@@ -26,7 +26,20 @@ Install
 Example
 ~~~~~~~
 
-1. **utf to wx (plain text):**
+1. **work with files:**
+
+::
+
+    converter-indic --f text --l hin --s utf --i tests/text/hin-utf.txt --o tests/text/hin-wx.txt
+
+    --l language  select language [hin|tel|tam|mal|kan|ben|ori|pan|mar|nep] (3 letter ISO-639 code)
+    --s source    select input-file encoding [utf|wx]
+    --f format    select output format [text|ssf|conll|bio|tnt]
+    --t ssf-type  specify ssf-type [inter|intra] in case file format (--f) is ssf
+    --i input     <input-file>
+    --o output    <output-file>
+
+2. **utf to wx (plain text):**
 
 .. code:: python
 
@@ -75,7 +88,7 @@ Example
     
     >>> 
 
-2. **wx to utf:**
+3. **wx to utf:**
 
 .. code:: python
 
@@ -99,7 +112,7 @@ Example
     
     >>> 
 
-3. **work with conll:**
+4. **work with conll:**
 
 .. code:: python
 
@@ -125,7 +138,7 @@ Example
     7   .	.   punc    SYM	cat-punc|gen-|num-|pers-|case-|vib-|tam-|chunkId-BLK|chunkType-head|stype-|voicetype-	6   rsym    __
     >>> 
 
-4. **work with tnt:**
+5. **work with tnt:**
 
 .. code:: python
 
@@ -165,27 +178,15 @@ Example
     
     >>> 
 
-5. **work with bio:**
+6. **work with bio:**
 
 ::
 
     same as tnt or conll
 
-6. **work with ssf:**
+7. **work with ssf:**
 
 ::
     
     implemented for ssf files
 
-7. **work with files:**
-
-::
-
-    converter-indic --f text --l hin --s utf --i tests/text/hin-utf.txt --o tests/text/hin-wx.txt
-
-    --l language  select language [hin|tel|tam|mal|kan|ben|ori|pan|mar|nep] (3 letter ISO-639 code)
-    --s source    select input-file encoding [utf|wx]
-    --f format    select output format [text|ssf|conll|bio|tnt]
-    --t ssf-type  specify ssf-type [inter|intra] in case file format (--f) is ssf
-    --i input     <input-file>
-    --o output    <output-file>
