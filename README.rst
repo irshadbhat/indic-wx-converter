@@ -175,9 +175,9 @@ Example
 
 ::
     
-    to be implemented soon
+    implemented for ssf files
 
-7. **work with text files:**
+7. **work with files:**
 
 ::
 
@@ -186,5 +186,6 @@ Example
     --l language  select language [hin|tel|tam|mal|kan|ben|ori|pan|mar|nep] (3 letter ISO-639 code)
     --s source    select input-file encoding [utf|wx]
     --f format    select output format [text|ssf|conll|bio|tnt]
+    --t ssf-type  specify ssf-type [inter|intra] in case file format (--f) is ssf
     --i input     <input-file>
     --o output    <output-file>
