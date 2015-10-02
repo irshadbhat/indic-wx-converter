@@ -30,7 +30,7 @@ Example
 
 ::
 
-    converter-indic --f text --l hin --s utf --i tests/text/hin-utf.txt --o tests/text/hin-wx.txt
+    converter-indic --f ssf --t intra --l hin --s utf --i tests/text/hin-utf.txt --o tests/text/hin-wx.txt
 
     --l language  select language [hin|tel|tam|mal|kan|ben|ori|pan|mar|nep] (3 letter ISO-639 code)
     --s source    select input-file encoding [utf|wx]
