@@ -847,6 +847,86 @@ class wxilp():
                 u"\xF9":u"\u0B6E",      #Digit 8
                 u"\xFA":u"\u0B6F",      #Digit 9 
                 }
+        self.hashg_i2u = {
+                u"\xA1":u"\u0A81",      #Vowel-modifier CHANDRABINDU
+                u"\xA2":u"\u0A82",      #Vowel-modifier ANUSWAR
+                u"\xA3":u"\u0A83",      #Vowel-modifier VISARG
+                u"\xA4":u"\u0A85",      #Vowel A
+                u"\xA5":u"\u0A86",      #Vowel AA
+                u"\xA6":u"\u0A87",      #Vowel I
+                u"\xA7":u"\u0A88",      #Vowel II
+                u"\xA8":u"\u0A89",      #Vowel U
+                u"\xA9":u"\u0A8A",      #Vowel UU
+                u"\xAA":u"\u0A8B",      #Vowel RI
+                u"\xAE":u"\u0A8D",      #Vowel AI -Rashid added
+                u"\xB2":u"\u0A8D",      #Vowel AYE (Devanagari Script)
+                u"\xAC":u"\u0A8F",      #Vowel EY
+                u"\xAD":u"\u0A90",      #Vowel AI
+                u"\xB0":u"\u0A93",      #Vowel OW
+                u"\xB1":u"\u0A94",      #Vowel AU
+                u"\xB2":u"\u0A91",      #Vowel AWE
+                u"\xB3":u"\u0A95",      #Consonant KA
+                u"\xB4":u"\u0A96",      #Consonant KHA
+                u"\xB5":u"\u0A97",      #Consonant GA
+                u"\xB6":u"\u0A98",      #Consonant GHA
+                u"\xB7":u"\u0A99",      #Consonant NGA
+                u"\xB8":u"\u0A9A",      #Consonant CHA
+                u"\xB9":u"\u0A9B",      #Consonant CHHA
+                u"\xBA":u"\u0A9C",      #Consonant JA
+                u"\xBB":u"\u0A9D",      #Consonant JHA
+                u"\xBC":u"\u0A9E",      #Consonant JNA
+                u"\xBD":u"\u0A9F",      #Consonant Hard TA
+                u"\xBE":u"\u0AA0",      #Consonant Hard THA
+                u"\xBF":u"\u0AA1",      #Consonant Hard DA
+                u"\xC0":u"\u0AA2",      #Consonant Hard DHA
+                u"\xC1":u"\u0AA3",      #Consonant Hard NA
+                u"\xC2":u"\u0AA4",      #Consonant Soft TA
+                u"\xC3":u"\u0AA5",      #Consonant Soft THA
+                u"\xC4":u"\u0AA6",      #Consonant Soft DA
+                u"\xC5":u"\u0AA7",      #Consonant Soft DHA
+                u"\xC6":u"\u0AA8",      #Consonant Soft NA
+                u"\xC8":u"\u0AAA",      #Consonant PA
+                u"\xC9":u"\u0AAB",      #Consonant PHA
+                u"\xCA":u"\u0AAC",      #Consonant BA
+                u"\xCB":u"\u0AAD",      #Consonant BHA
+                u"\xCC":u"\u0AAE",      #Consonant MA
+                u"\xCD":u"\u0AAF",      #Consonant YA
+                u"\xCE":u"",            #Consonant JYA (Bangla, Assamese & Orriya)
+                u"\xCF":u"\u0AB0",      #Consonant RA
+                u"\xD1":u"\u0AB2",      #Consonant LA
+                u"\xD2":u"\u0AB3",      #Consonant Hard LA
+                u"\xD4":u"\u0AB5",      #Consonant VA
+                u"\xD5":u"\u0AB6",      #Consonant SHA
+                u"\xD6":u"\u0AB7",      #Consonant Hard SHA
+                u"\xD7":u"\u0AB8",      #Consonant SA
+                u"\xD8":u"\u0AB9",      #Consonant HA
+                u"\xE9":u"\u0ABC",      #Diacritic Sign (Nukta)
+                u"\xD9":u"",            #Consonant INV
+                u"\xDA":u"\u0ABE",      #Vowel Sign AA
+                u"\xDB":u"\u0ABF",      #Vowel Sign I
+                u"\xDC":u"\u0AC0",      #Vowel Sign II
+                u"\xDD":u"\u0AC1",      #Vowel Sign U
+                u"\xDE":u"\u0AC2",      #Vowel Sign UU
+                u"\xDF":u"\u0AC3",      #Vowel Sign RI
+                u"\xE1":u"\u0AC7",      #Vowel Sign EY
+                u"\xE2":u"\u0AC8",      #Vowel Sign AI
+                u"\xE3":u"\u0AC5",      #Vowel Sign AYE (Devanagari Script)
+                u"\xE5":u"\u0ACB",      #Vowel Sign OW
+                u"\xE6":u"\u0ACC",      #Vowel Sign AU
+                u"\xE7":u"\u0AC9",      #Vowel Sign AWE (Devanagari Script)
+                u"\xE8":u"\u0ACD",      #Vowel Omission Sign (Halant)
+                u"\xEA":u".",           #Full Stop (Viram, Northern Scripts)
+                u"\xF1":u"\u0AE6",      #Digit 0
+                u"\xF2":u"\u0AE7",      #Digit 1
+                u"\xF3":u"\u0AE8",      #Digit 2
+                u"\xF4":u"\u0AE9",      #Digit 3
+                u"\xF5":u"\u0AEA",      #Digit 4
+                u"\xF6":u"\u0AEB",      #Digit 5
+                u"\xF7":u"\u0AEC",      #Digit 6
+                u"\xF8":u"\u0AED",      #Digit 7
+                u"\xF9":u"\u0AEE",      #Digit 8
+                u"\xFA":u"\u0AEF",      #Digit 9
+               }
 
         # compile regexes
         const = 'kKgGfcCjJFtTdDNwWxXnpPbBmyrlvSsRh'
@@ -915,14 +995,7 @@ class wxilp():
         self.cqmd = re.compile(u"([%s])q([MHz])" %const)
         self.qmd = re.compile(u"q([MHz])")    #NOTE q+[MHz]
 
-        self.i2u_h = re.compile(u'([\xA1-\xFA])')
-        self.i2u_t = re.compile(u'([\xA1-\xFA])')
-        self.i2u_p = re.compile(u'([\xA1-\xFA])')
-        self.i2u_k = re.compile(u'([\xA1-\xFA])')
-        self.i2u_m = re.compile(u'([\xA1-\xFA])')
-        self.i2u_b = re.compile(u'([\xA1-\xFA])')
-        self.i2u_o = re.compile(u'([\xA1-\xFA])')
-        self.i2u_ta = re.compile(u'([\xA1-\xFA])')
+        self.i2u = re.compile(u'([\xA1-\xFA])')
 
         #NOTE Handle pre-present iscii characters
         self.iscii_num = dict(zip([unichr(i) for i in range(161, 251)], ['@~%s~@'%i for i in range(0, 90)]))
@@ -932,13 +1005,12 @@ class wxilp():
 
     def initialize_utf2wx_hash(self):
 
-        self.BYTE_ORDER_MARK = u'\uFEFF'
-        self.BYTE_ORDER_MARK_2 = u'\uFFFE'
         self.WORD_JOINER = u'\u2060'
         self.SOFT_HYPHEN = u'\u00AD'
-
-        self.ZERO_WIDTH_NON_JOINER = u'\u200C'
+        self.BYTE_ORDER_MARK = u'\uFEFF'
+        self.BYTE_ORDER_MARK_2 = u'\uFFFE'
         self.ZERO_WIDTH_JOINER = u'\u200D'
+        self.ZERO_WIDTH_NON_JOINER = u'\u200C'
 
         self.hashc_i2w = {
                 u"\xB3":u"k",
@@ -1785,6 +1857,90 @@ class wxilp():
             #   u"\x095E":u"\u092B",
             #   u"\x095F":u"\u092F",
             #   }
+        self.hashg_u2i = {
+                u"\u0A81":u"\xA1",      #Vowel-modifier CHANDRABINDU
+                u"\u0A82":u"\xA2",      #Vowel-modifier ANUSWAR
+                u"\u0A83":u"\xA3",      #Vowel-modifier VISARG
+                u"\u0A84":u"",
+                u"\u0A85":u"\xA4",      #Vowel A
+                u"\u0A86":u"\xA5",      #Vowel AA
+                u"\u0A87":u"\xA6",      #Vowel I
+                u"\u0A88":u"\xA7",      #Vowel II
+                u"\u0A89":u"\xA8",      #Vowel U
+                u"\u0A8A":u"\xA9",      #Vowel UU
+                u"\u0A8B":u"\xAA",      #Vowel RI
+                u"\u0A8C":u"",
+                u"\u0A8D":u"\xAE",
+                u"\u0A8F":u"\xAC",
+                u"\u0A90":u"\xAD",
+                u"\u0A91":u"\xB2",
+                u"\u0A93":u"\xB0",
+                u"\u0A94":u"\xB1",
+                u"\u0A95":u"\xB3",      #Consonant KA
+                u"\u0A96":u"\xB4",      #Consonant
+                u"\u0A97":u"\xB5",      #Consonant
+                u"\u0A98":u"\xB6",      #Consonant
+                u"\u0A99":u"\xB7",      #Consonant NGA
+                u"\u0A9A":u"\xB8",      #Consonant
+                u"\u0A9B":u"\xB9",      #Consonant
+                u"\u0A9C":u"\xBA",      #Consonant
+                u"\u0A9D":u"\xBB",      #Consonant
+                u"\u0A9E":u"\xBC",      #Consonant JNA
+                u"\u0A9F":u"\xBD",      #Consonant
+                u"\u0AA0":u"\xBE",      #Consonant
+                u"\u0AA1":u"\xBF",      #Consonant
+                u"\u0AA2":u"\xC0",      #Consonant
+                u"\u0AA3":u"\xC1",      #Consonant NA
+                u"\u0AA4":u"\xC2",      #Consonant
+                u"\u0AA5":u"\xC3",      #Consonant
+                u"\u0AA6":u"\xC4",      #Consonant
+                u"\u0AA7":u"\xC5",      #Consonant
+                u"\u0AA8":u"\xC6",      #Consonant NA
+                u"\u0AAA":u"\xC8",      #Consonant PA
+                u"\u0AAB":u"\xC9",      #Consonant PHA
+                u"\u0AAC":u"\xCA",      #Consonant BA
+                u"\u0AAD":u"\xCB",      #Consonant BHA
+                u"\u0AAE":u"\xCC",      #Consonant MA
+                u"\u0AAF":u"\xCD",      #Consonant YA
+                u"\u0AB0":u"\xCF",      #Consonant RA
+                u"\u0AB2":u"\xD1",      #Consonant LA
+                u"\u0AB3":u"\xD2",      #Consonant LLA
+                u"\u0AB5":u"\xD4",      #Consonant VA
+                u"\u0AB6":u"\xD5",      #Consonant SHA
+                u"\u0AB7":u"\xD6",      #Consonant SSA
+                u"\u0AB8":u"\xD7",      #Consonant SA
+                u"\u0AB9":u"\xD8",      #Consonant HA
+                u"\u0ABA":u"",          #Consonant
+                u"\u0ABB":u"",          #Consonant
+                u"\u0ABC":u"\xE9",      #Consonant NUKTA
+                u"\u0ABD":u"",          #Consonant AVAGRAHA
+                u"\u0ABE":u"\xDA",      #Vowel Sign AA
+                u"\u0ABF":u"\xDB",      #Vowel Sign I
+                u"\u0AC0":u"\xDC",      #Vowel Sign II
+                u"\u0AC1":u"\xDD",      #Vowel Sign U
+                u"\u0AC2":u"\xDE",      #Vowel
+                u"\u0AC3":u"\xDF",      #Vowel
+                u"\u0AC4":u"",          #Vowel
+                u"\u0AC5":u"",          #Vowel
+                u"\u0AC7":u"\xE1",      #Vowel
+                u"\u0AC8":u"\xE2",      #Vowel
+                u"\u0AC9":u"\xE7",      #Vowel
+                u"\u0ACB":u"\xE5",      #Vowel
+                u"\u0ACC":u"\xE6",      #Vowel
+                u"\u0ACD":u"\xE8",      #Halant
+                u"\u0AD0":u"",          #Consonant
+                u"\u0AE0":u"\xAA",      #Vowel Sanskrit
+                u"\u0AE6":u"\xF1",      #Digit 0
+                u"\u0AE7":u"\xF2",      #Digit 1
+                u"\u0AE8":u"\xF3",      #Digit 2
+                u"\u0AE9":u"\xF4",      #Digit 3
+                u"\u0AEA":u"\xF5",      #Digit 4
+                u"\u0AEB":u"\xF6",      #Digit 5
+                u"\u0AEC":u"\xF7",      #Digit 6
+                u"\u0AED":u"\xF8",      #Digit 7
+                u"\u0AEE":u"\xF9",      #Digit 8
+                u"\u0AEF":u"\xFA",      #Digit 9
+                }
 
         # compile regexes
         self.c = re.compile(u"([\xB3-\xD8])")
@@ -1813,6 +1969,7 @@ class wxilp():
         self.u2i_ta = re.compile(u"([\u0B82-\u0BEF])")
         self.u2i_kn = re.compile(u"([\u0958-\u095F])")
         self.u2i_pn = re.compile(u"([\u0A59-\u0A5B\u0A5E])")
+        self.u2i_g = re.compile(u"([\u0A80-\u0AFF])")
 
     def normalize(self,text):
         """
@@ -2239,11 +2396,11 @@ class wxilp():
     
     def iscii2unicode(self, iscii):
         """Convert ISCII to Unicode"""
-        if self.lang_tag in ["hin", "mar", "nep"]:
+        if self.lang_tag in ["hin", "mar", "nep", "bod", "kok"]:
             unicode_ = self.iscii2unicode_hin(iscii)
         elif self.lang_tag == "tel":
             unicode_ = self.iscii2unicode_tel(iscii)
-        elif self.lang_tag == "ben":
+        elif self.lang_tag in ["ben", "asm"]:
             unicode_ = self.iscii2unicode_ben(iscii)
         elif self.lang_tag == "kan":
             unicode_ = self.iscii2unicode_kan(iscii)
@@ -2255,50 +2412,56 @@ class wxilp():
             unicode_ = self.iscii2unicode_tam(iscii)
         elif self.lang_tag == "ori":
             unicode_ = self.iscii2unicode_ori(iscii)
+        elif self.lang_tag == "guj":
+            unicode_ = self.iscii2unicode_guj(iscii)
         else:
             sys.stderr.write("LanguageError: invalid language code\n")
             sys.exit(0)
         return unicode_
     
     def iscii2unicode_hin(self, iscii):
-        unicode_ = self.i2u_h.sub(lambda m: self.hashh_i2u.get(m.group(1), u""), iscii)
+        unicode_ = self.i2u.sub(lambda m: self.hashh_i2u.get(m.group(1), u""), iscii)
         return unicode_
     
     def iscii2unicode_tel(self, iscii):
-        unicode_ = self.i2u_t.sub(lambda m: self.hasht_i2u.get(m.group(1), u""), iscii)
+        unicode_ = self.i2u.sub(lambda m: self.hasht_i2u.get(m.group(1), u""), iscii)
         return unicode_
     
     def iscii2unicode_pan(self, iscii):
-        unicode_ = self.i2u_p.sub(lambda m: self.hashp_i2u.get(m.group(1), u""), iscii)
+        unicode_ = self.i2u.sub(lambda m: self.hashp_i2u.get(m.group(1), u""), iscii)
         return unicode_
     
     def iscii2unicode_kan(self, iscii):
-        unicode_ = self.i2u_k.sub(lambda m: self.hashk_i2u.get(m.group(1), u""), iscii)
+        unicode_ = self.i2u.sub(lambda m: self.hashk_i2u.get(m.group(1), u""), iscii)
         return unicode_
     
     def iscii2unicode_mal(self, iscii):
-        unicode_ = self.i2u_m.sub(lambda m: self.hashm_i2u.get(m.group(1), u""), iscii)
+        unicode_ = self.i2u.sub(lambda m: self.hashm_i2u.get(m.group(1), u""), iscii)
         return unicode_
     
     def iscii2unicode_ben(self, iscii): 
-        unicode_ = self.i2u_b.sub(lambda m: self.hashb_i2u.get(m.group(1), u""), iscii)
+        unicode_ = self.i2u.sub(lambda m: self.hashb_i2u.get(m.group(1), u""), iscii)
         return unicode_
     
     def iscii2unicode_tam(self, iscii):
-        unicode_ = self.i2u_ta.sub(lambda m: self.hashcta_i2u.get(m.group(1), u""), iscii)
+        unicode_ = self.i2u.sub(lambda m: self.hashcta_i2u.get(m.group(1), u""), iscii)
         return unicode_
     
     def iscii2unicode_ori(self, iscii):
-        unicode_ = self.i2u_o.sub(lambda m: self.hasho_i2u.get(m.group(1), u""), iscii)
+        unicode_ = self.i2u.sub(lambda m: self.hasho_i2u.get(m.group(1), u""), iscii)
+        return unicode_
+
+    def iscii2unicode_guj(self, iscii):
+        unicode_ = self.i2u.sub(lambda m: self.hashg_i2u.get(m.group(1), u""), iscii)
         return unicode_
     
     def unicode2iscii(self, unicode_):
         """Convert Unicode to ISCII"""
-        if self.lang_tag in ["hin", "mar", "nep"]:
+        if self.lang_tag in ["hin", "mar", "nep", "bod", "kok"]:
             iscii = self.unicode2iscii_hin(unicode_)
         elif self.lang_tag == "tel":
             iscii = self.unicode2iscii_tel(unicode_)
-        elif self.lang_tag == "ben":
+        elif self.lang_tag in ["ben", "asm"]:
             iscii = self.unicode2iscii_ben(unicode_)
         elif self.lang_tag == "kan":
             iscii = self.unicode2iscii_kan(unicode_)
@@ -2310,6 +2473,8 @@ class wxilp():
             iscii = self.unicode2iscii_tam(unicode_)
         elif self.lang_tag == "ori":
             iscii = self.unicode2iscii_ori(unicode_)
+        elif self.lang_tag == "guj":
+            iscii = self.unicode2iscii_guj(unicode_)
         else:
             sys.stderr.write("LanguageError: invalid language code\n")
             sys.exit(0)
@@ -2407,6 +2572,11 @@ class wxilp():
         iscii_ori = self.u2i_o.sub(lambda m:self.hasho_u2i.get(m.group(1), u""), unicode_)
         return iscii_ori
     
+    def unicode2iscii_guj(self, unicode_):
+        # Convert Gujurati Unicode values to ISCII values
+        iscii_guj = self.u2i_g.sub(lambda m:self.hashg_u2i.get(m.group(1), u""), unicode_)
+        return iscii_guj
+
     def utf2wx(self, unicode_):
         """Convert UTF-8 string to Unicode"""
         if not isinstance(unicode_, unicode):

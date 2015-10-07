@@ -3,6 +3,7 @@
 import re
 import sys
 import argparse
+from argparse import RawTextHelpFormatter
 
 from .ilp import wxConvert
 
@@ -18,16 +19,32 @@ __all__        = ["ilp", "wxILP", "main"]
 
 def main():
     format_list = ["text", "ssf", "conll", "bio","tnt"]
-    languages = ["hin", "tel", "tam", "mal", "kan", "ben", "ori", "pan", "mar", "nep"]
+    languages = ["hin", "tel", "tam", "mal", "kan", "ben", "ori", "pan", "mar", "nep", "guj", "bod", "kok", "asm"]
     # help messages
     src_enc_help = "select input-file encoding [utf|wx]"
     #trg_enc_help = "select output-file encoding [utf|wx]"
     format_help  = "select output format [text|ssf|conll|bio|tnt]"
-    lang_help    = "select language [%s] (3 letter ISO-639 code)" %('|'.join(languages))
+    lang_help    =  """select language (3 letter ISO-639 code)
+		    Hindi	: hin
+		    Telugu	: tel
+		    Tamil	: tam
+		    Malayalam	: mal
+		    Kannada	: kan
+		    Bengali	: ben
+		    Oriya	: ori
+		    Punjabi	: pan
+		    Marathi	: mar
+		    Nepali	: nep
+		    Gujarati	: guj
+		    Bodo	: bod
+		    Konkani	: kok
+		    Assamese	: asm"""
     ssf_help     = "specify ssf-type [inter|intra] in case file format (--f) is ssf"
 
     # parse command line arguments 
-    parser = argparse.ArgumentParser(prog="converter-indic", description="wx-utf converter for Indain languages")
+    parser = argparse.ArgumentParser(prog="converter-indic", 
+				    description="wx-utf converter for Indain languages", 
+				    formatter_class=RawTextHelpFormatter)
     parser.add_argument('--v', action="version", version="%(prog)s 1.5")
     parser.add_argument('--l', metavar='language', dest="lang", choices=languages, default="hin", help="%s" %lang_help)
     parser.add_argument('--s', metavar='source', dest="src_enc", choices=["utf","wx"], default="utf", help="%s" %src_enc_help)
