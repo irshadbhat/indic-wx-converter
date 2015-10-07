@@ -32,7 +32,21 @@ Example
 
     converter-indic --f ssf --t intra --l hin --s utf --i tests/text/hin-utf.txt --o tests/text/hin-wx.txt
 
-    --l language  select language [hin|tel|tam|mal|kan|ben|ori|pan|mar|nep] (3 letter ISO-639 code)
+    --l language  select language (3 letter ISO-639 code)
+                    Hindi       : hin
+                    Telugu      : tel
+                    Tamil       : tam
+                    Malayalam   : mal
+                    Kannada     : kan
+                    Bengali     : ben
+                    Oriya       : ori
+                    Punjabi     : pan
+                    Marathi     : mar
+                    Nepali      : nep
+                    Gujarati    : guj
+                    Bodo        : bod
+                    Konkani     : kok
+                    Assamese    : asm
     --s source    select input-file encoding [utf|wx]
     --f format    select output format [text|ssf|conll|bio|tnt]
     --t ssf-type  specify ssf-type [inter|intra] in case file format (--f) is ssf
@@ -47,8 +61,8 @@ Example
     >>> 
     >>> # class wxConvert(order="utf2wx", format_="text", lang="hin")
     ... # Parameters: order:str, (default="utf2wx"), source2target encoding [wx2utf|utf2wx]
-    ... #	      format_:str, (default="text"), output format [text|ssf|conll|bio|tnt]
-    ... #	      lang:str, (default="hin"), language parameter [hin|tel|...] (3 letter ISO-639 code)
+    ... #             format_:str, (default="text"), output format [text|ssf|conll|bio|tnt]
+    ... #             lang:str, (default="hin"), language parameter [hin|tel|...] (3 letter ISO-639 code)
 
     >>> con = wxConvert(order='utf2wx')  # here default language is hindi and default format is text
     >>> 
@@ -129,13 +143,13 @@ Example
     >>> 
     >>> print con.convert(conll)
     
-    1   isakI   yaha    pn	PRP cat-pn|gen-f|num-sg|pers-3|case-o|vib-kA|tam-kA|chunkId-NP|chunkType-head|stype-|voicetype-	2   r6	_   _
-    2   UzcAI   UzcAI   n	NN  cat-n|gen-f|num-sg|pers-3|case-d|vib-0|tam-0|chunkId-NP2|chunkType-head|stype-|voicetype-	6   k1	_   _
-    3   kevala  kevala  avy	RP  cat-avy|gen-|num-|pers-|case-|vib-|tam-|chunkId-NP3|chunkType-child|stype-|voicetype-   4	lwg__rp_    _
-    4   1982    1982    num	QC  cat-num|gen-any|num-any|pers-|case-any|vib-|tam-|chunkId-NP3|chunkType-child|stype-|voicetype-  5	nmod__adj   _	_
-    5   mItara  mItara  n	NN  cat-n|gen-m|num-sg|pers-3|case-d|vib-0|tam-0|chunkId-NP3|chunkType-head|stype-|voicetype-	6   k1s	_   _
-    6   hE	hE  v	VM  cat-v|gen-any|num-sg|pers-3|case-|vib-hE|tam-hE|chunkId-VGF|chunkType-head|stype-declarative|voicetype-active   0	root	_   _
-    7   .	.   punc    SYM	cat-punc|gen-|num-|pers-|case-|vib-|tam-|chunkId-BLK|chunkType-head|stype-|voicetype-	6   rsym    __
+    1   isakI   yaha    pn      PRP cat-pn|gen-f|num-sg|pers-3|case-o|vib-kA|tam-kA|chunkId-NP|chunkType-head|stype-|voicetype- 2   r6  _   _
+    2   UzcAI   UzcAI   n       NN  cat-n|gen-f|num-sg|pers-3|case-d|vib-0|tam-0|chunkId-NP2|chunkType-head|stype-|voicetype-   6   k1  _   _
+    3   kevala  kevala  avy     RP  cat-avy|gen-|num-|pers-|case-|vib-|tam-|chunkId-NP3|chunkType-child|stype-|voicetype-   4   lwg__rp_    _
+    4   1982    1982    num     QC  cat-num|gen-any|num-any|pers-|case-any|vib-|tam-|chunkId-NP3|chunkType-child|stype-|voicetype-  5   nmod__adj   _   _
+    5   mItara  mItara  n       NN  cat-n|gen-m|num-sg|pers-3|case-d|vib-0|tam-0|chunkId-NP3|chunkType-head|stype-|voicetype-   6   k1s _   _
+    6   hE      hE  v   VM  cat-v|gen-any|num-sg|pers-3|case-|vib-hE|tam-hE|chunkId-VGF|chunkType-head|stype-declarative|voicetype-active   0   root    _   _
+    7   .       .   punc    SYM cat-punc|gen-|num-|pers-|case-|vib-|tam-|chunkId-BLK|chunkType-head|stype-|voicetype-   6   rsym    __
     >>> 
 
 5. **work with tnt:**
@@ -163,17 +177,17 @@ Example
     >>> print con.convert(tnt)
     
     yoM RB
-    siMgala	JJ
-    skrIna	NNC
-    Wietara	NNP
+    siMgala     JJ
+    skrIna      NNC
+    Wietara     NNP
     ke  PSP
     xarSakoM    NN
     ko  PSP
     agnipaWa    NNP
-    aXika	QF
-    nahIM	NEG
+    aXika       QF
+    nahIM       NEG
     BA  VM
-    sakI	VAUX
+    sakI        VAUX
     .   SYM
     
     >>> 
