@@ -104,15 +104,16 @@ class wxConvert():
     def convert_conll(self, line):
         """Convert CONLL data"""
         trans_LINES = list()
-        line = line.split("\n")
-        for line_ in line:
-            line_ = line_.split()
-            if not line_:
+        lines = line.split("\n")
+        for line in lines:
+	    line = line.strip()
+            line = line.split("\t")
+            if not line:
                 trans_LINES.append("")
                 continue
-            if len(line_) != 10:
+            if len(line) != 10:
                 sys.stderr.write("Warning: length mismatch at line\n")
-            FORM, LEMMA, FEATS = line_[1], line_[2], line_[5].split("|")
+            FORM, LEMMA, FEATS = line[1], line[2], line[5].split("|")
             vib_id = [idx for idx,feat in enumerate(FEATS) if feat[:4]=="vib-"][0]
             vib = FEATS[vib_id].lstrip("vib-")
             vib = re.split("([+_0-9]+)", vib)
@@ -124,11 +125,11 @@ class wxConvert():
                   continue
                 trans_word = self.transform(word)
                 trans_FEATS.append(trans_word)
-            line_[1] = trans_FEATS[0] if trans_FEATS[0].strip() else "_"
-            line_[2] = trans_FEATS[1] if trans_FEATS[1].strip() else "_"
+            line[1] = trans_FEATS[0] if trans_FEATS[0].strip() else "_"
+            line[2] = trans_FEATS[1] if trans_FEATS[1].strip() else "_"
             FEATS[vib_id] = "vib-%s" %"".join(trans_FEATS[2:])
-            line_[5] = "|".join(FEATS)
-            trans_LINES.append("%s" %"\t".join(line_))
+            line[5] = "|".join(FEATS)
+            trans_LINES.append("%s" %"\t".join(line))
         return "\n".join(trans_LINES)
 
     def convert(self, line):
@@ -141,15 +142,15 @@ class wxConvert():
             return self.convert_conll(line)
         elif self.format_ in ["bio", "tnt"]:
             trans_LINES = list()
-            line = line.split("\n")
-            for line_ in line:
-                line_ = line_.split()
-                if not line_:
+            lines = line.split("\n")
+            for line in lines:
+                line = line.split()
+                if not line:
                     trans_LINES.append("")
                     continue
-                FORM = line_[0]
-                line_[0] = self.transform(FORM)
-                trans_LINES.append("%s" %"\t".join(line_))
+                FORM = line[0]
+                line[0] = self.transform(FORM)
+                trans_LINES.append("%s" %"\t".join(line))
             return "\n".join(trans_LINES)
         else: 
             sys.stderr("FormatError: invalid format :: %s\n" %self.format_)
