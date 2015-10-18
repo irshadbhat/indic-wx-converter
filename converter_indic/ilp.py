@@ -101,10 +101,12 @@ class wxConvert():
 
 	return consen
 
-    def convert_conll(self, line):
+    def convert_conll(self, conll):
         """Convert CONLL data"""
         trans_LINES = list()
-        lines = line.split("\n")
+	if isinstance(conll, unicode):
+	    conll = conll.encode('utf-8')
+        lines = conll.split("\n")
         for line in lines:
 	    line = line.strip()
             line = line.split("\t")
