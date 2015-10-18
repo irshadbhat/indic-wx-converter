@@ -120,8 +120,12 @@ class wxConvert():
             vib = FEATS[vib_id].lstrip("vib-")
             vib = re.split("([+_0-9]+)", vib)
             vib = " ".join(vib).split()
-            trans_FEATS = list()
-            for word in [FORM, LEMMA]+vib:
+	    if not (FORM[0] == "&" and FORM[-1] == ";"):
+		FORM = self.transform(FORM)
+	    if not (LEMMA[0] == "&" and LEMMA[-1] == ";"):
+		LEMMA = self.transform(LEMMA)
+            trans_FEATS = [FORM, LEMMA]
+            for word in vib:
                 if word in ["+", "_"] or word.isdigit():
                   trans_FEATS.append(word)
                   continue
