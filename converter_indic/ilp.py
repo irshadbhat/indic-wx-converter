@@ -109,12 +109,12 @@ class wxConvert():
         lines = conll.split("\n")
         for line in lines:
 	    line = line.strip()
-            line = line.split("\t")
             if not line:
                 trans_LINES.append("")
                 continue
+            line = line.split("\t")
             if len(line) != 10:
-                sys.stderr.write("Warning: length mismatch at line\n")
+                sys.stderr.write("Warning: dimension mismatch (attributes < 10 or > 10) \n")
             FORM, LEMMA, FEATS = line[1], line[2], line[5].split("|")
             vib_id = [idx for idx,feat in enumerate(FEATS) if feat[:4]=="vib-"][0]
             vib = FEATS[vib_id].lstrip("vib-")
