@@ -28,9 +28,9 @@ Example
 
 1. **work with files:**
 
-::
+.. parsed-literal::
 
-    converter-indic --f ssf --t intra --l hin --s utf --i tests/text/hin-utf.txt --o tests/text/hin-wx.txt
+    converter-indic --f ssf --t intra --n --l hin --s utf --i tests/text/hin-utf.txt --o tests/text/hin-wx.txt
 
     --l language  select language (3 letter ISO-639 code)
                     Hindi       : hin
@@ -50,6 +50,7 @@ Example
     --s source    select input-file encoding [utf|wx]
     --f format    select output format [text|ssf|conll|bio|tnt]
     --t ssf-type  specify ssf-type [inter|intra] in case file format (--f) is ssf
+    --n           set this flag for nested ssf
     --i input     <input-file>
     --o output    <output-file>
 
@@ -61,7 +62,7 @@ Example
     >>> 
     >>> # class wxConvert(order="utf2wx", format_="text", lang="hin")
     ... # Parameters: order:str, (default="utf2wx"), source2target encoding [wx2utf|utf2wx]
-    ... #             format_:str, (default="text"), output format [text|ssf|conll|bio|tnt]
+    ... #             format_:str, (default="text"), output format [text|conll|bio|tnt]
     ... #             lang:str, (default="hin"), language parameter [hin|tel|...] (3 letter ISO-639 code)
 
     >>> con = wxConvert(order='utf2wx')  # here default language is hindi and default format is text
