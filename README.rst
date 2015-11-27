@@ -1,5 +1,5 @@
 ======================
-python-converter-indic
+indic-wx-converter
 ======================
 
 Python library for implementing UTF to WX converter and vice-versa for Indian languages.
@@ -10,17 +10,17 @@ Installation
 Download
 ~~~~~~~~
 
-Download **python-converter-indic**  from `github`_.
+Download **indic-wx-converter**  from `github`_.
 
-.. _`github`: https://github.com/irshadbhat/python-converter-indic
+.. _`github`: https://github.com/irshadbhat/indic-wx-converter
 
 Install
 ~~~~~~~
 
 ::
 
-    tar -xvzf python-converter-indic.tar.gz
-    cd python-converter-indic
+    tar -xvzf indic-wx-converter.tar.gz
+    cd indic-wx-converter
     sudo python setup.py install
 
 Example
