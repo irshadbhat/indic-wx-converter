@@ -89,6 +89,7 @@ setup(
     url="https://github.com/irshadbhat/python-converter-indic",
     package_dir={'converter_indic':'converter_indic'},
     packages=['converter_indic'],
+    package_data={'converter_indic': ['mapping/*']},
 
     classifiers=[
         "Topic :: Indian Languages :: Text Processing",

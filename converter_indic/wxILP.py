@@ -26,11 +26,27 @@ __email__      = [
                  ]
 
 import re
+import os
 import sys
 
 class wxilp():
     def __init__(self, lang_tag, order):
         self.lang_tag = lang_tag.lower()
+	file_path = os.path.abspath(__file__).rpartition('/')[0]
+
+        self.norm_tbl = dict()
+        with open('%s/mapping/norm_urd.map' %(file_path)) as fp:
+            for line in fp:
+                sr,tg = line.decode('utf-8').split()
+                self.norm_tbl[ord(sr)] = tg
+
+        self.trans_tbl = dict()
+        with open('%s/mapping/wx_urd.map' %(file_path)) as fp:
+            for line in fp:
+                tg,sr = line.decode('utf-8').split()
+                tg,sr = (tg,sr) if order=='utf2wx' else (sr,tg)
+                self.trans_tbl[ord(sr)] = tg
+
         if order == "utf2wx":
             self.initialize_utf2wx_hash()
         elif order == "wx2utf":
@@ -2581,6 +2597,10 @@ class wxilp():
         """Convert UTF-8 string to Unicode"""
         if not isinstance(unicode_, unicode):
             unicode_ = unicode_.decode('utf-8')
+	if self.lang_tag == 'urd':
+            unicode_ = unicode_.translate(self.norm_tbl)
+            wx = unicode_.translate(self.trans_tbl)
+	    return wx.encode('utf-8')
         unicode_ = self.normalize(unicode_)
         #Convert Unicode values with ISCII values
         iscii = self.unicode2iscii(unicode_)
@@ -2594,6 +2614,9 @@ class wxilp():
         """Convert WX-Roman to ISCII"""
         if not isinstance(wx, unicode):
             wx = wx.decode('utf-8')
+	if self.lang_tag == 'urd':
+            unicode_ = wx.translate(self.trans_tbl)
+	    return unicode_.encode('utf-8')
         #NOTE Map iscii characters (if any) to some highly unlikely strings
         wx = self.isc.sub(lambda m: self.iscii_num[m.group(1)], wx)
         iscii = self.wx2iscii(wx)

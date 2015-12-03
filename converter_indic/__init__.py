@@ -18,8 +18,8 @@ __status__     = "Beta"
 __all__        = ["ilp", "wxILP", "main"]
 
 def main():
-    format_list = ["text", "ssf", "conll", "bio","tnt"]
-    languages = ["hin", "tel", "tam", "mal", "kan", "ben", "ori", "pan", "mar", "nep", "guj", "bod", "kok", "asm"]
+    format_list = 'text ssf conll bio tnt'.split()
+    languages = 'hin tel tam mal kan ben ori pan mar nep guj bod kok asm urd'.split()
     # help messages
     src_enc_help = "select input-file encoding [utf|wx]"
     #trg_enc_help = "select output-file encoding [utf|wx]"
@@ -38,7 +38,8 @@ def main():
                 Gujarati    : guj
                 Bodo        : bod
                 Konkani     : kok
-                Assamese    : asm"""
+                Assamese    : asm
+		Urdu	    : urd"""
     ssf_help = "specify ssf-type [inter|intra] in case file format (--f) is ssf"
 
     # parse command line arguments 
@@ -48,7 +49,6 @@ def main():
     parser.add_argument('--v', action="version", version="%(prog)s 1.5")
     parser.add_argument('--l', metavar='language', dest="lang", choices=languages, default="hin", help="%s" %lang_help)
     parser.add_argument('--s', metavar='source', dest="src_enc", choices=["utf","wx"], default="utf", help="%s" %src_enc_help)
-    #parser.add_argument('--t', metavar='target', dest="trg_enc", choices=["utf","wx"], default="wx", help="%s" %trg_enc_help)
     parser.add_argument('--f', metavar='format', dest="format_", choices=format_list, default="text", help="%s" %format_help)
     parser.add_argument('--t', metavar='ssf-type', dest="ssf_type", choices=["inter","intra"], default=None, help=ssf_help)
     parser.add_argument('--n', dest='nested', action='store_true', help="set this flag for nested ssf")
