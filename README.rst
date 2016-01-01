@@ -204,5 +204,5 @@ Example
 
 ::
     
-    implemented for ssf files
+    implemented for ssf files (intra, inter and nested)
 
