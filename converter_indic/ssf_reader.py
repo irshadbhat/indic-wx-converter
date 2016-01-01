@@ -16,31 +16,31 @@ __email__      = [
 class SSFReader():
     def __init__ (self, sentence):
         self.tokens = list()
-	self.fs_order = list()
+        self.fs_order = list()
         self.nodeList = list()
         self.sentence = sentence
         fs_node = ('af', 'name', 'head', 'chunkId', 'chunkType', 'posn', 'vpos', 'drel', 'coref',
-		'stype', 'voicetype', 'poslcat', 'mtype', 'troot', 'etype', 'etype_root', 'emph', 
-		'esubtype', 'etype_name', 'agr_num', 'hon', 'agr_cas', 'agr_gen') #NOTE add node
+                'stype', 'voicetype', 'poslcat', 'mtype', 'troot', 'etype', 'etype_root', 'emph', 
+                'esubtype', 'etype_name', 'agr_num', 'hon', 'agr_cas', 'agr_gen') #NOTE add node
         nodes = ('id', 'wordForm', 'posTag', 'af', 'name', 'head', 'chunkId', 'chunkType', 'posn', 
-		'vpos', 'drel', 'coref', 'stype', 'voicetype', 'poslcat', 'mtype', 'troot', 'corel', 
-		'parent', 'dmrel', 'etype', 'etype_root', 'emph', 'esubtype', 'etype_name', 'agr_num', 
-		'hon', 'agr_cas', 'agr_gen') #NOTE add node
+                'vpos', 'drel', 'coref', 'stype', 'voicetype', 'poslcat', 'mtype', 'troot', 'corel', 
+                'parent', 'dmrel', 'etype', 'etype_root', 'emph', 'esubtype', 'etype_name', 'agr_num', 
+                'hon', 'agr_cas', 'agr_gen') #NOTE add node
 
         self.node = namedtuple('node', nodes)
-	self.maping = dict(zip(fs_node, range(len(fs_node)))) 
+        self.maping = dict(zip(fs_node, range(len(fs_node)))) 
         self.features = namedtuple('features', ('lemma', 'cat', 'gen', 'num', 'per', 'case', 'vib', 'tam'))
     
     def morphFeatures (self, af):
         """LEMMA, CAT, GEN, NUM, PER, CASE, VIB, TAM"""
-	af = af[1:-1].split(",")
+        af = af[1:-1].split(",")
         assert len(af) == 8 #NOTE no need to process trash!
         return af
 
     def buildNode(self, id_, form_, tag_, pairs_):
         wordForm_, Tag_, name_, head_, posn_, vpos_, chunkId_, chunkType_, depRel_, = [str()]*9 #NOTE add node
         corel_, coref_, parent_, stype_, voicetype_, features_, poslcat_, mtype_, troot_ = [str()]*9
-	etype_, etype_root_, emph_, esubtype_, etype_name_, agr_num_, hon_, agr_cas_, agr_gen_ = [str()]*9 
+        etype_, etype_root_, emph_, esubtype_, etype_name_, agr_num_, hon_, agr_cas_, agr_gen_ = [str()]*9 
         wordForm_, Tag_ = form_, tag_
         for key, value in pairs_.items():
             if key == "af":
@@ -59,17 +59,17 @@ class SSFReader():
                 vpos_ = re.sub("'|\"", '', value)
             elif key == "poslcat":
                 poslcat_ = re.sub("'|\"", '', value)
-	    elif key == "mtype":
+            elif key == "mtype":
                 mtype_ = re.sub("'|\"", '', value)
-	    elif key == "troot":
+            elif key == "troot":
                 troot_ = re.sub("'|\"", '', value)
             elif key == "drel":
                 assert len(value.split(":", 1)) == 2 # no need to process trash! FIXME
                 depRel_, parent_ = re.sub("'|\"", '', value).split(":", 1)
                 assert depRel_ and parent_ # no need to process trash! FIXME
-	    elif key == "coref":
-		try: corel_, coref_ = re.sub("'|\"", '', value).split(":")
-		except ValueError: corel_, coref_ = '', re.sub("'|\"", '', value)
+            elif key == "coref":
+                try: corel_, coref_ = re.sub("'|\"", '', value).split(":")
+                except ValueError: corel_, coref_ = '', re.sub("'|\"", '', value)
             elif key == "stype":
                 stype_ = re.sub("'|\"", '', value)
             elif key == "voicetype":
@@ -93,7 +93,7 @@ class SSFReader():
             elif key == "agr_gen":
                 agr_gen_ = re.sub("'|\"", '', value) #NOTE add node
 
-	self.fs_order.append([self.maping[x] for x in pairs_.keys() if x in self.maping][::-1])
+        self.fs_order.append([self.maping[x] for x in pairs_.keys() if x in self.maping][::-1])
         self.nodeList.append(self.node(id_, wordForm_, Tag_.decode("ascii", 'ignore').encode("ascii"),
             features_, name_, head_, chunkId_, chunkType_, posn_, vpos_, depRel_, coref_,
             stype_, voicetype_, poslcat_, mtype_, troot_, corel_, parent_, self.dmrel_,
@@ -101,12 +101,12 @@ class SSFReader():
 
     def FSPairs(self, FS):
         feats = OrderedDict()
-	self.dmrel_ = False
+        self.dmrel_ = False
         for feat in FS.split():
             if "=" not in feat: continue
-	    if 'dmrel' in feat:
-		self.dmrel_ = True
-		feat = feat.replace("dmrel", "drel")
+            if 'dmrel' in feat:
+                self.dmrel_ = True
+                feat = feat.replace("dmrel", "drel")
             feat = re.sub("af='+", "af='", feat)
             feat = re.sub("af='+", "af='", feat)
             attribute, value = feat.split("=")
@@ -116,7 +116,7 @@ class SSFReader():
 
     def getAnnotations(self):
         for line in self.sentence.split("\n"):
-	    line = line.split('\t')
+            line = line.split('\t')
             if line[0].isdigit():
                 assert len(line) == 4 # no need to process trash! FIXME
                 id_, oBraces_, Tag_ = line[:3]

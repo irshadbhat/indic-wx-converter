@@ -9,7 +9,7 @@ by Rashid Ahmad. This module is a direct coversion of 'IndicCC.pl' script from
 convertor-indic tool-kit.
 
 NOTE: This class generates same results as IndicCC.pl from Rashid's implementation 
-except that there were few minor issues with Perl code which I've fixed in this 
+except that there were few issues/bugs with Perl code which I've fixed in this 
 Python implementation.
 """
 
@@ -31,26 +31,41 @@ import sys
 
 class wxilp():
     def __init__(self, lang_tag, order):
+        self.order = order
         self.lang_tag = lang_tag.lower()
-	file_path = os.path.abspath(__file__).rpartition('/')[0]
+        self.fit()
 
-        self.norm_tbl = dict()
-        with open('%s/mapping/norm_urd.map' %(file_path)) as fp:
-            for line in fp:
-                sr,tg = line.decode('utf-8').split()
-                self.norm_tbl[ord(sr)] = tg
-
-        self.trans_tbl = dict()
-        with open('%s/mapping/wx_urd.map' %(file_path)) as fp:
-            for line in fp:
-                tg,sr = line.decode('utf-8').split()
-                tg,sr = (tg,sr) if order=='utf2wx' else (sr,tg)
-                self.trans_tbl[ord(sr)] = tg
-
-        if order == "utf2wx":
-            self.initialize_utf2wx_hash()
-        elif order == "wx2utf":
-            self.initialize_wx2utf_hash()
+    def fit(self):
+        file_path = os.path.abspath(__file__).rpartition('/')[0]
+        if self.order == "utf2wx":
+            self.WORD_JOINER = u'\u2060'
+            self.SOFT_HYPHEN = u'\u00AD'
+            self.BYTE_ORDER_MARK = u'\uFEFF'
+            self.BYTE_ORDER_MARK_2 = u'\uFFFE'
+            self.ZERO_WIDTH_JOINER = u'\u200D'
+            self.ZERO_WIDTH_NON_JOINER = u'\u200C'
+            if self.lang_tag == 'urd':
+                self.norm_tbl = dict()
+                self.trans_tbl = dict()
+                with open('%s/mapping/norm_urd.map' %(file_path)) as fp:
+                    for line in fp:
+                        sr, tg = line.decode('utf-8').split()
+                        self.norm_tbl[ord(sr)] = tg
+                with open('%s/mapping/urd-wx.map' %(file_path)) as fp:
+                    for line in fp:
+                        sr, tg = line.decode('utf-8').split()
+                        self.trans_tbl[ord(sr)] = tg
+            else:
+                self.initialize_utf2wx_hash()
+        elif self.order == "wx2utf":
+            if self.lang_tag == 'urd':
+                self.trans_tbl = dict()
+                with open('%s/mapping/wx-urd.map' %(file_path)) as fp:
+                    for line in fp:
+                        sr, tg = line.decode('utf-8').split()
+                        self.trans_tbl[ord(sr)] = tg
+            else:
+                self.initialize_wx2utf_hash()
         else:
             sys.stderr.write("EncodingError: invalid source/target encoding\n")
             sys.exit(0)
@@ -1020,14 +1035,6 @@ class wxilp():
         self.num = re.compile(u'(%s)' %'|'.join(['@~%s~@'%i for i in range(0, 90)]))
 
     def initialize_utf2wx_hash(self):
-
-        self.WORD_JOINER = u'\u2060'
-        self.SOFT_HYPHEN = u'\u00AD'
-        self.BYTE_ORDER_MARK = u'\uFEFF'
-        self.BYTE_ORDER_MARK_2 = u'\uFFFE'
-        self.ZERO_WIDTH_JOINER = u'\u200D'
-        self.ZERO_WIDTH_NON_JOINER = u'\u200C'
-
         self.hashc_i2w = {
                 u"\xB3":u"k",
                 u"\xB4":u"K",
@@ -1987,19 +1994,18 @@ class wxilp():
         self.u2i_pn = re.compile(u"([\u0A59-\u0A5B\u0A5E])")
         self.u2i_g = re.compile(u"([\u0A80-\u0AFF])")
 
-    def normalize(self,text):
+    def normalize(self, text):
         """
         Performs some common normalization, which includes: 
         - Byte order mark, word joiner, etc. removal 
         - ZERO_WIDTH_NON_JOINER and ZERO_WIDTH_JOINER removal 
         """
-        text = text.replace(self.BYTE_ORDER_MARK,'')
-        text = text.replace(self.BYTE_ORDER_MARK_2,'')
-        text = text.replace(self.WORD_JOINER,'')
-        text = text.replace(self.SOFT_HYPHEN,'')
-
+        text = text.replace(self.BYTE_ORDER_MARK, '')
+        text = text.replace(self.BYTE_ORDER_MARK_2, '')
+        text = text.replace(self.WORD_JOINER, '')
+        text = text.replace(self.SOFT_HYPHEN, '')
         text = text.replace(self.ZERO_WIDTH_NON_JOINER, '')
-        text = text.replace(self.ZERO_WIDTH_JOINER,'')
+        text = text.replace(self.ZERO_WIDTH_JOINER, '')
 
         return text
 
@@ -2593,15 +2599,80 @@ class wxilp():
         iscii_guj = self.u2i_g.sub(lambda m:self.hashg_u2i.get(m.group(1), u""), unicode_)
         return iscii_guj
 
+    def utf2wx_urd(self, text):
+        #hamza and mada normalizations
+        text = text.replace(u'\u0627\u0653', u'\u0622')
+        text = text.replace(u'\u0648\u0654', u'\u0624')
+        text = text.replace(u'\u06cc\u0654', u'\u0626')
+        text = text.replace(u'\u06d2\u0654', u'\u06d3')
+        text = text.replace(u'\u0627\u0654', u'\u0623')
+        text = text.replace(u'\u06c1\u0654', u'\u06c0')
+        text = text.replace(u'\u06d5\u0654', u'\u06c0')
+
+        # unicode_equivalence normalization
+        text = text.translate(self.norm_tbl)
+
+        # utf to wx mapping
+        text = text.replace(u'\u06A9\u06BE', u'K')
+        text = text.replace(u'\u06AF\u06BE', u'G')
+        text = text.replace(u'\u0686\u06BE', u'C')
+        text = text.replace(u'\u062c\u06BE', u'J')
+        text = text.replace(u'\u0679\u06BE', u'T')
+        text = text.replace(u'\u0688\u06BE', u'D')
+        text = text.replace(u'\u062A\u06BE', u'W')
+        text = text.replace(u'\u062F\u06BE', u'X')
+        text = text.replace(u'\u067E\u06BE', u'P')
+        text = text.replace(u'\u0628\u06BE', u'B')
+        text = text.replace(u'\u0645\u06BE', u'M')
+        text = text.replace(u'\u0646\u06BE', u'N')
+        text = text.replace(u'\u0644\u06BE', u'L')
+        text = text.replace(u'\u0691\u06BE', u'DY')
+        text = text.translate(self.trans_tbl)
+
+        return text
+        
+    def wx2utf_urd(self, text):
+        # wx to utf mapping
+        text = text.replace(u'jyy', u'\u0636')
+        text = text.replace(u'jVY', u'\u0698')
+        text = text.replace(u'QYY', u'\u0655')
+        text = text.replace(u'jYY', u'\u0632')
+        text = text.replace(u'sYY', u'\u0635')
+        text = text.replace(u'EYY', u'\u06D3')
+        text = text.replace(u'jy', u'\u0638')
+        text = text.replace(u'vY', u'\u0624')
+        text = text.replace(u'IY', u'\u0626')
+        text = text.replace(u'aY', u'\u0623')
+        text = text.replace(u'HY', u'\u06C0')
+        text = text.replace(u'QY', u'\u0621')
+        text = text.replace(u'hY', u'\u06BE')
+        text = text.replace(u'qV', u'\u0670')
+        text = text.replace(u'GV', u'\u0656')
+        text = text.replace(u'qf', u'\u064B')
+        text = text.replace(u'qF', u'\u064D')
+        text = text.replace(u'wY', u'\u0637')
+        text = text.replace(u'EY', u'\u0639')
+        text = text.replace(u'gY', u'\u063A')
+        text = text.replace(u'PY', u'\u0641')
+        text = text.replace(u'KY', u'\u062E')
+        text = text.replace(u'jY', u'\u0630')
+        text = text.replace(u'sY', u'\u062B')
+        text = text.replace(u'dY', u'\u0691')
+        text = text.replace(u'DY', u'\u0691\u06BE')
+        text = text.translate(self.trans_tbl)
+
+        return text
+    
     def utf2wx(self, unicode_):
         """Convert UTF-8 string to Unicode"""
         if not isinstance(unicode_, unicode):
             unicode_ = unicode_.decode('utf-8')
-	if self.lang_tag == 'urd':
-            unicode_ = unicode_.translate(self.norm_tbl)
-            wx = unicode_.translate(self.trans_tbl)
-	    return wx.encode('utf-8')
+
         unicode_ = self.normalize(unicode_)
+        if self.lang_tag == 'urd':
+            wx = self.utf2wx_urd(unicode_)
+            return wx.encode('utf-8')
+
         #Convert Unicode values with ISCII values
         iscii = self.unicode2iscii(unicode_)
         #Convert ISCII to WX-Roman
@@ -2609,14 +2680,16 @@ class wxilp():
         #NOTE Consecutive Vowel Normalization
         wx = re.sub(u'[\xA0-\xFA]+', u'', wx)
         return wx.encode('utf-8')
-    
+
     def wx2utf(self, wx):
         """Convert WX-Roman to ISCII"""
         if not isinstance(wx, unicode):
             wx = wx.decode('utf-8')
-	if self.lang_tag == 'urd':
-            unicode_ = wx.translate(self.trans_tbl)
-	    return unicode_.encode('utf-8')
+
+        if self.lang_tag == 'urd':
+            unicode_ = self.wx2utf_urd(wx)
+            return unicode_.encode('utf-8')
+
         #NOTE Map iscii characters (if any) to some highly unlikely strings
         wx = self.isc.sub(lambda m: self.iscii_num[m.group(1)], wx)
         iscii = self.wx2iscii(wx)

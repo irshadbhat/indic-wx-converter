@@ -42,9 +42,9 @@ class wxConvert():
 
     def __init__(self, order="wx2utf", format_="text", lang="hin", ssf_type=None, nested=False):
         self.lang = lang
-	self.nested = nested
+        self.nested = nested
         self.format_ = format_
-	self.ssf_type = ssf_type
+        self.ssf_type = ssf_type
         wxp = wxilp(self.lang, order)
         self.transform = wxp.wx2utf if order=="wx2utf" else wxp.utf2wx
 
@@ -114,11 +114,11 @@ class wxConvert():
     def convert_conll(self, conll):
         """Convert CONLL data"""
         trans_LINES = list()
-	if isinstance(conll, unicode):
-	    conll = conll.encode('utf-8')
+        if isinstance(conll, unicode):
+            conll = conll.encode('utf-8')
         lines = conll.split("\n")
         for line in lines:
-	    line = line.strip()
+            line = line.strip()
             if not line:
                 trans_LINES.append("")
                 continue
@@ -130,10 +130,10 @@ class wxConvert():
             vib = FEATS[vib_id].lstrip("vib-")
             vib = re.split("([+_0-9]+)", vib)
             vib = " ".join(vib).split()
-	    if not (FORM[0] == "&" and FORM[-1] == ";"):
-		FORM = self.transform(FORM)
-	    if not (LEMMA[0] == "&" and LEMMA[-1] == ";"):
-		LEMMA = self.transform(LEMMA)
+            if not (FORM[0] == "&" and FORM[-1] == ";"):
+                FORM = self.transform(FORM)
+            if not (LEMMA[0] == "&" and LEMMA[-1] == ";"):
+                LEMMA = self.transform(LEMMA)
             trans_FEATS = [FORM, LEMMA]
             for word in vib:
                 if word in ["+", "_"] or word.isdigit():
@@ -152,8 +152,8 @@ class wxConvert():
         if self.format_=="text":
             return self.transform(line)
         elif self.format_=="ssf":
-	    self.special = set(['null', 'NULL', 'COMMA', 'SINGLE_QUOTE', '-JOIN'])
-	    return self.convert_ssf(line)
+            self.special = set(['null', 'NULL', 'COMMA', 'SINGLE_QUOTE', '-JOIN'])
+            return self.convert_ssf(line)
         elif self.format_=="conll":
             return self.convert_conll(line)
         elif self.format_ in ["bio", "tnt"]:

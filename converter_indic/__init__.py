@@ -39,7 +39,7 @@ def main():
                 Bodo        : bod
                 Konkani     : kok
                 Assamese    : asm
-		Urdu	    : urd"""
+                Urdu        : urd"""
     ssf_help = "specify ssf-type [inter|intra] in case file format (--f) is ssf"
 
     # parse command line arguments 
