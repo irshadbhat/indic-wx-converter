@@ -367,7 +367,8 @@ class wxilp():
                 u"\xFA":u"\u0C6F",      #Digit 9 
                 }
         self.hashp_i2u = {
-                u"\xA1":u"\u0A01",      #Vowel-modifier CHANDRABINDU
+		u"\xA1":u"\u0A70",      #Vowel-modifier GURMUKHI TIPPI  NOTE Added -Irshad
+                #u"\xA1":u"\u0A01",	#Vowel-modifier CHANDRABINDU
                 u"\xA2":u"\u0A02",      #Vowel-modifier ANUSWAR
                 u"\xA3":u"\u0A03",      #Vowel-modifier VISARG
                 u"\xA4":u"\u0A05",      #Vowel A
@@ -452,6 +453,7 @@ class wxilp():
                 u"\xF8":u"\u0A6D",      #Digit 7
                 u"\xF9":u"\u0A6E",      #Digit 8
                 u"\xFA":u"\u0A6F",      #Digit 9 
+		u"\xFB":u"\u0A71"       #GURMUKHI ADDAK  NOTE Added -Irshad
                 } 
         self.hashk_i2u = {
 		u"\xA2":u"\u0C82",
@@ -964,6 +966,7 @@ class wxilp():
         self.ccceVmd = re.compile(u"([%s])([%s])([%s])eV([MHz])" %(const, const, const))
 
         self.ceV = re.compile(u"([%s])eV" %const)
+        self.cZeV = re.compile(u"([%s])ZeV" %const)  #NOTE consonant+ZeV case added for Bengali -Irshad
         self.cceV = re.compile(u"([%s])([%s])eV" %(const, const))
         self.ccceV = re.compile(u"([%s])([%s])([%s])eV" %(const, const, const))
 
@@ -984,6 +987,7 @@ class wxilp():
         self.cccoVmd = re.compile(u"([%s])([%s])([%s])oV([MHz])" %(const, const, const))
 
         self.coV = re.compile(u"([%s])oV" %const)
+        self.cZoV = re.compile(u"([%s])ZoV" %const)  #NOTE consonant+ZoV case added for Bengali -Irshad
         self.ccoV = re.compile(u"([%s])([%s])oV" %(const, const))
         self.cccoV = re.compile(u"([%s])([%s])([%s])oV" %(const, const, const))
 
@@ -1029,7 +1033,7 @@ class wxilp():
         #NOTE Handle pre-present iscii characters
         self.iscii_num = dict(zip([unichr(i) for i in range(161, 251)], ['@~%s~@'%i for i in range(0, 90)]))
         self.num_iscii = dict(zip(['@~%s~@'%i for i in range(0, 90)], [unichr(i) for i in range(161, 251)]))
-        self.isc = re.compile(u'([\xA1-\xFA])')
+        self.isc = re.compile(u'([\xA1-\xFB])') #NOTE \xFB Added -Irshad
         self.num = re.compile(u'(%s)' %'|'.join(['@~%s~@'%i for i in range(0, 90)]))
 
     def initialize_utf2wx_hash(self):
@@ -1318,7 +1322,7 @@ class wxilp():
                 u"\u0C6F":u"\xFA",
                 }
         self.hashp_u2i = { 
-                #u"\x0A01":u"\xA1",     #Vowel-modifier CHANDRABINDU -Rashid
+                u"\u0A01":u"\xA1",	#Vowel-modifier CHANDRABINDU NOTE Added -Rashid
                 u"\u0A02":u"\xA2",      #Vowel-modifier ANUSWAR
                 u"\u0A04":u"",
                 u"\u0A05":u"\xA4",      #Vowel A
@@ -2013,6 +2017,8 @@ class wxilp():
         MHz = u'M' in my_string or u'H' in my_string or u'z' in my_string 
         eV, EY, oV, OY = u'eV' in my_string, u'EY' in my_string, u'oV' in my_string, u'OY' in my_string
         q, l, n, rY, a = u'q' in my_string, u'l' in my_string, u'n' in my_string, u'rY' in my_string, u'a' in my_string
+        if self.lang_tag == 'pan':  #NOTE Added -Irshad
+            my_string = my_string.replace(u'EY', self.hashv_w2i[u"E"]+'Y')
         if _u_:
             my_string = re.sub(u'k_ReV([MHz])', lambda m: self.hashc_w2i[u"k"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"R"]+
                         self.hashm_w2i[u"eV"]+self.hashmd_w2i[m.group(1)], my_string)
@@ -2188,6 +2194,8 @@ class wxilp():
                             self.hashmd_w2i[m.group(3)], my_string)
             my_string = self.cca.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)], my_string)
         if eV:
+            if Z: #NOTE added
+                my_string = self.cZeV.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+self.hashm_w2i[u"eV"], my_string)
             if MHz:
                 my_string = self.ceVmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"eV"]
                             +self.hashmd_w2i[m.group(2)], my_string)
@@ -2197,6 +2205,8 @@ class wxilp():
                 my_string = self.cEYmd.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"EY"]+self.hashmd_w2i[m.group(2)], my_string)
             my_string = self.cEY.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"EY"], my_string)
         if oV:
+            if Z: #NOTE added
+                my_string = self.cZoV.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+self.hashm_w2i[u"oV"], my_string)
             if MHz:
                 my_string = self.coVmd.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"oV"]+self.hashmd_w2i[m.group(2)], my_string)
             my_string = self.coV.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"oV"], my_string)
