@@ -260,8 +260,8 @@ class wxilp():
                 u"\xE7":u"\u0949",      #Vowel Sign AWE (Devanagari Script)
                 u"\xE8":u"\u094D",      #Vowel Omission Sign (Halant)
                 u"\xE9":u"\u093C",      #Diacritic Sign (Nukta)
-                u"\xEA":u"\u0964",      #Full Stop (Viram, Northern Scripts)
-                #u"\xEA":u".",          #Full Stop (Viram, Northern Scripts)
+                #u"\xEA":u"\u0964",	#Full Stop (Viram, Northern Scripts)
+                u"\xEA":u".",		#Full Stop (Viram, Northern Scripts)
                 u"\xF1":u"\u0966",      #Digit 0
                 u"\xF2":u"\u0967",      #Digit 1
                 u"\xF3":u"\u0968",      #Digit 2
@@ -440,7 +440,8 @@ class wxilp():
                 u"\xE7":u"\u0A49",      #Vowel Sign AWE (Devanagari Script)
                 u"\xE8":u"\u0A4D",      #Vowel Omission Sign (Halant)
                 u"\xE9":u"\u0A3C",      #Diacritic Sign (Nukta)
-                u"\xEA":u"\u0964",      #Full Stop (Viram, Northern Scripts)
+                #u"\xEA":u"\u0964",	#Full Stop (Viram, Northern Scripts)
+                u"\xEA":u".",		#Full Stop (Viram, Northern Scripts)
                 u"\xF1":u"\u0A66",      #Digit 0
                 u"\xF2":u"\u0A67",      #Digit 1
                 u"\xF3":u"\u0A68",      #Digit 2
@@ -453,90 +454,86 @@ class wxilp():
                 u"\xFA":u"\u0A6F",      #Digit 9 
                 } 
         self.hashk_i2u = {
-                u"\xA2":u"\u0C82",      #Vowel-modifier ANUSWAR
-                u"\xA3":u"\u0C83",      #Vowel-modifier VISARG
-                u"\xA4":u"\u0C85",      #Vowel A
-                u"\xA5":u"\u0C86",      #Vowel AA
-                u"\xA6":u"\u0C87",      #Vowel I
-                u"\xA7":u"\u0C88",      #Vowel II
-                u"\xA8":u"\u0C89",      #Vowel U
-                u"\xA9":u"\u0C8A",      #Vowel UU
-                u"\xAA":u"\u0C8B",      #Vowel RI
-                u"\xAB":u"\u0C0E",      #Vowel E
-                u"\xAC":u"\u0C0F",      #Vowel EY
-                u"\xAD":u"\u0C10",      #Vowel AI
-                u"\xB2":u"\u0C0D",      #Vowel AYE (Devanagari Script)
-                u"\xAF":u"\u0C12",      #Vowel O
-                u"\xB0":u"\u0C13",      #Vowel OW
-                u"\xB1":u"\u0C14",      #Vowel AU
-                u"\xB2":u"\u0C11",      #Vowel AWE
-                u"\xB3":u"\u0C15",      #Consonant KA
-                u"\xB4":u"\u0C16",      #Consonant KHA
-                u"\xB5":u"\u0C17",      #Consonant GA
-                u"\xB6":u"\u0C18",      #Consonant GHA
-                u"\xB7":u"\u0C19",      #Consonant NGA
-                u"\xB8":u"\u0C1A",      #Consonant CHA
-                u"\xB9":u"\u0C1B",      #Consonant CHHA
-                u"\xBA":u"\u0C1C",      #Consonant JA
-                u"\xBB":u"\u0C1D",      #Consonant JHA
-                u"\xBC":u"\u0C1E",      #Consonant JNA
-                u"\xBD":u"\u0C1F",      #Consonant Hard TA
-                u"\xBE":u"\u0C20",      #Consonant Hard THA
-                u"\xBF":u"\u0C21",      #Consonant Hard DA
-                u"\xC0":u"\u0C22",      #Consonant Hard DHA
-                u"\xC1":u"\u0C23",      #Consonant Hard NA
-                u"\xC2":u"\u0C24",      #Consonant Soft TA
-                u"\xC3":u"\u0C25",      #Consonant Soft THA
-                u"\xC4":u"\u0C26",      #Consonant Soft DA
-                u"\xC5":u"\u0C27",      #Consonant Soft DHA
-                u"\xC6":u"\u0C28",      #Consonant Soft NA
-                u"\xC7":u"\u0C29",      #Consonant NA (Tamil)
-                u"\xC8":u"\u0C2A",      #Consonant PA
-                u"\xC9":u"\u0C2B",      #Consonant PHA
-                u"\xCA":u"\u0C2C",      #Consonant BA
-                u"\xCB":u"\u0C2D",      #Consonant BHA
-                u"\xCC":u"\u0C2E",      #Consonant MA
-                u"\xCD":u"\u0C2F",      #Consonant YA
-                u"\xCE":u"",            #Consonant JYA (Bangla, Assamese & Orriya)
-                u"\xCF":u"\u0C30",      #Consonant RA
-                u"\xD0":u"\u0C31",      #Consonant Hard RA (Southern Script)
-                u"\xD1":u"\u0C32",      #Consonant LA
-                u"\xD2":u"\u0C33",      #Consonant Hard LA
-                u"\xD3":u"\u0C34",      #Consonant ZHA (Tamil & Malyalam)
-                u"\xD4":u"\u0C35",      #Consonant VA
-                u"\xD5":u"\u0C36",      #Consonant SHA
-                u"\xD6":u"\u0C37",      #Consonant Hard SHA
-                u"\xD7":u"\u0C38",      #Consonant SA
-                u"\xD8":u"\u0C39",      #Consonant HA
-                u"\xD9":u"",            #Consonant INV
-                u"\xDA":u"\u0C3E",      #Vowel Sign AA
-                u"\xDB":u"\u0C3F",      #Vowel Sign I
-                u"\xDC":u"\u0C40",      #Vowel Sign II
-                u"\xDD":u"\u0C41",      #Vowel Sign U
-                u"\xDE":u"\u0C42",      #Vowel Sign UU
-                u"\xDF":u"\u0C43",      #Vowel Sign RI
-                u"\xE0":u"\u0C46",      #Vowel Sign E (Southern Scripts)
-                u"\xE1":u"\u0C47",      #Vowel Sign EY
-                u"\xE2":u"\u0C48",      #Vowel Sign AI
-                u"\xE3":u"\u0C45",      #Vowel Sign AYE (Devanagari Script)
-                u"\xE4":u"\u0C4A",      #Vowel Sign O
-                u"\xE5":u"\u0C4B",      #Vowel Sign OW
-                u"\xE6":u"\u0C4C",      #Vowel Sign AU
-                u"\xE7":u"\u0C49",      #Vowel Sign AWE (Devanagari Script)
-                u"\xE8":u"\u0C4D",      #Vowel Omission Sign (Halant)
-                u"\xE9":u"\u0C3C",      #Diacritic Sign (Nukta)
-                #u"\xEA":u"\u0C64",     #Full Stop (Viram, Northern Scripts)
-                u"\xEA":u".",           #Full Stop (Viram, Northern Scripts)
-                u"\xF1":u"\u0C66",      #Digit 0
-                u"\xF2":u"\u0C67",      #Digit 1
-                u"\xF3":u"\u0C68",      #Digit 2
-                u"\xF4":u"\u0C69",      #Digit 3
-                u"\xF5":u"\u0C6A",      #Digit 4
-                u"\xF6":u"\u0C6B",      #Digit 5
-                u"\xF7":u"\u0C6C",      #Digit 6
-                u"\xF8":u"\u0C6D",      #Digit 7
-                u"\xF9":u"\u0C6E",      #Digit 8
-                u"\xFA":u"\u0C6F",      #Digit 9 
+		u"\xA2":u"\u0C82",
+                u"\xA3":u"\u0C83",
+                u"\xA4":u"\u0C85",
+                u"\xA5":u"\u0C86",
+                u"\xA6":u"\u0C87",
+                u"\xA7":u"\u0C88",
+                u"\xA8":u"\u0C89",
+                u"\xA9":u"\u0C8A",
+                u"\xAA":u"\u0C8B",
+                u"\xAE":u"\u0C8D",
+                u"\xAB":u"\u0C8E",
+                u"\xAC":u"\u0C8F",
+                u"\xAD":u"\u0C90",
+                u"\xB2":u"\u0C91",
+                u"\xAF":u"\u0C92",
+                u"\xB0":u"\u0C93",
+                u"\xB1":u"\u0C94",
+                u"\xB3":u"\u0C95",
+                u"\xB4":u"\u0C96",
+                u"\xB5":u"\u0C97",
+                u"\xB6":u"\u0C98",
+                u"\xB7":u"\u0C99",
+                u"\xB8":u"\u0C9A",
+                u"\xB9":u"\u0C9B",
+                u"\xBA":u"\u0C9C",
+                u"\xBB":u"\u0C9D",
+                u"\xBC":u"\u0C9E",
+                u"\xBD":u"\u0C9F",
+                u"\xBE":u"\u0CA0",
+                u"\xBF":u"\u0CA1",
+                u"\xC0":u"\u0CA2",
+                u"\xC1":u"\u0CA3",
+                u"\xC2":u"\u0CA4",
+                u"\xC3":u"\u0CA5",
+                u"\xC4":u"\u0CA6",
+                u"\xC5":u"\u0CA7",
+                u"\xC6":u"\u0CA8",
+                u"\xC7":u"\u0CA9",
+                u"\xC8":u"\u0CAA",
+                u"\xC9":u"\u0CAB",
+                u"\xCA":u"\u0CAC",
+                u"\xCB":u"\u0CAD",
+                u"\xCC":u"\u0CAE",
+                u"\xCD":u"\u0CAF",
+                u"\xCF":u"\u0CB0",
+                u"\xD0":u"\u0CB1",
+                u"\xD1":u"\u0CB2",
+                u"\xD2":u"\u0CB3",
+                u"\xD3":u"\u0CB4",
+                u"\xD4":u"\u0CB5",
+                u"\xD5":u"\u0CB6",
+                u"\xD6":u"\u0CB7",
+                u"\xD7":u"\u0CB8",
+                u"\xD8":u"\u0CB9",
+                u"\xE9":u"\u0CBC",
+                u"\xDA":u"\u0CBE",
+                u"\xDB":u"\u0CBF",
+                u"\xDC":u"\u0CC0",
+                u"\xDD":u"\u0CC1",
+                u"\xDE":u"\u0CC2",
+                u"\xDF":u"\u0CC3",
+                u"\xE0":u"\u0CC6",
+                u"\xE1":u"\u0CC7",
+                u"\xE2":u"\u0CC8",
+                u"\xE7":u"\u0CC9",
+                u"\xE4":u"\u0CCA",
+                u"\xE5":u"\u0CCB",
+                u"\xE6":u"\u0CCC",
+                u"\xE8":u"\u0CCD",
+                u"\xEA":u".",
+                u"\xF1":u"\u0CE6",
+                u"\xF2":u"\u0CE7",
+                u"\xF3":u"\u0CE8",
+                u"\xF4":u"\u0CE9",
+                u"\xF5":u"\u0CEA",	    
+                u"\xF6":u"\u0CEB",	    
+                u"\xF7":u"\u0CEC",	    
+                u"\xF8":u"\u0CED",	    
+                u"\xF9":u"\u0CEE",	    
+                u"\xFA":u"\u0CEF"
                 }
         self.hashm_i2u = {
                 u"\xA2":u"\u0D02",      #Vowel-modifier ANUSWAR
@@ -693,7 +690,8 @@ class wxilp():
                 u"\xE7":u"",            #Vowel Sign AWE (Devanagari Script)
                 u"\xE8":u"\u09CD",      #Vowel Omission Sign (Halant)
                 u"\xE9":u"\u09BC",
-                u"\xEA":u"\u0964",      #Full Stop (Viram, Northern Scripts)
+                #u"\xEA":u"\u0964",	#Full Stop (Viram, Northern Scripts)
+                u"\xEA":u".",		#Full Stop (Viram, Northern Scripts)
                 u"\xF1":u"\u09E6",      #Digit 0
                 u"\xF2":u"\u09E7",      #Digit 1
                 u"\xF3":u"\u09E8",      #Digit 2
@@ -707,7 +705,7 @@ class wxilp():
                 }    
         self.hashcta_i2u = {
                 #u"\xA2":u"\u0B82",     #Vowel-modifier ANUSWAR commented 14-March-11 -Rashid
-                u"\xA2":u"\u0BAE\u0BCD",        #Vowel-modifier ANUSWAR is m + halant
+                u"\xA2":u"\u0BAE\u0BCD",#Vowel-modifier ANUSWAR is m + halant
                 u"\xA3":u"\u0B83",      #Vowel-modifier VISARG
                 u"\xA4":u"\u0B85",      #Vowel A
                 u"\xA5":u"\u0B86",      #Vowel AA
@@ -865,8 +863,8 @@ class wxilp():
                 u"\xE7":u"",            #Vowel Sign AWE (Devanagari Script)
                 u"\xE8":u"\u0B4D",      #Vowel Omission Sign (Halant)
                 u"\xE9":u"\u0B3C",      #Diacritic Sign (Nukta)
-                u"\xEA":u"\u0964",      #Full Stop (Viram, Northern Scripts)
-                #u"\xEA":u".",          #Full Stop (Viram, Northern Scripts)
+                #u"\xEA":u"\u0964",	#Full Stop (Viram, Northern Scripts)
+                u"\xEA":u".",		#Full Stop (Viram, Northern Scripts)
                 u"\xF1":u"\u0B66",      #Digit 0
                 u"\xF2":u"\u0B67",      #Digit 1
                 u"\xF3":u"\u0B68",      #Digit 2
@@ -2702,3 +2700,85 @@ class wxilp():
         unicode_ = self.num.sub(lambda m: self.num_iscii[m.group(1)], unicode_)
         #Convert Unicode to utf-8
         return unicode_.encode('utf-8')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
