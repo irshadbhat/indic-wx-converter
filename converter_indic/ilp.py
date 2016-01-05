@@ -13,7 +13,7 @@ This module is a UTF (Indian Scripts) to Roman (WX) convertor and vice-versa tha
 
 """
 
-__version__    = "1.5"
+__version__    = "1.0"
 __license__    = "MIT"
 __author__     = "Irshad Ahmad"
 __maintainer__ = "Irshad Ahmad"
