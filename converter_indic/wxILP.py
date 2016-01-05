@@ -1507,16 +1507,16 @@ class wxilp():
                 u"\u0CEE":u"\xF9",
                 u"\u0CEF":u"\xFA",
                 }
-        self.unicode_norm_hashk_u2i = {
-                u"\u0958":u"\u0915",
-                u"\u0959":u"\u0916",
-                u"\u095A":u"\u0917",
-                u"\u095B":u"\u091C",
-                u"\u095C":u"\u0921",
-                u"\u095D":u"\u0922",
-                u"\u095E":u"\u092B",
-                u"\u095F":u"\u092F",
-                }
+        #self.unicode_norm_hashk_u2i = {
+        #        u"\u0958":u"\u0915",
+        #        u"\u0959":u"\u0916",
+        #        u"\u095A":u"\u0917",
+        #        u"\u095B":u"\u091C",
+        #        u"\u095C":u"\u0921",
+        #        u"\u095D":u"\u0922",
+        #        u"\u095E":u"\u092B",
+        #        u"\u095F":u"\u092F",
+        #        }
         self.hashm_u2i = { 
                 u"\u0D02":u"\xA2",      #Vowel-modifier ANUSWAR
                 u"\u0D03":u"\xA3",      #Vowel-modifier VISARG
@@ -2571,9 +2571,9 @@ class wxilp():
     
     def unicode2iscii_kan(self, unicode_):
         # Normalize Unicode values (NUKTA variations), needs to be modified yet, PAWAN
-        iscii_kan = self.u2i_kn.sub(lambda m:self.unicode_norm_hashk_u2i.get(m.group(1), u""), unicode_)
+        #iscii_kan = self.u2i_kn.sub(lambda m:self.unicode_norm_hashk_u2i.get(m.group(1), u""), unicode_)
         # Convert Unicode values to ISCII values
-        iscii_kan = self.u2i_k.sub(lambda m:self.hashk_u2i.get(m.group(1), u""), iscii_kan)
+        iscii_kan = self.u2i_k.sub(lambda m:self.hashk_u2i.get(m.group(1), u""), unicode_)
         return iscii_kan
     
     def unicode2iscii_mal(self, unicode_):
@@ -2703,92 +2703,7 @@ class wxilp():
         iscii = self.wx2iscii(wx)
         # Convert ISCII to Unicode
         unicode_ = self.iscii2unicode(iscii)
-        # Marathi uses "." instead of "danda"
-        if self.lang_tag == "mar":
-            unicode_ = unicode_.replace(u"\u0964", u".")
         #NOTE Convert back the mapped iscii characters
         unicode_ = self.num.sub(lambda m: self.num_iscii[m.group(1)], unicode_)
         #Convert Unicode to utf-8
         return unicode_.encode('utf-8')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
