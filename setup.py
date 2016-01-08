@@ -3,20 +3,18 @@
 
 from __future__ import print_function
 
+import sys
 import os.path
 import warnings
-import sys
+from setuptools import setup
 
 try:
-    from setuptools import setup
     setuptools_available = True
 except ImportError:
     from distutils.core import setup
     setuptools_available = False
 
 try:
-    # This will create an exe that needs Microsoft Visual C++ 2008
-    # Redistributable Package
     import py2exe
 except ImportError:
     if len(sys.argv) >= 2 and sys.argv[1] == 'py2exe':
@@ -46,10 +44,7 @@ if len(sys.argv) >= 2 and sys.argv[1] == 'py2exe':
     params = py2exe_params
 else:
     files_spec = [
-        ('etc/bash_completion.d', ['converter-indic.bash-completion']),
-        ('etc/fish/completions', ['converter-indic.fish']),
-        ('share/doc/converter-indic', ['README.txt']),
-        ('share/man/man1', ['converter-indic.1'])
+        ('share/doc/converter-indic', ['README.rst'])
     ]
     root = os.path.dirname(os.path.abspath(__file__))
     data_files = []
@@ -65,10 +60,7 @@ else:
     params = {
         'data_files': data_files,
     }
-    if setuptools_available:
-        params['entry_points'] = {'console_scripts': ['converter-indic = converter_indic:main']}
-    else:
-        params['scripts'] = ['bin/converter-indic']
+    params['entry_points'] = {'console_scripts': ['converter-indic = converter_indic:main']}
 
 # Get the version from youtube_dl/version.py without importing the package
 exec(compile(open('converter_indic/version.py').read(),
