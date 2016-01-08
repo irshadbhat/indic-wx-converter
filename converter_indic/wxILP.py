@@ -2573,7 +2573,7 @@ class wxilp():
         # Normalize Unicode values (NUKTA variations), needs to be modified yet, PAWAN
         #iscii_kan = self.u2i_kn.sub(lambda m:self.unicode_norm_hashk_u2i.get(m.group(1), u""), unicode_)
         # Convert Unicode values to ISCII values
-        iscii_kan = self.u2i_k.sub(lambda m:self.hashk_u2i.get(m.group(1), u""), iscii_kan)
+        iscii_kan = self.u2i_k.sub(lambda m:self.hashk_u2i.get(m.group(1), u""), unicode_)
         return iscii_kan
     
     def unicode2iscii_mal(self, unicode_):
