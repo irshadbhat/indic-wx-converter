@@ -37,13 +37,15 @@ class wxilp():
 
     def fit(self):
         file_path = os.path.abspath(__file__).rpartition('/')[0]
+        self.punctuation = r'!"#$%&\'()*+,-./:;<=>?@\[\\\]^_`{|}~'
+
+        #NOTE Handle iscii characters
+        self.iscii_num = dict(zip([unichr(i) for i in range(161, 251)], ['\x03%s\x04' %(unichr(i)) for i in range(300, 390)]))
+        self.num_iscii = dict(zip(['\x03%s\x04' %(unichr(i)) for i in range(300, 390)], [unichr(i) for i in range(161, 251)]))
+        self.mask_isc = re.compile(u'([\xA1-\xFB])') 
+        self.unmask_isc = re.compile(u'(%s)' %'|'.join(['\x03%s\x04' %(unichr(i)) for i in range(300, 390)]))
+
         if self.order == "utf2wx":
-            self.WORD_JOINER = u'\u2060'
-            self.SOFT_HYPHEN = u'\u00AD'
-            self.BYTE_ORDER_MARK = u'\uFEFF'
-            self.BYTE_ORDER_MARK_2 = u'\uFFFE'
-            self.ZERO_WIDTH_JOINER = u'\u200D'
-            self.ZERO_WIDTH_NON_JOINER = u'\u200C'
             if self.lang_tag == 'urd':
                 self.norm_tbl = dict()
                 self.trans_tbl = dict()
@@ -185,6 +187,18 @@ class wxilp():
                 u"M":u"\xA2",
                 u"H":u"\xA3",
                 }
+        self.digits_w2i = {
+                u"0":u"\xF1",
+                u"1":u"\xF2",
+                u"2":u"\xF3",
+                u"3":u"\xF4",
+                u"4":u"\xF5",
+                u"5":u"\xF6",
+                u"6":u"\xF7",
+                u"7":u"\xF8",
+                u"8":u"\xF9",
+                u"9":u"\xFA",
+                }
         self.hashh_i2u = {
                 u"\xA1":u"\u0901",      #Vowel-modifier CHANDRABINDU
                 u"\xA2":u"\u0902",      #Vowel-modifier ANUSWAR
@@ -232,7 +246,6 @@ class wxilp():
                 u"\xCB":u"\u092D",      #Consonant BHA
                 u"\xCC":u"\u092E",      #Consonant MA
                 u"\xCD":u"\u092F",      #Consonant YA
-                u"\xCE":u"",            #Consonant JYA (Bangla, Assamese & Orriya)
                 u"\xCF":u"\u0930",      #Consonant RA
                 u"\xD0":u"\u0931",      #Consonant Hard RA (Southern Script)
                 u"\xD1":u"\u0932",      #Consonant LA
@@ -243,7 +256,6 @@ class wxilp():
                 u"\xD6":u"\u0937",      #Consonant Hard SHA
                 u"\xD7":u"\u0938",      #Consonant SA
                 u"\xD8":u"\u0939",      #Consonant HA
-                u"\xD9":u"",            #Consonant INV
                 u"\xDA":u"\u093E",      #Vowel Sign AA
                 u"\xDB":u"\u093F",      #Vowel Sign I
                 u"\xDC":u"\u0940",      #Vowel Sign II
@@ -260,8 +272,8 @@ class wxilp():
                 u"\xE7":u"\u0949",      #Vowel Sign AWE (Devanagari Script)
                 u"\xE8":u"\u094D",      #Vowel Omission Sign (Halant)
                 u"\xE9":u"\u093C",      #Diacritic Sign (Nukta)
-                #u"\xEA":u"\u0964",	#Full Stop (Viram, Northern Scripts)
-                u"\xEA":u".",		#Full Stop (Viram, Northern Scripts)
+                #u"\xEA":u"\u0964",     #Full Stop (Viram, Northern Scripts)
+                u"\xEA":u".",           #Full Stop (Viram, Northern Scripts)
                 u"\xF1":u"\u0966",      #Digit 0
                 u"\xF2":u"\u0967",      #Digit 1
                 u"\xF3":u"\u0968",      #Digit 2
@@ -288,12 +300,10 @@ class wxilp():
                 u"\xAC":u"\u0C0F",      #Vowel EY
                 u"\xAD":u"\u0C10",      #Vowel AI
                 #u"\xB2":u"\u090D",     #Vowel AYE (Devanagari Script) 7-Mar-11 -Rashid
-                u"\xB2":u"",            #Vowel AYE (Devanagari Script)
                 u"\xAF":u"\u0C12",      #Vowel O
                 u"\xB0":u"\u0C13",      #Vowel OW
                 u"\xB1":u"\u0C14",      #Vowel AU
                 #u"\xB2":u"\u0911",     #Vowel AWE 7-Mar-11 -Rashid
-                u"\xB2":u"",            #Vowel AWE
                 u"\xB3":u"\u0C15",      #Consonant KA
                 u"\xB4":u"\u0C16",      #Consonant KHA
                 u"\xB5":u"\u0C17",      #Consonant GA
@@ -315,26 +325,22 @@ class wxilp():
                 u"\xC5":u"\u0C27",      #Consonant Soft DHA
                 u"\xC6":u"\u0C28",      #Consonant Soft NA
                 #u"\xC7":u"\u0929",     #Consonant NA (Tamil) 28-Feb-11 -Rashid
-                u"\xC7":u"",            #Consonant NA (Tamil)
                 u"\xC8":u"\u0C2A",      #Consonant PA
                 u"\xC9":u"\u0C2B",      #Consonant PHA
                 u"\xCA":u"\u0C2C",      #Consonant BA
                 u"\xCB":u"\u0C2D",      #Consonant BHA
                 u"\xCC":u"\u0C2E",      #Consonant MA
                 u"\xCD":u"\u0C2F",      #Consonant YA
-                u"\xCE":u"",            #Consonant JYA (Bangla, Assamese & Orriya)
                 u"\xCF":u"\u0C30",      #Consonant RA
                 u"\xD0":u"\u0C31",      #Consonant Hard RA (Southern Script)
                 u"\xD1":u"\u0C32",      #Consonant LA
                 u"\xD2":u"\u0C33",      #Consonant Hard LA
                 #u"\xD3":u"\u0934",     #Consonant LLLA 7-Mar-11 -Rashid
-                u"\xD3":u"",            #Consonant LLLA
                 u"\xD4":u"\u0C35",      #Consonant VA
                 u"\xD5":u"\u0C36",      #Consonant SHA
                 u"\xD6":u"\u0C37",      #Consonant Hard SHA
                 u"\xD7":u"\u0C38",      #Consonant SA
                 u"\xD8":u"\u0C39",      #Consonant HA
-                u"\xD9":u"",            #Consonant INV
                 u"\xDA":u"\u0C3E",      #Vowel Sign AA
                 u"\xDB":u"\u0C3F",      #Vowel Sign I
                 u"\xDC":u"\u0C40",      #Vowel Sign II
@@ -345,15 +351,12 @@ class wxilp():
                 u"\xE1":u"\u0C47",      #Vowel Sign EY
                 u"\xE2":u"\u0C48",      #Vowel Sign AI
                 #u"\xE3":u"\u0945",     #Vowel Sign AYE (Devanagari Script) 7-Mar-11 -Rashid
-                u"\xE3":u"",            #Vowel Sign AYE (Devanagari Script)
                 u"\xE4":u"\u0C4A",      #Vowel Sign O
                 u"\xE5":u"\u0C4B",      #Vowel Sign OW
                 u"\xE6":u"\u0C4C",      #Vowel Sign AU
                 #u"\xE7":u"\u0949",     #Vowel Sign AWE (Devanagari Script) 7-Mar-11 -Rashid
-                u"\xE7":u"",            #Vowel Sign AWE (Devanagari Script)
                 u"\xE8":u"\u0C4D",      #Vowel Omission Sign (Halant)
                 #u"\xE9":u"\u093C",     #Diacritic Sign (Nukta) 7-Mar-11 -Rashid
-                u"\xE9":u"",            #Diacritic Sign (Nukta)
                 u"\xEA":u".",           #Full Stop (Viram, Northern Scripts)
                 u"\xF1":u"\u0C66",      #Digit 0
                 u"\xF2":u"\u0C67",      #Digit 1
@@ -367,8 +370,8 @@ class wxilp():
                 u"\xFA":u"\u0C6F",      #Digit 9 
                 }
         self.hashp_i2u = {
-		u"\xA1":u"\u0A70",      #Vowel-modifier GURMUKHI TIPPI  NOTE Added -Irshad
-                #u"\xA1":u"\u0A01",	#Vowel-modifier CHANDRABINDU
+                u"\xA1":u"\u0A70",      #Vowel-modifier GURMUKHI TIPPI  NOTE Added -Irshad
+                #u"\xA1":u"\u0A01",     #Vowel-modifier CHANDRABINDU
                 u"\xA2":u"\u0A02",      #Vowel-modifier ANUSWAR
                 u"\xA3":u"\u0A03",      #Vowel-modifier VISARG
                 u"\xA4":u"\u0A05",      #Vowel A
@@ -413,7 +416,6 @@ class wxilp():
                 u"\xCB":u"\u0A2D",      #Consonant BHA
                 u"\xCC":u"\u0A2E",      #Consonant MA
                 u"\xCD":u"\u0A2F",      #Consonant YA
-                u"\xCE":u"",            #Consonant JYA (Bangla, Assamese & Orriya)
                 u"\xCF":u"\u0A30",      #Consonant RA
                 u"\xD0":u"\u0A31",      #Consonant Hard RA (Southern Script)
                 u"\xD1":u"\u0A32",      #Consonant LA
@@ -424,7 +426,6 @@ class wxilp():
                 u"\xD6":u"\u0A37",      #Consonant Hard SHA
                 u"\xD7":u"\u0A38",      #Consonant SA
                 u"\xD8":u"\u0A39",      #Consonant HA
-                u"\xD9":u"",            #Consonant INV
                 u"\xDA":u"\u0A3E",      #Vowel Sign AA
                 u"\xDB":u"\u0A3F",      #Vowel Sign I
                 u"\xDC":u"\u0A40",      #Vowel Sign II
@@ -441,8 +442,8 @@ class wxilp():
                 u"\xE7":u"\u0A49",      #Vowel Sign AWE (Devanagari Script)
                 u"\xE8":u"\u0A4D",      #Vowel Omission Sign (Halant)
                 u"\xE9":u"\u0A3C",      #Diacritic Sign (Nukta)
-                #u"\xEA":u"\u0964",	#Full Stop (Viram, Northern Scripts)
-                u"\xEA":u".",		#Full Stop (Viram, Northern Scripts)
+                #u"\xEA":u"\u0964",     #Full Stop (Viram, Northern Scripts)
+                u"\xEA":u".",           #Full Stop (Viram, Northern Scripts)
                 u"\xF1":u"\u0A66",      #Digit 0
                 u"\xF2":u"\u0A67",      #Digit 1
                 u"\xF3":u"\u0A68",      #Digit 2
@@ -453,10 +454,10 @@ class wxilp():
                 u"\xF8":u"\u0A6D",      #Digit 7
                 u"\xF9":u"\u0A6E",      #Digit 8
                 u"\xFA":u"\u0A6F",      #Digit 9 
-		u"\xFB":u"\u0A71"       #GURMUKHI ADDAK  NOTE Added -Irshad
+                u"\xFB":u"\u0A71"       #GURMUKHI ADDAK  NOTE Added -Irshad
                 } 
         self.hashk_i2u = {
-		u"\xA2":u"\u0C82",
+                u"\xA2":u"\u0C82",
                 u"\xA3":u"\u0C83",
                 u"\xA4":u"\u0C85",
                 u"\xA5":u"\u0C86",
@@ -530,11 +531,11 @@ class wxilp():
                 u"\xF2":u"\u0CE7",
                 u"\xF3":u"\u0CE8",
                 u"\xF4":u"\u0CE9",
-                u"\xF5":u"\u0CEA",	    
-                u"\xF6":u"\u0CEB",	    
-                u"\xF7":u"\u0CEC",	    
-                u"\xF8":u"\u0CED",	    
-                u"\xF9":u"\u0CEE",	    
+                u"\xF5":u"\u0CEA",          
+                u"\xF6":u"\u0CEB",          
+                u"\xF7":u"\u0CEC",          
+                u"\xF8":u"\u0CED",          
+                u"\xF9":u"\u0CEE",          
                 u"\xFA":u"\u0CEF"
                 }
         self.hashm_i2u = {
@@ -581,7 +582,6 @@ class wxilp():
                 u"\xCB":u"\u0D2D",      #Consonant BHA
                 u"\xCC":u"\u0D2E",      #Consonant MA
                 u"\xCD":u"\u0D2F",      #Consonant YA
-                u"\xCE":u"",            #Consonant JYA (Bangla, Assamese & Orriya)
                 u"\xCF":u"\u0D30",      #Consonant RA
                 u"\xD0":u"\u0D31",      #Consonant Hard RA (Southern Script)
                 u"\xD1":u"\u0D32",      #Consonant LA
@@ -592,7 +592,6 @@ class wxilp():
                 u"\xD6":u"\u0D37",      #Consonant Hard SHA
                 u"\xD7":u"\u0D38",      #Consonant SA
                 u"\xD8":u"\u0D39",      #Consonant HA
-                u"\xD9":u"",            #Consonant INV
                 u"\xDA":u"\u0D3E",      #Vowel Sign AA
                 u"\xDB":u"\u0D3F",      #Vowel Sign I
                 u"\xDC":u"\u0D40",      #Vowel Sign II
@@ -602,11 +601,9 @@ class wxilp():
                 u"\xE0":u"\u0D46",      #Vowel Sign E (Southern Scripts)
                 u"\xE1":u"\u0D47",      #Vowel Sign EY
                 u"\xE2":u"\u0D48",      #Vowel Sign AI
-                u"\xE3":u"",            #Vowel Sign AYE (Devanagari Script)
                 u"\xE4":u"\u0D4A",      #Vowel Sign O
                 u"\xE5":u"\u0D4B",      #Vowel Sign OW
                 u"\xE6":u"\u0D4C",      #Vowel Sign AU
-                u"\xE7":u"",            #Vowel Sign AWE (Devanagari Script)
                 u"\xE8":u"\u0D4D",      #Vowel Omission Sign (Halant)
                 #u"\xEA":u"\u0D64",     #Full Stop (Viram, Northern Scripts)
                 u"\xEA":u".",           #Full Stop (Viram, Northern Scripts)
@@ -635,7 +632,6 @@ class wxilp():
                 u"\xAB":u"\u098F",      #Vowel 
                 u"\xAD":u"\u0990",      #Vowel AI
                 u"\xAF":u"\u0993",      #Vowel O
-                u"\xB0":u"",            #Vowel OW
                 u"\xB1":u"\u0994",      #Vowel AU
                 u"\xB3":u"\u0995",      #Consonant KA
                 u"\xB4":u"\u0996",      #Consonant KHA
@@ -657,25 +653,18 @@ class wxilp():
                 u"\xC4":u"\u09A6",      #Consonant Soft DA
                 u"\xC5":u"\u09A7",      #Consonant Soft DHA
                 u"\xC6":u"\u09A8",      #Consonant Soft NA
-                u"\xC7":u"",            #Consonant NA (Tamil)
                 u"\xC8":u"\u09AA",      #Consonant PA
                 u"\xC9":u"\u09AB",      #Consonant PHA
                 u"\xCA":u"\u09AC",      #Consonant BA
                 u"\xCB":u"\u09AD",      #Consonant BHA
                 u"\xCC":u"\u09AE",      #Consonant MA
                 u"\xCD":u"\u09AF",      #Consonant YA
-                u"\xCE":u"",            #Consonant JYA (Bangla, Assamese & Orriya)
                 u"\xCF":u"\u09B0",      #Consonant RA
-                u"\xD0":u"",   
                 u"\xD1":u"\u09B2",      #Consonant LA
-                u"\xD2":u"",            #Consonant Hard LA
-                u"\xD3":u"",            #Consonant ZHA (Tamil & Malyalam)
-                u"\xD4":u"",            #Consonant VA
                 u"\xD5":u"\u09B6",      #Consonant SHA
                 u"\xD6":u"\u09B7",      #Consonant Hard SHA
                 u"\xD7":u"\u09B8",      #Consonant SA
                 u"\xD8":u"\u09B9",      #Consonant HA
-                u"\xD9":u"",            #Consonant INV
                 u"\xDA":u"\u09BE",      #Vowel Sign AA
                 u"\xDB":u"\u09BF",      #Vowel Sign I
                 u"\xDC":u"\u09C0",      #Vowel Sign II
@@ -683,17 +672,13 @@ class wxilp():
                 u"\xDE":u"\u09C2",      #Vowel Sign UU
                 u"\xDF":u"\u09C3",      #Vowel Sign RI
                 u"\xE0":u"\u09C7",      #Vowel Sign E (Southern Scripts)
-                u"\xE1":u"",            #Vowel Sign EY
                 u"\xE2":u"\u09C8",      #Vowel Sign AI
-                u"\xE3":u"",            #Vowel Sign AYE (Devanagari Script)
                 u"\xE4":u"\u09CB",      #Vowel Sign O
-                u"\xE5":u"",            #Vowel Sign OW
                 u"\xE6":u"\u09CC",      #Vowel Sign AU
-                u"\xE7":u"",            #Vowel Sign AWE (Devanagari Script)
                 u"\xE8":u"\u09CD",      #Vowel Omission Sign (Halant)
                 u"\xE9":u"\u09BC",
-                #u"\xEA":u"\u0964",	#Full Stop (Viram, Northern Scripts)
-                u"\xEA":u".",		#Full Stop (Viram, Northern Scripts)
+                #u"\xEA":u"\u0964",     #Full Stop (Viram, Northern Scripts)
+                u"\xEA":u".",           #Full Stop (Viram, Northern Scripts)
                 u"\xF1":u"\u09E6",      #Digit 0
                 u"\xF2":u"\u09E7",      #Digit 1
                 u"\xF3":u"\u09E8",      #Digit 2
@@ -722,33 +707,18 @@ class wxilp():
                 u"\xB0":u"\u0B93",      #Vowel OW
                 u"\xB1":u"\u0B94",      #Vowel AU
                 u"\xB3":u"\u0B95",      #Consonant KA
-                u"\xB4":u"",            #Consonant KHA
-                u"\xB5":u"",            #Consonant GA
-                u"\xB6":u"",            #Consonant GHA
                 u"\xB7":u"\u0B99",      #Consonant NGA
                 u"\xB8":u"\u0B9A",      #Consonant CHA
-                u"\xB9":u"",            #Consonant CHHA
                 u"\xBA":u"\u0B9C",      #Consonant JA
-                u"\xBB":u"",            #Consonant JHA
                 u"\xBC":u"\u0B9E",      #Consonant JNA
                 u"\xBD":u"\u0B9F",      #Consonant Hard TA
-                u"\xBE":u"",            #Consonant Hard THA
-                u"\xBF":u"",            #Consonant Hard DA
-                u"\xC0":u"",            #Consonant Hard DHA
                 u"\xC1":u"\u0BA3",      #Consonant Hard NA
                 u"\xC2":u"\u0BA4",      #Consonant Soft TA
-                u"\xC3":u"",            #Consonant Soft THA
-                u"\xC4":u"",            #Consonant Soft DA
-                u"\xC5":u"",            #Consonant Soft DHA
                 u"\xC6":u"\u0BA8",      #Consonant Soft NA
                 u"\xC7":u"\u0BA9",      #Consonant NA (Tamil)
                 u"\xC8":u"\u0BAA",      #Consonant PA
-                u"\xC9":u"",            #Consonant PHA
-                u"\xCA":u"",            #Consonant BA
-                u"\xCB":u"",            #Consonant BHA
                 u"\xCC":u"\u0BAE",      #Consonant MA
                 u"\xCD":u"\u0BAF",      #Consonant YA
-                u"\xCE":u"",            #Consonant JYA (Bangla, Assamese & Orriya)
                 u"\xCF":u"\u0BB0",      #Consonant RA
                 u"\xD0":u"\u0BB1",   
                 u"\xD1":u"\u0BB2",      #Consonant LA
@@ -760,23 +730,18 @@ class wxilp():
                 u"\xD6":u"\u0BB7",      #Consonant Hard SHA
                 u"\xD7":u"\u0BB8",      #Consonant SA
                 u"\xD8":u"\u0BB9",      #Consonant HA
-                u"\xD9":u"",            #Consonant INV
                 u"\xDA":u"\u0BBE",      #Vowel Sign AA
                 u"\xDB":u"\u0BBF",      #Vowel Sign I
                 u"\xDC":u"\u0BC0",      #Vowel Sign II
                 u"\xDD":u"\u0BC1",      #Vowel Sign U
                 u"\xDE":u"\u0BC2",      #Vowel Sign UU
-                u"\xDF":u"",            #Vowel Sign RI
                 u"\xE0":u"\u0BC6",      #Vowel Sign E (Southern Scripts)
                 u"\xE1":u"\u0BC7",      #Vowel Sign EY
                 u"\xE2":u"\u0BC8",      #Vowel Sign AI
-                u"\xE3":u"",            #Vowel Sign AYE (Devanagari Script)
                 u"\xE4":u"\u0BCA",      #Vowel Sign O
                 u"\xE5":u"\u0BCB",      #Vowel Sign OW
                 u"\xE6":u"\u0BCC",      #Vowel Sign AU
-                u"\xE7":u"",            #Vowel Sign AWE (Devanagari Script)
                 u"\xE8":u"\u0BCD",      #Vowel Omission Sign (Halant)
-                u"\xE9":u"",
                 #u"\xEA":u"\u0BE4",     #Full Stop (Viram, Northern Scripts)
                 u"\xEA":u".",           #Full Stop (Viram, Northern Scripts)
                 u"\xF1":u"\u0BE6",      #Digit 0
@@ -830,43 +795,34 @@ class wxilp():
                 u"\xC4":u"\u0B26",      #Consonant Soft DA
                 u"\xC5":u"\u0B27",      #Consonant Soft DHA
                 u"\xC6":u"\u0B28",      #Consonant Soft NA
-                u"\xC7":u"",            #Consonant NA (Tamil)
                 u"\xC8":u"\u0B2A",      #Consonant PA
                 u"\xC9":u"\u0B2B",      #Consonant PHA
                 u"\xCA":u"\u0B2C",      #Consonant BA
                 u"\xCB":u"\u0B2D",      #Consonant BHA
                 u"\xCC":u"\u0B2E",      #Consonant MA
                 u"\xCD":u"\u0B2F",      #Consonant YA
-                u"\xCE":u"",            #Consonant JYA (Bangla, Assamese & Orriya)
                 u"\xCF":u"\u0B30",      #Consonant RA
-                u"\xD0":u"",            #Consonant Hard RA (Southern Script)
                 u"\xD1":u"\u0B32",      #Consonant LA
                 u"\xD2":u"\u0B33",      #Consonant Hard LA
-                u"\xD3":u"",            #Consonant ZHA (Tamil & Malyalam)
                 u"\xD4":u"\u0B35",      #Consonant VA
                 u"\xD5":u"\u0B36",      #Consonant SHA
                 u"\xD6":u"\u0B37",      #Consonant Hard SHA
                 u"\xD7":u"\u0B38",      #Consonant SA
                 u"\xD8":u"\u0B39",      #Consonant HA
-                u"\xD9":u"",            #Consonant INV
                 u"\xDA":u"\u0B3E",      #Vowel Sign AA
                 u"\xDB":u"\u0B3F",      #Vowel Sign I
                 u"\xDC":u"\u0B40",      #Vowel Sign II
                 u"\xDD":u"\u0B41",      #Vowel Sign U
                 u"\xDE":u"\u0B42",      #Vowel Sign UU
                 u"\xDF":u"\u0B43",      #Vowel Sign RI
-                u"\xE0":u"",            #Vowel Sign E (Southern Scripts)
                 u"\xE1":u"\u0B47",      #Vowel Sign EY
                 u"\xE2":u"\u0B48",      #Vowel Sign AI
-                u"\xE3":u"",            #Vowel Sign AYE (Devanagari Script)
-                u"\xE4":u"",            #Vowel Sign O
                 u"\xE5":u"\u0B4B",      #Vowel Sign OW
                 u"\xE6":u"\u0B4C",      #Vowel Sign AU
-                u"\xE7":u"",            #Vowel Sign AWE (Devanagari Script)
                 u"\xE8":u"\u0B4D",      #Vowel Omission Sign (Halant)
                 u"\xE9":u"\u0B3C",      #Diacritic Sign (Nukta)
-                #u"\xEA":u"\u0964",	#Full Stop (Viram, Northern Scripts)
-                u"\xEA":u".",		#Full Stop (Viram, Northern Scripts)
+                #u"\xEA":u"\u0964",     #Full Stop (Viram, Northern Scripts)
+                u"\xEA":u".",           #Full Stop (Viram, Northern Scripts)
                 u"\xF1":u"\u0B66",      #Digit 0
                 u"\xF2":u"\u0B67",      #Digit 1
                 u"\xF3":u"\u0B68",      #Digit 2
@@ -922,7 +878,6 @@ class wxilp():
                 u"\xCB":u"\u0AAD",      #Consonant BHA
                 u"\xCC":u"\u0AAE",      #Consonant MA
                 u"\xCD":u"\u0AAF",      #Consonant YA
-                u"\xCE":u"",            #Consonant JYA (Bangla, Assamese & Orriya)
                 u"\xCF":u"\u0AB0",      #Consonant RA
                 u"\xD1":u"\u0AB2",      #Consonant LA
                 u"\xD2":u"\u0AB3",      #Consonant Hard LA
@@ -932,7 +887,6 @@ class wxilp():
                 u"\xD7":u"\u0AB8",      #Consonant SA
                 u"\xD8":u"\u0AB9",      #Consonant HA
                 u"\xE9":u"\u0ABC",      #Diacritic Sign (Nukta)
-                u"\xD9":u"",            #Consonant INV
                 u"\xDA":u"\u0ABE",      #Vowel Sign AA
                 u"\xDB":u"\u0ABF",      #Vowel Sign I
                 u"\xDC":u"\u0AC0",      #Vowel Sign II
@@ -962,79 +916,51 @@ class wxilp():
         # compile regexes
         const = 'kKgGfcCjJFtTdDNwWxXnpPbBmyrlvSsRh'
         self.ceVmd = re.compile(u"([%s])eV([MHz])" %const)
-        self.cceVmd = re.compile(u"([%s])([%s])eV([MHz])" %(const, const))
-        self.ccceVmd = re.compile(u"([%s])([%s])([%s])eV([MHz])" %(const, const, const))
 
         self.ceV = re.compile(u"([%s])eV" %const)
         self.cZeV = re.compile(u"([%s])ZeV" %const)  #NOTE consonant+ZeV case added for Bengali -Irshad
-        self.cceV = re.compile(u"([%s])([%s])eV" %(const, const))
-        self.ccceV = re.compile(u"([%s])([%s])([%s])eV" %(const, const, const))
 
         self.cEYmd = re.compile(u"([%s])EY([MHz])" %const)
-        self.ccEYmd = re.compile(u"([%s])([%s])EY([MHz])" %(const, const))
-        self.cccEYmd = re.compile(u"([%s])([%s])([%s])EY([MHz])" %(const, const, const))
 
         self.cEY = re.compile(u"([%s])EY" %const)
-        self.ccEY = re.compile(u"([%s])([%s])EY" %(const, const))
-        self.cccEY = re.compile(u"([%s])([%s])([%s])EY" %(const, const, const))
 
         self.cOYmd = re.compile(u"([%s])OY([MHz])" %const)
-        self.ccOYmd = re.compile(u"([%s])([%s])OY([MHz])" %(const, const))
-        self.cccOYmd = re.compile(u"([%s])([%s])([%s])OY([MHz])" %(const, const, const))
 
         self.coVmd = re.compile(u"([%s])oV([MHz])" %const)
-        self.ccoVmd = re.compile(u"([%s])([%s])oV([MHz])" %(const, const))
-        self.cccoVmd = re.compile(u"([%s])([%s])([%s])oV([MHz])" %(const, const, const))
 
         self.coV = re.compile(u"([%s])oV" %const)
         self.cZoV = re.compile(u"([%s])ZoV" %const)  #NOTE consonant+ZoV case added for Bengali -Irshad
-        self.ccoV = re.compile(u"([%s])([%s])oV" %(const, const))
-        self.cccoV = re.compile(u"([%s])([%s])([%s])oV" %(const, const, const))
 
         self.cOY = re.compile(u"([%s])OY" %const)
         self.cZOY = re.compile(u"([%s])ZOY" %const)  #NOTE consonant+ZOY case added
-        self.ccOY = re.compile(u"([%s])([%s])OY" %(const, const))
-        self.cccOY = re.compile(u"([%s])([%s])([%s])OY" %(const, const, const))
 
         self.cvmd = re.compile(u"([%s])([AiIuUeEoO])([MHz])" %const)
         self.cZvmd = re.compile(u"([%s])Z([AiIuUeEoO])([MHz])" %const)
-        self.ccvmd = re.compile(u"([%s])([%s])([AiIuUeEoO])([MHz])" %(const, const))
-        self.cccvmd = re.compile(u"([%s])([%s])([%s])([AiIuUeEoO])([MHz])" %(const, const, const))
 
         self.cv = re.compile(u"([%s])([AiIuUeEoO])" %const)
         self.cZv = re.compile(u"([%s])Z([AiIuUeEoO])" %const)
-        self.ccv = re.compile(u"([%s])([%s])([AiIuUeEoO])" %(const, const))
-        self.cccv = re.compile(u"([%s])([%s])([%s])([AiIuUeEoO])" %(const, const, const))
 
         self.camd = re.compile(u"([%s])a([MHz])" %const)
         self.cZamd = re.compile(u"([%s])Za([MHz])" %const)
         self.cZmd = re.compile(u"([%s])Z([MHz])" %const) #NOTE consonant+Z+[MHz] case added
-        self.ccamd = re.compile(u"([%s])([%s])a([MHz])" %(const, const))
-        self.cccamd = re.compile(u"([%s])([%s])([%s])a([MHz])" %(const, const, const))
 
         self.ca = re.compile(u"([%s])a" %const)
         self.cZa = re.compile(u"([%s])Za" %const)
         self.cYZa = re.compile(u"([%s])YZa" %const) #NOTE consonant+YZa case added
-        self.cca = re.compile(u"([%s])([%s])a" %(const, const))
-        self.ccca = re.compile(u"([%s])([%s])([%s])a" %(const, const, const))
 
         self.c = re.compile(u"([%s])" %const)
         self.cZ = re.compile(u"([%s])Z" %const)
-        self.cc = re.compile(u"([%s])([%s])" %(const, const))
-        self.ccc = re.compile(u"([%s])([%s])([%s])" %(const, const, const))
 
         self.aqmd = re.compile(u"aq([MHz])")
         self.cq = re.compile(u"([%s])q" %const)
         self.cqmd = re.compile(u"([%s])q([MHz])" %const)
         self.qmd = re.compile(u"q([MHz])")    #NOTE q+[MHz]
 
+        self.dig = re.compile(u"([0-9])")
         self.i2u = re.compile(u'([\xA1-\xFA])')
-
-        #NOTE Handle pre-present iscii characters
-        self.iscii_num = dict(zip([unichr(i) for i in range(161, 251)], ['@~%s~@'%i for i in range(0, 90)]))
-        self.num_iscii = dict(zip(['@~%s~@'%i for i in range(0, 90)], [unichr(i) for i in range(161, 251)]))
-        self.isc = re.compile(u'([\xA1-\xFB])') #NOTE \xFB Added -Irshad
-        self.num = re.compile(u'(%s)' %'|'.join(['@~%s~@'%i for i in range(0, 90)]))
+        
+        #NOTE Handle Roman strings
+        self.unmask_rom = re.compile(r'(_[a-zA-Z0-9%s]+_)' %(self.punctuation)) 
 
     def initialize_utf2wx_hash(self):
         self.hashc_i2w = {
@@ -1065,7 +991,6 @@ class wxilp():
                 u"\xCB":u"B",
                 u"\xCC":u"m",
                 u"\xCD":u"y",
-                u"\xCE":u"",    #Representation for Consonant JYA in Bangla & Oriya??
                 u"\xCF":u"r",
                 u"\xD0":u"rY",  #Representation for Consonant HARD RA (Southern Script) -Rashid
                 u"\xD1":u"l",
@@ -1132,7 +1057,6 @@ class wxilp():
                 u"\u0901":u"\xA1",      #Vowel-modifier CHANDRABINDU
                 u"\u0902":u"\xA2",      #Vowel-modifier ANUSWAR
                 u"\u0903":u"\xA3",      #Vowel-modifier VISARG
-                u"\u0904":u"",
                 u"\u0905":u"\xA4",      #Vowel A
                 u"\u0906":u"\xA5",      #Vowel AA
                 u"\u0907":u"\xA6",      #Vowel I
@@ -1140,7 +1064,6 @@ class wxilp():
                 u"\u0909":u"\xA8",      #Vowel U
                 u"\u090A":u"\xA9",      #Vowel UU
                 u"\u090B":u"\xAA",      #Vowel RI
-                u"\u090C":u"",
                 u"\u090D":u"\xAE",
                 u"\u090E":u"\xAB",
                 u"\u090F":u"\xAC",
@@ -1186,18 +1109,13 @@ class wxilp():
                 u"\u0937":u"\xD6",      #Consonant SSA
                 u"\u0938":u"\xD7",      #Consonant SA
                 u"\u0939":u"\xD8",      #Consonant HA
-                u"\u093A":u"",          #Consonant
-                u"\u093B":u"",          #Consonant
                 u"\u093C":u"\xE9",      #Consonant NUKTA
-                u"\u093D":u"",          #Consonant AVAGRAHA
                 u"\u093E":u"\xDA",      #Vowel Sign AA
                 u"\u093F":u"\xDB",      #Vowel Sign I
                 u"\u0940":u"\xDC",      #Vowel Sign II
                 u"\u0941":u"\xDD",      #Vowel Sign U
                 u"\u0942":u"\xDE",      #Vowel 
                 u"\u0943":u"\xDF",      #Vowel
-                u"\u0944":u"",          #Vowel
-                u"\u0945":u"",          #Vowel
                 u"\u0946":u"\xE0",      #Vowel
                 u"\u0947":u"\xE1",      #Vowel
                 u"\u0948":u"\xE2",      #Vowel
@@ -1206,7 +1124,6 @@ class wxilp():
                 u"\u094B":u"\xE5",      #Vowel
                 u"\u094C":u"\xE6",      #Vowel
                 u"\u094D":u"\xE8",      # Halant
-                u"\u0950":u"",          #Consonant
                 u"\u0964":u"\xEA",      #Consonant
                 u"\u0960":u"\xAA",      #Vowel Sanskrit
                 u"\u0966":u"\xF1",      #Devanagari Digit 0
@@ -1234,7 +1151,6 @@ class wxilp():
                 u"\u0C01":u"\xA1",
                 u"\u0C02":u"\xA2",
                 u"\u0C03":u"\xA3",
-                u"\u0C04":u"",
                 u"\u0C05":u"\xA4",
                 u"\u0C06":u"\xA5",
                 u"\u0C07":u"\xA6",
@@ -1242,7 +1158,6 @@ class wxilp():
                 u"\u0C09":u"\xA8",
                 u"\u0C0A":u"\xA9",
                 u"\u0C0B":u"\xAA",
-                u"\u0C0C":u"",
                 u"\u0C0D":u"\xAE",
                 u"\u0C0E":u"\xAB",
                 u"\u0C0F":u"\xAC",
@@ -1288,27 +1203,19 @@ class wxilp():
                 u"\u0C37":u"\xD6",
                 u"\u0C38":u"\xD7",
                 u"\u0C39":u"\xD8",
-                u"\u0C3A":u"",
-                u"\u0C3B":u"",
-                u"\u0C3C":u"",
-                u"\u0C3D":u"",
                 u"\u0C3E":u"\xDA",
                 u"\u0C3F":u"\xDB",
                 u"\u0C40":u"\xDC",
                 u"\u0C41":u"\xDD",
                 u"\u0C42":u"\xDE",
                 u"\u0C43":u"\xDF",
-                u"\u0C44":u"",
-                u"\u0C45":u"",
                 u"\u0C46":u"\xE0",
                 u"\u0C47":u"\xE1",
                 u"\u0C48":u"\xE2",
-                u"\u0C49":u"",
                 u"\u0C4A":u"\xE4",
                 u"\u0C4B":u"\xE5",
                 u"\u0C4C":u"\xE6",
                 u"\u0C4D":u"\xE8",
-                u"\u0C50":u"",
                 u"\u0C64":u"\xEA",
                 u"\u0C66":u"\xF1",
                 u"\u0C67":u"\xF2",
@@ -1322,9 +1229,8 @@ class wxilp():
                 u"\u0C6F":u"\xFA",
                 }
         self.hashp_u2i = { 
-                u"\u0A01":u"\xA1",	#Vowel-modifier CHANDRABINDU NOTE Added -Rashid
+                u"\u0A01":u"\xA1",      #Vowel-modifier CHANDRABINDU NOTE Added -Rashid
                 u"\u0A02":u"\xA2",      #Vowel-modifier ANUSWAR
-                u"\u0A04":u"",
                 u"\u0A05":u"\xA4",      #Vowel A
                 u"\u0A06":u"\xA5",      #Vowel AA
                 u"\u0A07":u"\xA6",      #Vowel I
@@ -1332,7 +1238,6 @@ class wxilp():
                 u"\u0A09":u"\xA8",      #Vowel U
                 u"\u0A0A":u"\xA9",      #Vowel UU
                 u"\u0A0B":u"\xAA",      #Vowel RI
-                u"\u0A0C":u"",
                 u"\u0A0D":u"\xAE",
                 u"\u0A0E":u"\xAB",
                 u"\u0A0F":u"\xAC",
@@ -1378,18 +1283,13 @@ class wxilp():
                 u"\u0A37":u"\xD6",      #Consonant SSA
                 u"\u0A38":u"\xD7",      #Consonant SA
                 u"\u0A39":u"\xD8",      #Consonant HA
-                u"\u0A3A":u"",          #Consonant
-                u"\u0A3B":u"",          #Consonant
                 u"\u0A3C":u"\xE9",      #Consonant NUKTA
-                u"\u0A3D":u"",          #Consonant AVAGRAHA
                 u"\u0A3E":u"\xDA",      #Vowel Sign AA
                 u"\u0A3F":u"\xDB",      #Vowel Sign I
                 u"\u0A40":u"\xDC",      #Vowel Sign II
                 u"\u0A41":u"\xDD",      #Vowel Sign U
                 u"\u0A42":u"\xDE",      #Vowel 
                 u"\u0A43":u"\xDF",      #Vowel
-                u"\u0A44":u"",          #Vowel
-                u"\u0A45":u"",          #Vowel
                 u"\u0A46":u"\xE0",      #Vowel
                 u"\u0A47":u"\xE1",      #Vowel
                 u"\u0A48":u"\xE2",      #Vowel
@@ -1422,7 +1322,6 @@ class wxilp():
         self.hashk_u2i = {
                 u"\u0C82":u"\xA2",      #Vowel-modifier ANUSWAR
                 u"\u0C83":u"\xA3",      #Vowel-modifier VISARG
-                u"\u0C84":u"",
                 u"\u0C85":u"\xA4",      #Vowel A
                 u"\u0C86":u"\xA5",      #Vowel AA
                 u"\u0C87":u"\xA6",      #Vowel I
@@ -1430,7 +1329,6 @@ class wxilp():
                 u"\u0C89":u"\xA8",      #Vowel U
                 u"\u0C8A":u"\xA9",      #Vowel UU
                 u"\u0C8B":u"\xAA",      #Vowel RI
-                u"\u0C8C":u"",
                 u"\u0C8D":u"\xAE",
                 u"\u0C8E":u"\xAB",
                 u"\u0C8F":u"\xAC",
@@ -1477,15 +1375,12 @@ class wxilp():
                 u"\u0CB8":u"\xD7",      #Consonant SA
                 u"\u0CB9":u"\xD8",      #Consonant HA
                 u"\u0CBC":u"\xE9",      #Consonant NUKTA
-                u"\u0CBD":u"",          #Consonant AVAGRAHA
                 u"\u0CBE":u"\xDA",      #Vowel Sign AA
                 u"\u0CBF":u"\xDB",      #Vowel Sign I
                 u"\u0CC0":u"\xDC",      #Vowel Sign II
                 u"\u0CC1":u"\xDD",      #Vowel Sign U
                 u"\u0CC2":u"\xDE",      #Vowel 
                 u"\u0CC3":u"\xDF",      #Vowel
-                u"\u0CC4":u"",          #Vowel
-                u"\u0CC5":u"",          #Vowel
                 u"\u0CC6":u"\xE0",      #Vowel
                 u"\u0CC7":u"\xE1",      #Vowel
                 u"\u0CC8":u"\xE2",      #Vowel
@@ -1494,7 +1389,6 @@ class wxilp():
                 u"\u0CCB":u"\xE5",      #Vowel
                 u"\u0CCC":u"\xE6",      #Vowel
                 u"\u0CCD":u"\xE8",      #Consonant
-                u"\u0CD0":u"",          #Consonant
                 u"\u0CE4":u"\xEA",      #Consonant
                 u"\u0CE6":u"\xF1",      #Consonant
                 u"\u0CE7":u"\xF2",      #Consonant
@@ -1507,20 +1401,9 @@ class wxilp():
                 u"\u0CEE":u"\xF9",
                 u"\u0CEF":u"\xFA",
                 }
-        #self.unicode_norm_hashk_u2i = {
-        #        u"\u0958":u"\u0915",
-        #        u"\u0959":u"\u0916",
-        #        u"\u095A":u"\u0917",
-        #        u"\u095B":u"\u091C",
-        #        u"\u095C":u"\u0921",
-        #        u"\u095D":u"\u0922",
-        #        u"\u095E":u"\u092B",
-        #        u"\u095F":u"\u092F",
-        #        }
         self.hashm_u2i = { 
                 u"\u0D02":u"\xA2",      #Vowel-modifier ANUSWAR
                 u"\u0D03":u"\xA3",      #Vowel-modifier VISARG
-                u"\u0D04":u"",
                 u"\u0D05":u"\xA4",      #Vowel A
                 u"\u0D06":u"\xA5",      #Vowel AA
                 u"\u0D07":u"\xA6",      #Vowel I
@@ -1528,8 +1411,6 @@ class wxilp():
                 u"\u0D09":u"\xA8",      #Vowel U
                 u"\u0D0A":u"\xA9",      #Vowel UU
                 u"\u0D0B":u"\xAA",      #Vowel RI
-                u"\u0D0C":u"",
-                u"\u0D0D":u"",
                 u"\u0D0E":u"\xAB",
                 u"\u0D0F":u"\xAC",
                 u"\u0D10":u"\xAD",
@@ -1574,15 +1455,12 @@ class wxilp():
                 u"\u0D37":u"\xD6",      #Consonant SSA
                 u"\u0D38":u"\xD7",      #Consonant SA
                 u"\u0D39":u"\xD8",      #Consonant HA
-                u"\u0D3D":u"",          #Consonant AVAGRAHA
                 u"\u0D3E":u"\xDA",      #Vowel Sign AA
                 u"\u0D3F":u"\xDB",      #Vowel Sign I
                 u"\u0D40":u"\xDC",      #Vowel Sign II
                 u"\u0D41":u"\xDD",      #Vowel Sign U
                 u"\u0D42":u"\xDE",      #Vowel
                 u"\u0D43":u"\xDF",      #Vowel
-                u"\u0D44":u"",          #Vowel
-                u"\u0D45":u"",          #Vowel
                 u"\u0D46":u"\xE0",      #Vowel
                 u"\u0D47":u"\xE1",      #Vowel
                 u"\u0D48":u"\xE2",      #Vowel
@@ -1613,13 +1491,8 @@ class wxilp():
                 u"\u0989":u"\xA8",      #Vowel U
                 u"\u098A":u"\xA9",      #Vowel UU
                 u"\u098B":u"\xAA",      #Vowel RI
-                u"\u098C":u"",
-                u"\u098D":u"",
-                u"\u098E":u"",
                 u"\u098F":u"\xAB",
                 u"\u0990":u"\xAD",
-                u"\u0991":u"",
-                u"\u0992":u"",
                 u"\u0993":u"\xAF",
                 u"\u0994":u"\xB1",
                 u"\u0995":u"\xB3",      #Consonant KA
@@ -1642,7 +1515,6 @@ class wxilp():
                 u"\u09A6":u"\xC4",      #Consonant
                 u"\u09A7":u"\xC5",      #Consonant
                 u"\u09A8":u"\xC6",      #Consonant NA
-                u"\u09A9":u"",      
                 u"\u09AA":u"\xC8",      #Consonant PA
                 u"\u09AB":u"\xC9",      #Consonant PHA
                 u"\u09AC":u"\xCA",      #Consonant BA
@@ -1650,32 +1522,23 @@ class wxilp():
                 u"\u09AE":u"\xCC",      #Consonant MA
                 u"\u09AF":u"\xCD",      #Consonant YA
                 u"\u09B0":u"\xCF",      #Consonant RA
-                u"\u09B1":u"",       
                 u"\u09B2":u"\xD1",      #Consonant LA
-                u"\u09B3":u"",       
-                u"\u09B4":u"",     
-                u"\u09B5":u"",           
                 u"\u09B6":u"\xD5",      #Consonant SHA
                 u"\u09B7":u"\xD6",      #Consonant SSA
                 u"\u09B8":u"\xD7",      #Consonant SA
                 u"\u09B9":u"\xD8",      #Consonant HA
                 u"\u09BC":u"\xE9",      #Consonant NUKTA
-                u"\u09BD":u"",          #Consonant AVAGRAHA
                 u"\u09BE":u"\xDA",      #Vowel Sign AA
                 u"\u09BF":u"\xDB",      #Vowel Sign I
                 u"\u09C0":u"\xDC",      #Vowel Sign II
                 u"\u09C1":u"\xDD",      #Vowel Sign U
                 u"\u09C2":u"\xDE",      #Vowel
                 u"\u09C3":u"\xDF",      #Vowel
-                u"\u09C4":u"",          #Vowel
-                u"\u09C5":u"",          #Vowel
-                u"\u09C6":u"",          #Vowel
                 u"\u09C7":u"\xE0",      #Vowel
                 u"\u09C8":u"\xE2",      #Vowel
                 u"\u09CB":u"\xE4",      #Vowel
                 u"\u09CC":u"\xE6",      #Vowel
                 u"\u09CD":u"\xE8",      #Consonant
-                u"\u09CE":u"",          #Consonant
                 u"\u09E4":u"\xEA",      #Consonant
                 u"\u0964":u"\xEA",      #Consonant
                 u"\u09E6":u"\xF1",      #Consonant
@@ -1698,41 +1561,23 @@ class wxilp():
                 u"\u0B88":u"\xA7",      #Vowel II
                 u"\u0B89":u"\xA8",      #Vowel U
                 u"\u0B8A":u"\xA9",      #Vowel UU
-                u"\u0B8B":u"",          #Vowel RI
-                u"\u0B8C":u"",
-                u"\u0B8D":u"",
                 u"\u0B8E":u"\xAB",
                 u"\u0B8F":u"\xAC",
                 u"\u0B90":u"\xAD",
-                u"\u0B91":u"",
                 u"\u0B92":u"\xAF",      #check here
                 u"\u0B93":u"\xB0",
                 u"\u0B94":u"\xB1",
                 u"\u0B95":u"\xB3",      #Consonant KA
-                u"\u0B96":u"",          #Consonant
-                u"\u0B97":u"",          #Consonant
-                u"\u0B98":u"",          #Consonant
                 u"\u0B99":u"\xB7",      #Consonant NGA
                 u"\u0B9A":u"\xB8",      #Consonant
-                u"\u0B9B":u"",          #Consonant
                 u"\u0B9C":u"\xBA",      #Consonant
-                u"\u0B9D":u"",          #Consonant
                 u"\u0B9E":u"\xBC",      #Consonant JNA
                 u"\u0B9F":u"\xBD",      #Consonant
-                u"\u0BA0":u"",          #Consonant
-                u"\u0BA1":u"",          #Consonant
-                u"\u0BA2":u"",          #Consonant
                 u"\u0BA3":u"\xC1",      #Consonant NA
                 u"\u0BA4":u"\xC2",      #Consonant
-                u"\u0BA5":u"",          #Consonant
-                u"\u0BA6":u"",          #Consonant
-                u"\u0BA7":u"",          #Consonant
                 u"\u0BA8":u"\xC6",      #Consonant NA
                 u"\u0BA9":u"\xC7",      #Consonant NNNA
                 u"\u0BAA":u"\xC8",      #Consonant PA
-                u"\u0BAB":u"",          #Consonant PHA
-                u"\u0BAC":u"",          #Consonant BA
-                u"\u0BAD":u"",          #Consonant BHA
                 u"\u0BAE":u"\xCC",      #Consonant MA
                 u"\u0BAF":u"\xCD",      #Consonant YA
                 u"\u0BB0":u"\xCF",      #Consonant RA
@@ -1750,9 +1595,6 @@ class wxilp():
                 u"\u0BC0":u"\xDC",      #Vowel Sign II
                 u"\u0BC1":u"\xDD",      #Vowel Sign U
                 u"\u0BC2":u"\xDE",      #Vowel
-                u"\u0BC3":u"",          #Vowel
-                u"\u0BC4":u"",          #Vowel
-                u"\u0BC5":u"",          #Vowel
                 u"\u0BC6":u"\xE0",      #Vowel
                 u"\u0BC7":u"\xE1",      #Vowel
                 u"\u0BC8":u"\xE2",      #Vowel
@@ -1760,14 +1602,6 @@ class wxilp():
                 u"\u0BCB":u"\xE5",      #Vowel ோ
                 u"\u0BCC":u"\xE6",      #Vowel ௌ
                 u"\u0BCD":u"\xE8",      #Halant
-                u"\u0BD0":u"",          #Consonant
-                u"\u0BD1":u"",
-                u"\u0BD2":u"",
-                u"\u0BD3":u"",
-                u"\u0BD4":u"",
-                u"\u0BD5":u"",
-                u"\u0BD6":u"",
-                u"\u0BD7":u"",
                 u"\u0BE4":u"\xEA",      #Consonant
                 u"\u0BE5":u"\xEA", 
                 u"\u0BE6":u"\xF1",      #Consonant
@@ -1785,7 +1619,6 @@ class wxilp():
                 u"\u0B01":u"\xA1",      #Vowel-modifier CHANDRABINDU
                 u"\u0B02":u"\xA2",      #Vowel-modifier ANUSWAR
                 u"\u0B03":u"\xA3",      #Vowel-modifier VISARG
-                u"\u0904":u"",
                 u"\u0B05":u"\xA4",      #Vowel A
                 u"\u0B06":u"\xA5",      #Vowel AA
                 u"\u0B07":u"\xA6",      #Vowel I
@@ -1793,13 +1626,8 @@ class wxilp():
                 u"\u0B09":u"\xA8",      #Vowel U
                 u"\u0B0A":u"\xA9",      #Vowel UU
                 u"\u0B0B":u"\xAA",      #Vowel RI
-                u"\u0B0C":u"",
-                u"\u0B0D":u"",
-                u"\u0B0E":u"",
                 u"\u0B0F":u"\xAC",
                 u"\u0910":u"\xAD",
-                u"\u0B11":u"",
-                u"\u0B12":u"",
                 u"\u0B13":u"\xB0",
                 u"\u0B14":u"\xB1",
                 u"\u0B15":u"\xB3",      #Consonant KA
@@ -1822,7 +1650,6 @@ class wxilp():
                 u"\u0B26":u"\xC4",      #Consonant
                 u"\u0B27":u"\xC5",      #Consonant
                 u"\u0B28":u"\xC6",      #Consonant NA
-                u"\u0929":u"",          #Consonant NNNA
                 u"\u0B2A":u"\xC8",      #Consonant PA
                 u"\u0B2B":u"\xC9",      #Consonant PHA
                 u"\u0B2C":u"\xCA",      #Consonant BA
@@ -1830,36 +1657,25 @@ class wxilp():
                 u"\u0B2E":u"\xCC",      #Consonant MA
                 u"\u0B2F":u"\xCD",      #Consonant YA
                 u"\u0B30":u"\xCF",      #Consonant RA
-                u"\u0931":u"",          #Consonant RRA
                 u"\u0B32":u"\xD1",      #Consonant LA
                 u"\u0B33":u"\xD2",      #Consonant LLA
-                u"\u0934":u"",          #Consonant LLLA
                 u"\u0935":u"\xD4",      #Consonant VA
                 u"\u0B36":u"\xD5",      #Consonant SHA
                 u"\u0B37":u"\xD6",      #Consonant SSA
                 u"\u0B38":u"\xD7",      #Consonant SA
                 u"\u0B39":u"\xD8",      #Consonant HA
-                u"\u0B3A":u"",          #Consonant
-                u"\u0B3B":u"",          #Consonant
                 u"\u0B3C":u"\xE9",      #Consonant NUKTA
-                u"\u0B3D":u"",          #Consonant AVAGRAHA
                 u"\u0B3E":u"\xDA",      #Vowel Sign AA
                 u"\u0B3F":u"\xDB",      #Vowel Sign I
                 u"\u0B40":u"\xDC",      #Vowel Sign II
                 u"\u0B41":u"\xDD",      #Vowel Sign U
                 u"\u0B42":u"\xDE",      #Vowel 
                 u"\u0B43":u"\xDF",      #Vowel
-                u"\u0B44":u"",          #Vowel
-                u"\u0B45":u"",          #Vowel
-                u"\u0B46":u"",          #Vowel
                 u"\u0B47":u"\xE1",      #Vowel
                 u"\u0B48":u"\xE2",      #Vowel
-                u"\u0B49":u"",          #Vowel
-                u"\u0B4A":u"",          #Vowel
                 u"\u0B4B":u"\xE5",      #Vowel O
                 u"\u0B4C":u"\xE6",      #Vowel OU
                 u"\u0B4D":u"\xE8",      # Halant
-                u"\u0B50":u"",          #Consonant
                 u"\u0964":u"\xEA",      #Full stop use Devanagri
                 u"\u0B66":u"\xF1",      # Digit 0
                 u"\u0B67":u"\xF2",      # Digit 1
@@ -1872,21 +1688,10 @@ class wxilp():
                 u"\u0B6E":u"\xF9",      # Digit 8
                 u"\u0B6F":u"\xFA",      # Digit 9
                 }
-            #unicode_norm_hasho_u2i = {
-            #   u"\x0958":u"\u0915",
-            #   u"\x0959":u"\u0916",
-            #   u"\x095A":u"\u0917",
-            #   u"\x095B":u"\u091C",
-            #   u"\x095C":u"\u0921",
-            #   u"\x095D":u"\u0922",
-            #   u"\x095E":u"\u092B",
-            #   u"\x095F":u"\u092F",
-            #   }
         self.hashg_u2i = {
                 u"\u0A81":u"\xA1",      #Vowel-modifier CHANDRABINDU
                 u"\u0A82":u"\xA2",      #Vowel-modifier ANUSWAR
                 u"\u0A83":u"\xA3",      #Vowel-modifier VISARG
-                u"\u0A84":u"",
                 u"\u0A85":u"\xA4",      #Vowel A
                 u"\u0A86":u"\xA5",      #Vowel AA
                 u"\u0A87":u"\xA6",      #Vowel I
@@ -1894,7 +1699,6 @@ class wxilp():
                 u"\u0A89":u"\xA8",      #Vowel U
                 u"\u0A8A":u"\xA9",      #Vowel UU
                 u"\u0A8B":u"\xAA",      #Vowel RI
-                u"\u0A8C":u"",
                 u"\u0A8D":u"\xAE",
                 u"\u0A8F":u"\xAC",
                 u"\u0A90":u"\xAD",
@@ -1935,25 +1739,19 @@ class wxilp():
                 u"\u0AB7":u"\xD6",      #Consonant SSA
                 u"\u0AB8":u"\xD7",      #Consonant SA
                 u"\u0AB9":u"\xD8",      #Consonant HA
-                u"\u0ABA":u"",          #Consonant
-                u"\u0ABB":u"",          #Consonant
                 u"\u0ABC":u"\xE9",      #Consonant NUKTA
-                u"\u0ABD":u"",          #Consonant AVAGRAHA
                 u"\u0ABE":u"\xDA",      #Vowel Sign AA
                 u"\u0ABF":u"\xDB",      #Vowel Sign I
                 u"\u0AC0":u"\xDC",      #Vowel Sign II
                 u"\u0AC1":u"\xDD",      #Vowel Sign U
                 u"\u0AC2":u"\xDE",      #Vowel
                 u"\u0AC3":u"\xDF",      #Vowel
-                u"\u0AC4":u"",          #Vowel
-                u"\u0AC5":u"",          #Vowel
                 u"\u0AC7":u"\xE1",      #Vowel
                 u"\u0AC8":u"\xE2",      #Vowel
                 u"\u0AC9":u"\xE7",      #Vowel
                 u"\u0ACB":u"\xE5",      #Vowel
                 u"\u0ACC":u"\xE6",      #Vowel
                 u"\u0ACD":u"\xE8",      #Halant
-                u"\u0AD0":u"",          #Consonant
                 u"\u0AE0":u"\xAA",      #Vowel Sanskrit
                 u"\u0AE6":u"\xF1",      #Digit 0
                 u"\u0AE7":u"\xF2",      #Digit 1
@@ -1995,6 +1793,9 @@ class wxilp():
         self.u2i_kn = re.compile(u"([\u0958-\u095F])")
         self.u2i_pn = re.compile(u"([\u0A59-\u0A5B\u0A5E])")
         self.u2i_g = re.compile(u"([\u0A80-\u0AFF])")
+        
+        #NOTE Handle Roman strings
+        self.mask_rom = re.compile(r'([0-9%s]*[a-zA-Z][0-9a-zA-Z%s]*)' %((self.punctuation,)*2))
 
     def normalize(self, text):
         """
@@ -2002,426 +1803,200 @@ class wxilp():
         - Byte order mark, word joiner, etc. removal 
         - ZERO_WIDTH_NON_JOINER and ZERO_WIDTH_JOINER removal 
         """
-        text = text.replace(self.BYTE_ORDER_MARK, '')
-        text = text.replace(self.BYTE_ORDER_MARK_2, '')
-        text = text.replace(self.WORD_JOINER, '')
-        text = text.replace(self.SOFT_HYPHEN, '')
-        text = text.replace(self.ZERO_WIDTH_NON_JOINER, '')
-        text = text.replace(self.ZERO_WIDTH_JOINER, '')
+        text = text.replace(u'\uFEFF', '')  #BYTE_ORDER_MARK
+        text = text.replace(u'\uFFFE', '')  #BYTE_ORDER_MARK_2
+        text = text.replace(u'\u2060', '')  #WORD JOINER
+        text = text.replace(u'\u00AD', '')  #SOFT_HYPHEN
+        text = text.replace(u'\u200C', '')  #ZERO_WIDTH_NON_JOINER
+        text = text.replace(u'\u200D', '')  #ZERO_WIDTH_JOINER
 
         return text
 
     def wx2iscii(self, my_string):
         """Convert WX to ISCII"""
-        Z, _u_ = u'Z' in my_string, u'_' in my_string
-        MHz = u'M' in my_string or u'H' in my_string or u'z' in my_string 
+        q, Z = u'q' in my_string, u'Z' in my_string
+        lY, nY, rY, = u'lY' in my_string, u'nY' in my_string, u'rY' in my_string
         eV, EY, oV, OY = u'eV' in my_string, u'EY' in my_string, u'oV' in my_string, u'OY' in my_string
-        q, l, n, rY, a = u'q' in my_string, u'l' in my_string, u'n' in my_string, u'rY' in my_string, u'a' in my_string
         if self.lang_tag == 'pan':  #NOTE Added -Irshad
             my_string = my_string.replace(u'EY', self.hashv_w2i[u"E"]+'Y')
-        if _u_:
-            my_string = re.sub(u'k_ReV([MHz])', lambda m: self.hashc_w2i[u"k"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"R"]+
-                        self.hashm_w2i[u"eV"]+self.hashmd_w2i[m.group(1)], my_string)
-            my_string = my_string.replace(u'k_ReV', self.hashc_w2i[u"k"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"R"]+
-                        self.hashm_w2i[u"eV"])
-            my_string = re.sub(u'k_REY([MHz])', lambda m: self.hashc_w2i[u"k"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"R"]+
-                        self.hashm_w2i[u"EY"]+self.hashmd_w2i[m.group(1)], my_string)
-            my_string = my_string.replace(u'k_REY', self.hashc_w2i[u"k"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"R"]+
-                        self.hashm_w2i[u"EY"])
-            my_string = re.sub(u'k_RoV([MHz])', lambda m: self.hashc_w2i[u"k"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"R"]+
-                        self.hashm_w2i[u"oV"]+self.hashmd_w2i[m.group(1)], my_string)
-            my_string = my_string.replace(u'k_RoV', self.hashc_w2i[u"k"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"R"]+
-                        self.hashm_w2i[u"oV"])
-            my_string = re.sub(u'k_ROY([MHz])', lambda m: self.hashc_w2i[u"k"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"R"]+
-                        self.hashm_w2i[u"OY"]+self.hashmd_w2i[m.group(1)], my_string)
-            my_string = my_string.replace(u'k_ROY', self.hashc_w2i[u"k"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"R"]+
-                        self.hashm_w2i[u"OY"])
-            my_string = re.sub(u'k_R([AiIuUoO])([MHz])', lambda m: self.hashc_w2i[u"k"]+self.hashc_w2i[u"_"]+
-                        self.hashc_w2i[u"R"]+self.hashm_w2i[m.group(1)]+self.hashmd_w2i[m.group(2)], my_string)
-            my_string = re.sub(u'k_R([AiIuUoO])', lambda m: self.hashc_w2i[u"k"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"R"]+
-                                self.hashm_w2i[m.group(1)], my_string)
-            my_string = re.sub(u'k_Ra([MHz])', lambda m: self.hashc_w2i[u"k"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"R"]+
-                        self.hashmd_w2i[m.group(1)], my_string)
-            my_string = my_string.replace(u'k_Ra', self.hashc_w2i[u"k"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"R"])
-            my_string = my_string.replace(u'k_R', self.hashc_w2i[u"k"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"R"]+
-                        self.hashc_w2i[u"_"])
-            my_string = re.sub(u'w_reV([MHz])', lambda m: self.hashc_w2i[u"w"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"]+
-                        self.hashm_w2i[u"eV"]+self.hashmd_w2i[m.group(1)], my_string)
-            my_string = my_string.replace(u'w_reV', self.hashc_w2i[u"w"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"]+
-                        self.hashm_w2i[u"eV"])
-            my_string = re.sub(u'w_rEY([MHz])', lambda m: self.hashc_w2i[u"w"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"]+
-                        self.hashm_w2i[u"EY"]+self.hashmd_w2i[m.group(1)], my_string)
-            my_string = my_string.replace(u'w_rEY', self.hashc_w2i[u"w"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"]+
-                        self.hashm_w2i[u"EY"])
-            my_string = re.sub(u'w_roV([MHz])', lambda m: self.hashc_w2i[u"w"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"]+
-                        self.hashm_w2i[u"oV"]+self.hashmd_w2i[m.group(1)], my_string)
-            my_string = my_string.replace(u'w_roV', self.hashc_w2i[u"w"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"]+
-                        self.hashm_w2i[u"oV"])
-            my_string = re.sub(u'w_rOY([MHz])', lambda m: self.hashc_w2i[u"w"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"]+
-                        self.hashm_w2i[u"OY"]+self.hashmd_w2i[m.group(1)], my_string)
-            my_string = my_string.replace(u'w_rOY', self.hashc_w2i[u"w"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"]+
-                        self.hashm_w2i[u"OY"])
-            my_string = re.sub(u'w_r([AiIuUeEoO])([MHz])', lambda m: self.hashc_w2i[u"w"]+self.hashc_w2i[u"_"]+
-                        self.hashc_w2i[u"r"]+self.hashm_w2i[m.group(1)]+self.hashmd_w2i[m.group(2)], my_string)
-            my_string = re.sub(u'w_r([AiIuUeEoO])', lambda m: self.hashc_w2i[u"w"]+self.hashc_w2i[u"_"]+
-                        self.hashc_w2i[u"r"]+self.hashm_w2i[m.group(1)], my_string)
-            my_string = re.sub(u'w_ra([MHz])', lambda m: self.hashc_w2i[u"w"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"]+
-                        self.hashmd_w2i[m.group(1)], my_string)
-            my_string = my_string.replace(u'w_ra', self.hashc_w2i[u"w"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"])
-            my_string = my_string.replace(u'w_r', self.hashc_w2i[u"w"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"]+
-                        self.hashc_w2i[u"_"])
-            my_string = re.sub(u'j_FeV([MHz])', lambda m: self.hashc_w2i[u"j"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"F"]+
-                        self.hashm_w2i[u"eV"]+self.hashmd_w2i[m.group(1)], my_string)
-            my_string = my_string.replace(u'j_FeV', self.hashc_w2i[u"j"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"F"]+
-                        self.hashm_w2i[u"eV"])
-            my_string = re.sub(u'j_FEY([MHz])', lambda m: self.hashc_w2i[u"j"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"F"]+
-                        self.hashm_w2i[u"EY"]+self.hashmd_w2i[m.group(1)], my_string)
-            my_string = my_string.replace(u'j_FEY', self.hashc_w2i[u"j"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"F"]+
-                        self.hashm_w2i[u"EY"])
-            my_string = re.sub(u'j_FoV([MHz])', lambda m: self.hashc_w2i[u"j"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"F"]+
-                        self.hashm_w2i[u"oV"]+self.hashmd_w2i[m.group(1)], my_string)
-            my_string = my_string.replace(u'j_FoV', self.hashc_w2i[u"j"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"F"]+
-                        self.hashm_w2i[u"oV"])
-            my_string = re.sub(u'j_FOY([MHz])', lambda m: self.hashc_w2i[u"j"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"F"]+
-                        self.hashm_w2i[u"OY"]+self.hashmd_w2i[m.group(1)], my_string)
-            my_string = my_string.replace(u'j_FOY', self.hashc_w2i[u"j"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"F"]+
-                        self.hashm_w2i[u"OY"])
-            my_string = re.sub(u'j_F([AiIuUeEoO])([MHz])', lambda m: self.hashc_w2i[u"j"]+self.hashc_w2i[u"_"]+
-                        self.hashc_w2i[u"F"]+self.hashm_w2i[m.group(1)]+self.hashmd_w2i[m.group(2)], my_string)
-            my_string = re.sub(u'j_F([AiIuUeEoO])', lambda m: self.hashc_w2i[u"j"]+self.hashc_w2i[u"_"]+
-                        self.hashc_w2i[u"F"]+self.hashm_w2i[m.group(1)], my_string)
-            my_string = re.sub(u'j_Fa([MHz])', lambda m: self.hashc_w2i[u"j"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"F"]+
-                        self.hashmd_w2i[m.group(1)], my_string)
-            my_string = my_string.replace(u'j_Fa', self.hashc_w2i[u"j"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"F"])
-            my_string = my_string.replace(u'j_F', self.hashc_w2i[u"j"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"F"]+
-                        self.hashc_w2i[u"_"])
-            my_string = re.sub(u'S_reV([MHz])', lambda m: self.hashc_w2i[u"S"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"]+
-                        self.hashm_w2i[u"eV"]+self.hashmd_w2i[m.group(1)], my_string)
-            my_string = my_string.replace(u'S_reV', self.hashc_w2i[u"S"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"]+
-                        self.hashm_w2i[u"eV"])
-            my_string = re.sub(u'S_rEY([MHz])', lambda m: self.hashc_w2i[u"S"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"]+
-                        self.hashm_w2i[u"EY"]+self.hashmd_w2i[m.group(1)], my_string)
-            my_string = my_string.replace(u'S_rEY', self.hashc_w2i[u"S"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"]+
-                        self.hashm_w2i[u"EY"])
-            my_string = re.sub(u'S_roV([MHz])', lambda m: self.hashc_w2i[u"S"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"]+
-                        self.hashm_w2i[u"oV"]+self.hashmd_w2i[m.group(1)], my_string)
-            my_string = my_string.replace(u'S_roV', self.hashc_w2i[u"S"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"]+
-                        self.hashm_w2i[u"oV"])
-            my_string = re.sub(u'S_rOY([MHz])', lambda m: self.hashc_w2i[u"S"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"]+
-                        self.hashm_w2i[u"OY"]+self.hashmd_w2i[m.group(1)], my_string)
-            my_string = my_string.replace(u'S_rOY', self.hashc_w2i[u"S"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"]+
-                        self.hashm_w2i[u"OY"])
-            my_string = re.sub(u'S_r([AiIuUeEoO])([MHz])', lambda m: self.hashc_w2i[u"S"]+self.hashc_w2i[u"_"]+
-                        self.hashc_w2i[u"r"]+self.hashm_w2i[m.group(1)]+self.hashmd_w2i[m.group(2)], my_string)
-            my_string = re.sub(u'S_r([AiIuUeEoO])', lambda m: self.hashc_w2i[u"S"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"]+
-                        self.hashm_w2i[m.group(1)], my_string)
-            my_string = re.sub(u'S_ra([MHz])', lambda m: self.hashc_w2i[u"S"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"]+
-                        self.hashmd_w2i[m.group(1)], my_string)
-            my_string = my_string.replace(u'S_ra', self.hashc_w2i[u"S"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"])
-            my_string = my_string.replace(u'S_r', self.hashc_w2i[u"S"]+self.hashc_w2i[u"_"]+self.hashc_w2i[u"r"]+
-                        self.hashc_w2i[u"r"])
-    
-        if eV:
-            if MHz:
-                my_string = self.ccceVmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                            self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(3)]+self.hashm_w2i[u"aeV"]+self.hashmd_w2i[m.group(4)], my_string)
-            my_string = self.ccceV.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                        self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(3)]+self.hashm_w2i[u"aeV"], my_string)
-        if EY:
-            if MHz:
-                my_string = self.cccEYmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                            self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(3)]+self.hashm_w2i[u"aEY"]+self.hashmd_w2i[m.group(4)], my_string)
-            my_string = self.cccEY.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                        self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(3)]+self.hashm_w2i[u"aEY"], my_string)
-        if oV:
-            if MHz:
-                my_string = self.cccoVmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                            self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(3)]+self.hashm_w2i[u"aoV"]+self.hashmd_w2i[m.group(4)], my_string)
-            my_string = self.cccoV.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                        self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(3)]+self.hashm_w2i[u"aoV"], my_string)
-        if OY:
-            if MHz:
-                my_string = self.cccOYmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                            self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(3)]+self.hashm_w2i[u"aOY"]+self.hashmd_w2i[m.group(4)], my_string)
-            my_string = self.cccOY.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                        self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(3)]+self.hashm_w2i[u"aOY"], my_string)
-
-        if MHz:
-            my_string = self.cccvmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                        self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(3)]+self.hashm_w2i[m.group(4)]+self.hashmd_w2i[m.group(5)], my_string)
-        my_string = self.cccv.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                    self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(3)]+self.hashm_w2i[m.group(4)], my_string)
-        if a:
-            if MHz:
-                my_string = self.cccamd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                            self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(3)]+self.hashmd_w2i[m.group(4)], my_string)
-            my_string = self.ccca.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                        self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(3)], my_string)
-        #NOTE consonant+consonant+consonant moved from here
-        if eV:
-            if MHz:
-                my_string = self.cceVmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                            self.hashm_w2i[u"eV"]+self.hashmd_w2i[m.group(3)], my_string)
-            my_string = self.cceV.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                        self.hashm_w2i[u"eV"], my_string)
-        if EY:
-            if MHz:
-                my_string = self.ccEYmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+
-                            self.hashc_w2i[m.group(2)]+self.hashm_w2i[u"EY"]+self.hashmd_w2i[m.group(3)], my_string)
-            my_string = self.ccEY.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                        self.hashm_w2i[u"EY"], my_string)
-        if oV:
-            if MHz:
-                my_string = self.ccoVmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                            self.hashm_w2i[u"oV"]+self.hashmd_w2i[m.group(3)], my_string)
-            my_string = self.ccoV.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                        self.hashm_w2i[u"oV"], my_string)
-        if OY:
-            if MHz:
-                my_string = self.ccOYmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                            self.hashm_w2i[u"OY"]+self.hashmd_w2i[m.group(3)], my_string)
-            my_string = self.ccOY.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                        self.hashm_w2i[u"OY"], my_string)
-
-        if MHz:
-            my_string = self.ccvmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                        self.hashm_w2i[m.group(3)]+self.hashmd_w2i[m.group(4)], my_string)
-        my_string = self.ccv.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                        self.hashm_w2i[m.group(3)], my_string)
-        if a:
-            if MHz:
-                my_string = self.ccamd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                            self.hashmd_w2i[m.group(3)], my_string)
-            my_string = self.cca.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)], my_string)
         if eV:
             if Z: #NOTE added
                 my_string = self.cZeV.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+self.hashm_w2i[u"eV"], my_string)
-            if MHz:
-                my_string = self.ceVmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"eV"]
-                            +self.hashmd_w2i[m.group(2)], my_string)
+            my_string = self.ceVmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"eV"]
+                        +self.hashmd_w2i[m.group(2)], my_string)
             my_string = self.ceV.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"eV"], my_string)
         if EY:
-            if MHz:
-                my_string = self.cEYmd.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"EY"]+self.hashmd_w2i[m.group(2)], my_string)
+            my_string = self.cEYmd.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"EY"]+self.hashmd_w2i[m.group(2)], my_string)
             my_string = self.cEY.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"EY"], my_string)
         if oV:
             if Z: #NOTE added
                 my_string = self.cZoV.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+self.hashm_w2i[u"oV"], my_string)
-            if MHz:
-                my_string = self.coVmd.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"oV"]+self.hashmd_w2i[m.group(2)], my_string)
+            my_string = self.coVmd.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"oV"]+self.hashmd_w2i[m.group(2)], my_string)
             my_string = self.coV.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"oV"], my_string)
         if OY:
             if Z:   #NOTE Case ZOY added
                 my_string = self.cZOY.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+self.hashm_w2i[u"OY"], my_string)
-            if MHz:
-                my_string = self.cOYmd.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"OY"]+self.hashmd_w2i[m.group(2)], my_string)
+            my_string = self.cOYmd.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"OY"]+self.hashmd_w2i[m.group(2)], my_string)
             my_string = self.cOY.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"OY"], my_string)
 
         if Z:
-            if MHz:
-                my_string = self.cZvmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+
-                            self.hashm_w2i[m.group(2)]+self.hashmd_w2i[m.group(3)], my_string)
+            my_string = self.cZvmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+
+                        self.hashm_w2i[m.group(2)]+self.hashmd_w2i[m.group(3)], my_string)
             my_string = self.cZv.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+self.hashm_w2i[m.group(2)], my_string)
-            if MHz:
-                my_string = self.cZamd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+self.hashmd_w2i[m.group(2)], my_string)
-                my_string = self.cZmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+self.hashmd_w2i[m.group(2)], my_string)
+            my_string = self.cZamd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+self.hashmd_w2i[m.group(2)], my_string)
+            my_string = self.cZmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+self.hashmd_w2i[m.group(2)], my_string)
             my_string = self.cZa.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"], my_string)
             #NOTE consonant+YZa case added
             my_string = self.cYZa.sub(lambda m: self.hashc_w2i[m.group(1)+u"Y"]+self.hashc_w2i[u"Z"], my_string)
             my_string = self.cZ.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+self.hashc_w2i[u"_"], my_string)
-        #NOTE consonant+consonant+consonant replaced
-        my_string = self.ccc.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(2)]+
-                    self.hashc_w2i[u"_"]+self.hashc_w2i[m.group(3)]+self.hashc_w2i[u"_"], my_string)
         if q:
-            if MHz:
-                my_string = self.cqmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"q"]+self.hashmd_w2i[m.group(2)], my_string)
-                #NOTE q+[MHz] case added
-                my_string = self.qmd.sub(lambda m: self.hashv_w2i[u"q"]+self.hashmd_w2i[m.group(1)], my_string)
+            my_string = self.cqmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"q"]+self.hashmd_w2i[m.group(2)], my_string)
+            #NOTE q+[MHz] case added
+            my_string = self.qmd.sub(lambda m: self.hashv_w2i[u"q"]+self.hashmd_w2i[m.group(1)], my_string)
             my_string = self.cq.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"q"], my_string)
             #Added for the case Vowel(U090B)+Modifier
-            if MHz:
-                my_string = self.aqmd.sub(lambda m: self.hashv_w2i[u"aq"]+self.hashmd_w2i[m.group(1)], my_string)
+            my_string = self.aqmd.sub(lambda m: self.hashv_w2i[u"aq"]+self.hashmd_w2i[m.group(1)], my_string)
             #NOTE q, aq removed from here
         #Added for the case lYYa,lYY[AiIuUeEoO],lYY[MHz]
-        if l:
-            if MHz:
+        if lY:
+            if 'lYY' in my_string:
                 my_string = re.sub(u'(lYY)eV([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"eV"]+
                             self.hashmd_w2i[m.group(2)], my_string)
-            my_string = re.sub(u'(lYY)eV', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"eV"], my_string)
-            if MHz:
+                my_string = re.sub(u'(lYY)eV', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"eV"], my_string)
                 my_string = re.sub(u'(lYY)EY([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"EY"]+
                             self.hashmd_w2i[m.group(2)], my_string)
-            my_string = re.sub(u'(lYY)EY', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"EY"], my_string)
-            if MHz:
+                my_string = re.sub(u'(lYY)EY', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"EY"], my_string)
                 my_string = re.sub(u'(lYY)oV([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"oV"]+
                             self.hashmd_w2i[m.group(2)], my_string)
-            my_string = re.sub(u'(lYY)oV', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"oV"], my_string)
-            if MHz:
+                my_string = re.sub(u'(lYY)oV', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"oV"], my_string)
                 my_string = re.sub(u'(lYY)OY([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"OY"]+
                             self.hashmd_w2i[m.group(2)], my_string)
-            my_string = re.sub(u'(lYY)OY', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"OY"], my_string)
-            if MHz:
+                my_string = re.sub(u'(lYY)OY', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"OY"], my_string)
                 my_string = re.sub(u'(lYY)([AiIuUeEoO])([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[m.group(2)]+
                             self.hashmd_w2i[m.group(3)], my_string)
-            my_string = re.sub(u'(lYY)([AiIuUeEoO])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[m.group(2)], my_string)
-            if MHz:
+                my_string = re.sub(u'(lYY)([AiIuUeEoO])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[m.group(2)], my_string)
                 my_string = re.sub(u'(lYY)a([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashmd_w2i[m.group(2)], my_string)
-            my_string = re.sub(u'(lYY)a', lambda m: self.hashc_w2i[m.group(1)], my_string)
-            my_string = re.sub(u'(lYY)', lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"], my_string)
+                my_string = re.sub(u'(lYY)a', lambda m: self.hashc_w2i[m.group(1)], my_string)
+                my_string = re.sub(u'(lYY)', lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"], my_string)
             #Added for the case lYa,lY[AiIuUeEoO],lY[MHz]
-            if MHz:
-                my_string = re.sub(u'(lY)eV([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"eV"]+
-                            self.hashmd_w2i[m.group(2)], my_string)
+            my_string = re.sub(u'(lY)eV([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"eV"]+
+                        self.hashmd_w2i[m.group(2)], my_string)
             my_string = re.sub(u'(lY)eV', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"eV"], my_string)
-            if MHz:
-                my_string = re.sub(u'(lY)EY([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"EY"]+
-                            self.hashmd_w2i[m.group(2)], my_string)
+            my_string = re.sub(u'(lY)EY([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"EY"]+
+                        self.hashmd_w2i[m.group(2)], my_string)
             my_string = re.sub(u'(lY)EY', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"EY"], my_string)
-            if MHz:
-                my_string = re.sub(u'(lY)oV([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"oV"]+
-                            self.hashmd_w2i[m.group(2)], my_string)
+            my_string = re.sub(u'(lY)oV([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"oV"]+
+                        self.hashmd_w2i[m.group(2)], my_string)
             my_string = re.sub(u'(lY)oV', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"oV"], my_string)
-            if MHz:
-                my_string = re.sub(u'(lY)OY([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"OY"]+
-                            self.hashmd_w2i[m.group(2)], my_string)
+            my_string = re.sub(u'(lY)OY([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"OY"]+
+                        self.hashmd_w2i[m.group(2)], my_string)
             my_string = re.sub(u'(lY)OY', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"OY"], my_string)
-            if MHz:
-                my_string = re.sub(u'(lY)([AiIuUeEoO])([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[m.group(2)]+
-                            self.hashmd_w2i[m.group(3)], my_string)
+            my_string = re.sub(u'(lY)([AiIuUeEoO])([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[m.group(2)]+
+                        self.hashmd_w2i[m.group(3)], my_string)
             my_string = re.sub(u'(lY)([AiIuUeEoO])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[m.group(2)], my_string)
-            if MHz:
-                my_string = re.sub(u'(lY)a([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashmd_w2i[m.group(2)], my_string)
+            my_string = re.sub(u'(lY)a([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashmd_w2i[m.group(2)], my_string)
             my_string = re.sub(u'(lY)a', lambda m: self.hashc_w2i[m.group(1)], my_string)
             my_string = re.sub(u'(lY)', lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"], my_string)
         #Added for tamil -by Rashid
-        if n:
-            if MHz:
-                my_string = re.sub(u'(nY)eV([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"eV"]+
-                            self.hashmd_w2i[m.group(2)], my_string)
+        if nY:
+            my_string = re.sub(u'(nY)eV([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"eV"]+
+                        self.hashmd_w2i[m.group(2)], my_string)
             my_string = re.sub(u'(nY)eV', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"eV"], my_string)
-            if MHz:
-                my_string = re.sub(u'(nY)EY([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"EY"]+
-                            self.hashmd_w2i[m.group(2)], my_string)
+            my_string = re.sub(u'(nY)EY([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"EY"]+
+                        self.hashmd_w2i[m.group(2)], my_string)
             my_string = re.sub(u'(nY)EY', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"EY"], my_string)
-            if MHz:
-                my_string = re.sub(u'(nY)oV([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"oV"]+
-                            self.hashmd_w2i[m.group(2)], my_string)
+            my_string = re.sub(u'(nY)oV([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"oV"]+
+                        self.hashmd_w2i[m.group(2)], my_string)
             my_string = re.sub(u'(nY)oV', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"oV"], my_string)
-            if MHz:
-                my_string = re.sub(u'(nY)OY([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"OY"]+
-                            self.hashmd_w2i[m.group(2)], my_string)
+            my_string = re.sub(u'(nY)OY([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"OY"]+
+                        self.hashmd_w2i[m.group(2)], my_string)
             my_string = re.sub(u'(nY)OY', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"OY"], my_string)
-            if MHz:
-                my_string = re.sub(u'(nY)([AiIuUeEoO])([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[m.group(2)]+
-                            self.hashmd_w2i[m.group(3)], my_string)
+            my_string = re.sub(u'(nY)([AiIuUeEoO])([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[m.group(2)]+
+                        self.hashmd_w2i[m.group(3)], my_string)
             my_string = re.sub(u'(nY)([AiIuUeEoO])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[m.group(2)], my_string)
-            if MHz:
-                my_string = re.sub(u'(nY)a([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashmd_w2i[m.group(2)], my_string)
+            my_string = re.sub(u'(nY)a([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashmd_w2i[m.group(2)], my_string)
             my_string = re.sub(u'(nY)a', lambda m: self.hashc_w2i[m.group(1)], my_string)
             my_string = re.sub(u'(nY)', lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"], my_string)
         #Added for tamil -by Rashid
         if rY:
-            if MHz:
-                my_string = re.sub(u'(rY)eV([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"eV"]+
-                            self.hashmd_w2i[m.group(2)], my_string)
+            my_string = re.sub(u'(rY)eV([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"eV"]+
+                        self.hashmd_w2i[m.group(2)], my_string)
             my_string = re.sub(u'(rY)eV', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"eV"], my_string)
-            if MHz:
-                my_string = re.sub(u'(rY)EY([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"EY"]+
-                            self.hashmd_w2i[m.group(2)], my_string)
+            my_string = re.sub(u'(rY)EY([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"EY"]+
+                        self.hashmd_w2i[m.group(2)], my_string)
             my_string = re.sub(u'(rY)EY', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"EY"], my_string)
-            if MHz:
-                my_string = re.sub(u'(rY)oV([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"oV"]+
-                            self.hashmd_w2i[m.group(2)], my_string)
+            my_string = re.sub(u'(rY)oV([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"oV"]+
+                        self.hashmd_w2i[m.group(2)], my_string)
             my_string = re.sub(u'(rY)oV', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"oV"], my_string)
-            if MHz:
-                my_string = re.sub(u'(rY)OY([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"OY"]+
-                            self.hashmd_w2i[m.group(2)], my_string)
+            my_string = re.sub(u'(rY)OY([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"OY"]+
+                        self.hashmd_w2i[m.group(2)], my_string)
             my_string = re.sub(u'(rY)OY', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"OY"], my_string)
-            if MHz:
-                my_string = re.sub(u'(rY)([AiIuUeEoO])([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[m.group(2)]+
-                            self.hashmd_w2i[m.group(3)], my_string)
+            my_string = re.sub(u'(rY)([AiIuUeEoO])([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[m.group(2)]+
+                        self.hashmd_w2i[m.group(3)], my_string)
             my_string = re.sub(u'(rY)([AiIuUeEoO])', lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[m.group(2)], my_string)
-            if MHz:
-                my_string = re.sub(u'(rY)a([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashmd_w2i[m.group(2)], my_string)
+            my_string = re.sub(u'(rY)a([MHz])', lambda m: self.hashc_w2i[m.group(1)]+self.hashmd_w2i[m.group(2)], my_string)
             my_string = re.sub(u'(rY)a', lambda m: self.hashc_w2i[m.group(1)], my_string)
             my_string = re.sub(u'(rY)', lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"], my_string)
 
-        if MHz:
-            my_string = self.cvmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[m.group(2)]+
-                        self.hashmd_w2i[m.group(3)], my_string)
+        my_string = self.cvmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[m.group(2)]+
+                    self.hashmd_w2i[m.group(3)], my_string)
         #my_string = self.cvm.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[m.group(2)]+self.hashm_w2i[m.group(3)], my_string)
         #if Z:
         #    my_string = self.cZvm.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[m.group(2)]+self.hashm_w2i[m.group(3)], my_string)
         my_string = self.cv.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[m.group(2)], my_string)
-        if a:
-            if MHz:
-                my_string = self.camd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashmd_w2i[m.group(2)], my_string)
-            my_string = self.ca.sub(lambda m: self.hashc_w2i[m.group(1)], my_string)
+        my_string = self.camd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashmd_w2i[m.group(2)], my_string)
+        my_string = self.ca.sub(lambda m: self.hashc_w2i[m.group(1)], my_string)
         
         if q:
             #NOTE q, aq replaced 
             my_string = my_string.replace(u'aq', self.hashv_w2i[u"aq"])
             my_string = my_string.replace(u'q', self.hashv_w2i[u"aq"])
 
-        my_string = self.c.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"], my_string)
+        my_string = self.c.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"_"], my_string)  
         #Added for the case of U0946
         if eV:
-            if MHz:
-                my_string = re.sub(u'aeV([MHz])', lambda m: self.hashv_w2i[u"aeV"]+self.hashmd_w2i[m.group(1)], my_string)
+            my_string = re.sub(u'aeV([MHz])', lambda m: self.hashv_w2i[u"aeV"]+self.hashmd_w2i[m.group(1)], my_string)
             my_string = my_string.replace(u'aeV', self.hashv_w2i[u"aeV"])
-            if MHz:
-                my_string = re.sub(u'eV([MHz])', lambda m: self.hashv_w2i[u"eV"]+self.hashmd_w2i[m.group(1)], my_string)
+            my_string = re.sub(u'eV([MHz])', lambda m: self.hashv_w2i[u"eV"]+self.hashmd_w2i[m.group(1)], my_string)
             my_string = my_string.replace(u'eV', self.hashv_w2i[u"eV"])
         #Added for the case of U0945
         if EY:
-            if MHz:
-                my_string = re.sub(u'aEY([MHz])', lambda m: self.hashv_w2i[u"aEY"]+self.hashmd_w2i[m.group(1)], my_string)
+            my_string = re.sub(u'aEY([MHz])', lambda m: self.hashv_w2i[u"aEY"]+self.hashmd_w2i[m.group(1)], my_string)
             my_string = my_string.replace(u'aEY', self.hashv_w2i[u"aEY"])
-            if MHz:
-                my_string = re.sub(u'EY([MHz])', lambda m: self.hashv_w2i[u"EY"]+self.hashmd_w2i[m.group(1)], my_string)
+            my_string = re.sub(u'EY([MHz])', lambda m: self.hashv_w2i[u"EY"]+self.hashmd_w2i[m.group(1)], my_string)
             my_string = my_string.replace(u'EY', self.hashv_w2i[u"EY"])
         #Added for the case of U094A
         if oV:
-            if MHz:
-                my_string = re.sub(u'aoV([MHz])', lambda m: self.hashv_w2i[u"aoV"]+self.hashmd_w2i[m.group(1)], my_string)
+            my_string = re.sub(u'aoV([MHz])', lambda m: self.hashv_w2i[u"aoV"]+self.hashmd_w2i[m.group(1)], my_string)
             my_string = my_string.replace(u'aoV', self.hashv_w2i[u"aoV"])
-            if MHz:
-                my_string = re.sub(u'oV([MHz])', lambda m: self.hashv_w2i[u"oV"]+self.hashmd_w2i[m.group(1)], my_string)
+            my_string = re.sub(u'oV([MHz])', lambda m: self.hashv_w2i[u"oV"]+self.hashmd_w2i[m.group(1)], my_string)
             my_string = my_string.replace(u'oV', self.hashv_w2i[u"oV"])
         #Added for the case of U0949
         if OY:
-            if MHz:
-                my_string = re.sub(u'aOY([MHz])', lambda m: self.hashv_w2i[u"aOY"]+self.hashmd_w2i[m.group(1)], my_string)
+            my_string = re.sub(u'aOY([MHz])', lambda m: self.hashv_w2i[u"aOY"]+self.hashmd_w2i[m.group(1)], my_string)
             my_string = my_string.replace(u'aOY', self.hashv_w2i[u"aOY"])
-            if MHz:
-                my_string = re.sub(u'OY([MHz])', lambda m: self.hashv_w2i[u"OY"]+self.hashmd_w2i[m.group(1)], my_string)
+            my_string = re.sub(u'OY([MHz])', lambda m: self.hashv_w2i[u"OY"]+self.hashmd_w2i[m.group(1)], my_string)
             my_string = my_string.replace(u'OY', self.hashv_w2i[u"OY"])
     
-        if a:
-            #NOTE zero-width non-word boundary added on the left of string
-            #my_string = my_string.replace(u'aA', self.hashv_w2i[u"aA"])
+        if 'a' in my_string:
+            #NOTE non-word boundary added on the left of string
             my_string = re.sub(u'\BaA', self.hashv_w2i[u"aA"], my_string)
-            #my_string = my_string.replace(u'ai', self.hashv_w2i[u"ai"])
             my_string = re.sub(u'\Bai', self.hashv_w2i[u"ai"], my_string)
-            #my_string = my_string.replace(u'aI', self.hashv_w2i[u"aI"])
             my_string = re.sub(u'\BaI', self.hashv_w2i[u"aI"], my_string)
-            #my_string = my_string.replace(u'au', self.hashv_w2i[u"au"])
             my_string = re.sub(u'\Bau', self.hashv_w2i[u"au"], my_string)
-            #my_string = my_string.replace(u'aU', self.hashv_w2i[u"aU"])
             my_string = re.sub(u'\BaU', self.hashv_w2i[u"aU"], my_string)
-            #my_string = my_string.replace(u'ae', self.hashv_w2i[u"ae"])
             my_string = re.sub(u'\Bae', self.hashv_w2i[u"ae"], my_string)
-            #my_string = my_string.replace(u'aE', self.hashv_w2i[u"aE"])
             my_string = re.sub(u'\BaE', self.hashv_w2i[u"aE"], my_string)
-            #my_string = my_string.replace(u'ao', self.hashv_w2i[u"ao"])
             my_string = re.sub(u'\Bao', self.hashv_w2i[u"ao"], my_string)
-            #my_string = my_string.replace(u'aO', self.hashv_w2i[u"aO"])
             my_string = re.sub(u'\BaO', self.hashv_w2i[u"aO"], my_string)
 
-        if MHz:
-            my_string = re.sub(u'([aAiIuUeEoO])([MHz])', lambda m: self.hashv_w2i[m.group(1)]+self.hashmd_w2i[m.group(2)], my_string)
+        my_string = re.sub(u'([aAiIuUeEoO])([MHz])', lambda m: self.hashv_w2i[m.group(1)]+self.hashmd_w2i[m.group(2)], my_string)
         my_string = re.sub(u'([aAiIuUeEoO])', lambda m: self.hashv_w2i[m.group(1)], my_string)
         my_string = my_string.replace(u'.', self.hashc_w2i[u"."])
+
+        #Replace Roman Digits with ISCII
+        my_string = self.dig.sub(lambda m:self.digits_w2i[m.group(1)], my_string)
+
         return my_string
     
     def iscii2unicode(self, iscii):
@@ -2544,6 +2119,7 @@ class wxilp():
         my_string = my_string.replace(u"\xFB", u"Y")
         #Replace ISCII Digits with Roman
         my_string = self.dig.sub(lambda m:self.digits_i2w[m.group(1)], my_string)
+
         return my_string
                                 
     def unicode2iscii_hin(self, unicode_):
@@ -2590,7 +2166,7 @@ class wxilp():
         # Convert Unicode values to ISCII values
         # Rashid added normalize case for tamil as per feedback
         # normalize two-part dependent vowel sign o ொ 
-        iscii_tam = unicode_.replace(u"\u0BC6\u0BBE",u"\xE4")
+        iscii_tam = unicode_.replace(u"\u0BC6\u0BBE", u"\xE4")
         # normalize two-part dependent vowel sign oo ோ 
         iscii_tam = iscii_tam.replace(u"\u0BC7\u0BBE", u"\xE5")
         iscii_tam = self.u2i_ta.sub(lambda m:self.hashta_u2i.get(m.group(1), u"") , iscii_tam)
@@ -2681,12 +2257,19 @@ class wxilp():
             wx = self.utf2wx_urd(unicode_)
             return wx.encode('utf-8')
 
-        #Convert Unicode values with ISCII values
+        #NOTE Mask iscii characters (if any)
+        unicode_ = self.mask_isc.sub(lambda m: self.iscii_num[m.group(1)], unicode_)
+        #NOTE Mask Roman characters
+        unicode_ = self.mask_rom.sub(r'_\1_', unicode_)
+        #Convert Unicode values to ISCII values
         iscii = self.unicode2iscii(unicode_)
         #Convert ISCII to WX-Roman
         wx = self.iscii2wx(iscii)
         #NOTE Consecutive Vowel Normalization
         wx = re.sub(u'[\xA0-\xFA]+', u'', wx)
+        #NOTE Unmask iscii characters
+        wx = self.unmask_isc.sub(lambda m: self.num_iscii[m.group(1)], wx)
+
         return wx.encode('utf-8')
 
     def wx2utf(self, wx):
@@ -2698,12 +2281,20 @@ class wxilp():
             unicode_ = self.wx2utf_urd(wx)
             return unicode_.encode('utf-8')
 
-        #NOTE Map iscii characters (if any) to some highly unlikely strings
-        wx = self.isc.sub(lambda m: self.iscii_num[m.group(1)], wx)
-        iscii = self.wx2iscii(wx)
-        # Convert ISCII to Unicode
-        unicode_ = self.iscii2unicode(iscii)
-        #NOTE Convert back the mapped iscii characters
-        unicode_ = self.num.sub(lambda m: self.num_iscii[m.group(1)], unicode_)
+        unicode_ = str()
+        wx_list = self.unmask_rom.split(wx)
+        for wx in wx_list:
+            if not wx:
+                continue
+            elif wx[0] == '_' and wx[-1] == '_':
+                unicode_ += wx[1:-1]
+            else:
+                #NOTE Mask iscii characters (if any)
+                wx = self.mask_isc.sub(lambda m: self.iscii_num[m.group(1)], wx)
+                iscii = self.wx2iscii(wx)
+                # Convert ISCII to Unicode
+                unicode_t = self.iscii2unicode(iscii)
+                #NOTE Unmask iscii characters
+                unicode_ += self.unmask_isc.sub(lambda m: self.num_iscii[m.group(1)], unicode_t)
         #Convert Unicode to utf-8
         return unicode_.encode('utf-8')
