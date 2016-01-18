@@ -52,6 +52,7 @@ def main():
     parser.add_argument('--f', metavar='format', dest="format_", choices=format_list, default="text", help="%s" %format_help)
     parser.add_argument('--t', metavar='ssf-type', dest="ssf_type", choices=["inter","intra"], default=None, help=ssf_help)
     parser.add_argument('--n', dest='nested', action='store_true', help="set this flag for nested ssf")
+    parser.add_argument('--m', dest='mask', action='store_false', help="set this flag to keep off masking of roman strings in Indic text")
     parser.add_argument('--i', metavar='input', dest="INFILE", type=argparse.FileType('r'), default=sys.stdin, help="<input-file>")
     parser.add_argument('--o', metavar='output', dest="OUTFILE", type=argparse.FileType('w'), default=sys.stdout, help="<output-file>")
 
@@ -68,7 +69,7 @@ def main():
         src_trg = "wx2utf"
 
     # initialize converter object
-    con = wxConvert(src_trg, args.format_, args.lang, args.ssf_type, args.nested)
+    con = wxConvert(src_trg, args.format_, args.lang, args.ssf_type, args.nested, args.mask)
     # convert text
     if args.format_ == "ssf":
         if args.nested:

@@ -30,7 +30,8 @@ import os
 import sys
 
 class wxilp():
-    def __init__(self, lang_tag, order):
+    def __init__(self, lang_tag, order, rmask):
+        self.rmask = rmask
         self.order = order
         self.lang_tag = lang_tag.lower()
         self.fit()
@@ -1123,8 +1124,9 @@ class wxilp():
                 u"\u094A":u"\xE4",      #Vowel
                 u"\u094B":u"\xE5",      #Vowel
                 u"\u094C":u"\xE6",      #Vowel
-                u"\u094D":u"\xE8",      # Halant
-                u"\u0964":u"\xEA",      #Consonant
+                u"\u094D":u"\xE8",      #Halant
+                u"\u0964":u"\xEA",      #PURNA VIRAM
+                u"\u0965":u"\xEA",      #DEERGH VIRAM
                 u"\u0960":u"\xAA",      #Vowel Sanskrit
                 u"\u0966":u"\xF1",      #Devanagari Digit 0
                 u"\u0967":u"\xF2",      #Devanagari Digit 1
@@ -2260,7 +2262,8 @@ class wxilp():
         #NOTE Mask iscii characters (if any)
         unicode_ = self.mask_isc.sub(lambda m: self.iscii_num[m.group(1)], unicode_)
         #NOTE Mask Roman characters
-        unicode_ = self.mask_rom.sub(r'_\1_', unicode_)
+        if self.rmask:
+            unicode_ = self.mask_rom.sub(r'_\1_', unicode_)
         #Convert Unicode values to ISCII values
         iscii = self.unicode2iscii(unicode_)
         #Convert ISCII to WX-Roman
@@ -2286,7 +2289,7 @@ class wxilp():
         for wx in wx_list:
             if not wx:
                 continue
-            elif wx[0] == '_' and wx[-1] == '_':
+            elif self.rmask and wx[0] == '_' and wx[-1] == '_':
                 unicode_ += wx[1:-1]
             else:
                 #NOTE Mask iscii characters (if any)

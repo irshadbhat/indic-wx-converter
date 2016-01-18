@@ -29,8 +29,8 @@ import os
 import re
 import sys
 
-from wxILP import wxilp
-from ssf_reader import SSFReader
+from .wxILP import wxilp
+from .ssf_reader import SSFReader
 
 class wxConvert():
     """WX convertor (UTF to WX and vice-versa)
@@ -40,12 +40,17 @@ class wxConvert():
     Marathi and Nepali in 5 data formats viz. plain-text, ssf, conll, bio and tnt.
     """
 
-    def __init__(self, order="wx2utf", format_="text", lang="hin", ssf_type=None, nested=False):
+    def __init__(self, order="wx2utf",
+                       format_="text", 
+                       lang="hin", 
+                       ssf_type=None, 
+                       nested=False, 
+                       rmask=True):
         self.lang = lang
         self.nested = nested
         self.format_ = format_
         self.ssf_type = ssf_type
-        wxp = wxilp(self.lang, order)
+        wxp = wxilp(self.lang, order, rmask)
         self.transform = wxp.wx2utf if order=="wx2utf" else wxp.utf2wx
 
     def convert_ssf(self, sentence):
