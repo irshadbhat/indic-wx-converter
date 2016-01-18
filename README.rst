@@ -19,9 +19,7 @@ Install
 
 ::
 
-    tar -xvzf indic-wx-converter.tar.gz
-    cd indic-wx-converter
-    sudo python setup.py install
+    pip install git+git://github.com/irshadbhat/indic-wx-converter.git
 
 Example
 ~~~~~~~
