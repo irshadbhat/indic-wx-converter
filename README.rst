@@ -50,6 +50,7 @@ Example
     --f format    select output format [text|ssf|conll|bio|tnt]
     --t ssf-type  specify ssf-type [inter|intra] in case file format (--f) is ssf
     --n           set this flag for nested ssf
+    --m           set this flag to keep off masking of roman strings in Indic text
     --i input     <input-file>
     --o output    <output-file>
 
