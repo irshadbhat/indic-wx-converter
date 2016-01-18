@@ -1,17 +1,9 @@
 #!/usr/bin/python
 
+# Copyright Riyaz Ahmad Bhat, Irshad Ahmad Bhat 2015.
+
 import re
 from collections import namedtuple, OrderedDict
-
-__version__    = "1.5"
-__license__    = "MIT"
-__author__     = "Riyaz Ahmad"
-__maintainer__ = "Irshad Ahmad"
-__credits__    = ["Irshad Ahmad", "Riyaz Ahmad"]
-__email__      = [
-                 "irshad.bhat@research.iiit.ac.in",
-                 "riyaz.bhat@research.iiit.ac.in",
-                 ]
 
 class SSFReader():
     def __init__ (self, sentence):

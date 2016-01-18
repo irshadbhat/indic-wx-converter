@@ -15,7 +15,7 @@ __license__    = "MIT"
 __maintainer__ = "Irshad Ahmad"
 __email__      = "irshad.bhat@research.iiit.ac.in"
 __status__     = "Beta"
-__all__        = ["ilp", "wxILP", "main"]
+__all__        = ["ilp", "wxILP", "ssf_reader", "main"]
 
 def main():
     format_list = 'text ssf conll bio tnt'.split()

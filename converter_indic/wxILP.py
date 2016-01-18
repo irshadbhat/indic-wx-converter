@@ -1,6 +1,8 @@
 #! /usr/bin/env python
 # -*- coding:utf-8 -*-
 
+# Copyright Irshad Ahmad Bhat 2015.
+
 """An implementation for converting unicode strings in Indian languages to WX-Roman 
 and vice-versa.
 
@@ -12,18 +14,6 @@ NOTE: This class generates same results as IndicCC.pl from Rashid's implementati
 except that there were few issues/bugs with Perl code which I've fixed in this 
 Python implementation.
 """
-
-__version__    = "1.0"
-__license__    = "MIT"
-__author__     = "Irshad Ahmad"
-__maintainer__ = "Irshad Ahmad"
-__credits__    = ["Irshad Ahmad", "Riyaz Ahmad", "Rashid Ahmad"]
-__email__      = [
-                 "irshad.bhat@research.iiit.ac.in",
-                 "riyaz.bhat@research.iiit.ac.in",
-                 "bhatirshad127@gmail.com",
-                 "rashid101b@gmail.com"
-                 ]
 
 import re
 import os

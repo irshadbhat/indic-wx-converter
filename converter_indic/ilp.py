@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# Copyright Irshad Ahmad Bhat 2015.
+
 """WX convertor: converts Indian languages to ASCII and vice-versa
 
 WX notation is a transliteration scheme for representing Indian languages in ASCII.
@@ -12,18 +14,6 @@ This module is a UTF (Indian Scripts) to Roman (WX) convertor and vice-versa tha
     - handles 5 data formats viz. plain-text, ssf, conll, bio and tnt.
 
 """
-
-__version__    = "1.0"
-__license__    = "MIT"
-__author__     = "Irshad Ahmad"
-__maintainer__ = "Irshad Ahmad"
-__credits__    = ["Irshad Ahmad", "Riyaz Ahmad", "Rashid Ahmad"]
-__email__      = [
-                 "irshad.bhat@research.iiit.ac.in",
-                 "riyaz.bhat@research.iiit.ac.in",
-                 "bhatirshad127@gmail.com",
-                 "rashid101b@gmail.com"
-                 ]
 
 import os
 import re
