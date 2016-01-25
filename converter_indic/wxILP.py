@@ -31,8 +31,8 @@ class wxilp():
         self.punctuation = r'!"#$%&\'()*+,-./:;<=>?@\[\\\]^_`{|}~'
 
         #NOTE Handle iscii characters
-        self.iscii_num = dict(zip([unichr(i) for i in range(161, 251)], ['\x03%s\x04' %(unichr(i)) for i in range(300, 390)]))
-        self.num_iscii = dict(zip(['\x03%s\x04' %(unichr(i)) for i in range(300, 390)], [unichr(i) for i in range(161, 251)]))
+        self.iscii_num = dict(zip([unichr(i) for i in range(161, 252)], ['\x03%s\x04' %(unichr(i)) for i in range(300, 391)]))
+        self.num_iscii = dict(zip(['\x03%s\x04' %(unichr(i)) for i in range(300, 391)], [unichr(i) for i in range(161, 252)]))
         self.mask_isc = re.compile(u'([\xA1-\xFB])') 
         self.unmask_isc = re.compile(u'(%s)' %'|'.join(['\x03%s\x04' %(unichr(i)) for i in range(300, 390)]))
 
