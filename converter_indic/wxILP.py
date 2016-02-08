@@ -104,7 +104,7 @@ class wxilp():
                 u".":u"\xEA",
                 u"Y":u"\xFB",
                 u"lY":u"\xD2",
-                #Added for tamil wx to utf -Rashid
+                #Added for tamil -Rashid
                 u"rY":u"\xD0",
                 u"nY":u"\xC7",
                 u"lYY":u"\xD3",
@@ -263,8 +263,7 @@ class wxilp():
                 u"\xE7":u"\u0949",      #Vowel Sign AWE (Devanagari Script)
                 u"\xE8":u"\u094D",      #Vowel Omission Sign (Halant)
                 u"\xE9":u"\u093C",      #Diacritic Sign (Nukta)
-                #u"\xEA":u"\u0964",     #Full Stop (Viram, Northern Scripts)
-                u"\xEA":u".",           #Full Stop (Viram, Northern Scripts)
+                u"\xEA":u".",		#Fullstop
                 u"\xF1":u"\u0966",      #Digit 0
                 u"\xF2":u"\u0967",      #Digit 1
                 u"\xF3":u"\u0968",      #Digit 2
@@ -348,7 +347,7 @@ class wxilp():
                 #u"\xE7":u"\u0949",     #Vowel Sign AWE (Devanagari Script) 7-Mar-11 -Rashid
                 u"\xE8":u"\u0C4D",      #Vowel Omission Sign (Halant)
                 #u"\xE9":u"\u093C",     #Diacritic Sign (Nukta) 7-Mar-11 -Rashid
-                u"\xEA":u".",           #Full Stop (Viram, Northern Scripts)
+                u"\xEA":u".",		#Fullstop
                 u"\xF1":u"\u0C66",      #Digit 0
                 u"\xF2":u"\u0C67",      #Digit 1
                 u"\xF3":u"\u0C68",      #Digit 2
@@ -433,8 +432,7 @@ class wxilp():
                 u"\xE7":u"\u0A49",      #Vowel Sign AWE (Devanagari Script)
                 u"\xE8":u"\u0A4D",      #Vowel Omission Sign (Halant)
                 u"\xE9":u"\u0A3C",      #Diacritic Sign (Nukta)
-                #u"\xEA":u"\u0964",     #Full Stop (Viram, Northern Scripts)
-                u"\xEA":u".",           #Full Stop (Viram, Northern Scripts)
+                u"\xEA":u".",		#Fullstop
                 u"\xF1":u"\u0A66",      #Digit 0
                 u"\xF2":u"\u0A67",      #Digit 1
                 u"\xF3":u"\u0A68",      #Digit 2
@@ -517,7 +515,7 @@ class wxilp():
                 u"\xE5":u"\u0CCB",
                 u"\xE6":u"\u0CCC",
                 u"\xE8":u"\u0CCD",
-                u"\xEA":u".",
+                u"\xEA":u".",		#Fullstop
                 u"\xF1":u"\u0CE6",
                 u"\xF2":u"\u0CE7",
                 u"\xF3":u"\u0CE8",
@@ -596,8 +594,7 @@ class wxilp():
                 u"\xE5":u"\u0D4B",      #Vowel Sign OW
                 u"\xE6":u"\u0D4C",      #Vowel Sign AU
                 u"\xE8":u"\u0D4D",      #Vowel Omission Sign (Halant)
-                #u"\xEA":u"\u0D64",     #Full Stop (Viram, Northern Scripts)
-                u"\xEA":u".",           #Full Stop (Viram, Northern Scripts)
+                u"\xEA":u".",		#Fullstop
                 u"\xF1":u"\u0D66",      #Digit 0
                 u"\xF2":u"\u0D67",      #Digit 1
                 u"\xF3":u"\u0D68",      #Digit 2
@@ -668,8 +665,7 @@ class wxilp():
                 u"\xE6":u"\u09CC",      #Vowel Sign AU
                 u"\xE8":u"\u09CD",      #Vowel Omission Sign (Halant)
                 u"\xE9":u"\u09BC",
-                #u"\xEA":u"\u0964",     #Full Stop (Viram, Northern Scripts)
-                u"\xEA":u".",           #Full Stop (Viram, Northern Scripts)
+                u"\xEA":u".",		#Fullstop
                 u"\xF1":u"\u09E6",      #Digit 0
                 u"\xF2":u"\u09E7",      #Digit 1
                 u"\xF3":u"\u09E8",      #Digit 2
@@ -733,8 +729,7 @@ class wxilp():
                 u"\xE5":u"\u0BCB",      #Vowel Sign OW
                 u"\xE6":u"\u0BCC",      #Vowel Sign AU
                 u"\xE8":u"\u0BCD",      #Vowel Omission Sign (Halant)
-                #u"\xEA":u"\u0BE4",     #Full Stop (Viram, Northern Scripts)
-                u"\xEA":u".",           #Full Stop (Viram, Northern Scripts)
+                u"\xEA":u".",		#Fullstop
                 u"\xF1":u"\u0BE6",      #Digit 0
                 u"\xF2":u"\u0BE7",      #Digit 1
                 u"\xF3":u"\u0BE8",      #Digit 2
@@ -812,8 +807,7 @@ class wxilp():
                 u"\xE6":u"\u0B4C",      #Vowel Sign AU
                 u"\xE8":u"\u0B4D",      #Vowel Omission Sign (Halant)
                 u"\xE9":u"\u0B3C",      #Diacritic Sign (Nukta)
-                #u"\xEA":u"\u0964",     #Full Stop (Viram, Northern Scripts)
-                u"\xEA":u".",           #Full Stop (Viram, Northern Scripts)
+                u"\xEA":u".",		#Fullstop
                 u"\xF1":u"\u0B66",      #Digit 0
                 u"\xF2":u"\u0B67",      #Digit 1
                 u"\xF3":u"\u0B68",      #Digit 2
@@ -891,7 +885,7 @@ class wxilp():
                 u"\xE6":u"\u0ACC",      #Vowel Sign AU
                 u"\xE7":u"\u0AC9",      #Vowel Sign AWE (Devanagari Script)
                 u"\xE8":u"\u0ACD",      #Vowel Omission Sign (Halant)
-                u"\xEA":u".",           #Full Stop (Viram, Northern Scripts)
+                u"\xEA":u".",		#Fullstop
                 u"\xF1":u"\u0AE6",      #Digit 0
                 u"\xF2":u"\u0AE7",      #Digit 1
                 u"\xF3":u"\u0AE8",      #Digit 2
@@ -1115,8 +1109,6 @@ class wxilp():
                 u"\u094B":u"\xE5",      #Vowel
                 u"\u094C":u"\xE6",      #Vowel
                 u"\u094D":u"\xE8",      #Halant
-                u"\u0964":u"\xEA",      #PURNA VIRAM
-                u"\u0965":u"\xEA",      #DEERGH VIRAM
                 u"\u0960":u"\xAA",      #Vowel Sanskrit
                 u"\u0966":u"\xF1",      #Devanagari Digit 0
                 u"\u0967":u"\xF2",      #Devanagari Digit 1
@@ -1209,6 +1201,7 @@ class wxilp():
                 u"\u0C4C":u"\xE6",
                 u"\u0C4D":u"\xE8",
                 u"\u0C64":u"\xEA",
+                u"\u0C65":u"\xEA",	#ADDED
                 u"\u0C66":u"\xF1",
                 u"\u0C67":u"\xF2",
                 u"\u0C68":u"\xF3",
@@ -1291,7 +1284,8 @@ class wxilp():
                 u"\u0A4C":u"\xE6",      #Vowel
                 u"\u0A4D":u"\xE8",      #Vowel Omission Sign Halant
                 u"\u0A5C":u"\xE8",      #Vowel Omission Sign Halant
-                u"\u0A64":u"\xEA",      #PURNA VIRAM has to be handled separately
+                u"\u0A64":u"\xEA",      #PURNA VIRAM Reserved
+                u"\u0A65":u"\xEA",      #DEERGH VIRAM #ADDED
                 u"\u0A66":u"\xF1",      #Consonant
                 u"\u0A67":u"\xF2",      #Consonant
                 u"\u0A68":u"\xF3",      #Consonant
@@ -1381,7 +1375,8 @@ class wxilp():
                 u"\u0CCB":u"\xE5",      #Vowel
                 u"\u0CCC":u"\xE6",      #Vowel
                 u"\u0CCD":u"\xE8",      #Consonant
-                u"\u0CE4":u"\xEA",      #Consonant
+                u"\u0CE4":u"\xEA",      #PURNA VIRAM Reserved
+                u"\u0CE5":u"\xEA",	#DEERGH VIRAM #ADDED
                 u"\u0CE6":u"\xF1",      #Consonant
                 u"\u0CE7":u"\xF2",      #Consonant
                 u"\u0CE8":u"\xF3",      #Consonant
@@ -1460,7 +1455,8 @@ class wxilp():
                 u"\u0D4B":u"\xE5",      #Vowel
                 u"\u0D4C":u"\xE6",      #Vowel
                 u"\u0D4D":u"\xE8",      #Consonant
-                u"\u0D64":u"\xEA",      #Consonant
+                u"\u0D64":u"\xEA",      #PURNA VIRAM Reserved
+                u"\u0D65":u"\xEA",	#DEERGH VIRAM #ADDED
                 u"\u0D66":u"\xF1",      #Consonant
                 u"\u0D67":u"\xF2",      #Consonant
                 u"\u0D68":u"\xF3",      #Consonant
@@ -1531,8 +1527,8 @@ class wxilp():
                 u"\u09CB":u"\xE4",      #Vowel
                 u"\u09CC":u"\xE6",      #Vowel
                 u"\u09CD":u"\xE8",      #Consonant
-                u"\u09E4":u"\xEA",      #Consonant
-                u"\u0964":u"\xEA",      #Consonant
+                u"\u09E4":u"\xEA",      #PURNA VIRAM Reserved #ADDED
+                u"\u09E5":u"\xEA",      #DEERGH VIRAM #ADDED
                 u"\u09E6":u"\xF1",      #Consonant
                 u"\u09E7":u"\xF2",      #Consonant
                 u"\u09E8":u"\xF3",      #Consonant
@@ -1543,6 +1539,11 @@ class wxilp():
                 u"\u09ED":u"\xF8",
                 u"\u09EE":u"\xF9",
                 u"\u09EF":u"\xFA",
+                }
+        self.unicode_norm_hashb_u2i = {
+                u"\u09DC":u"\u09A1",	#ADDED
+                u"\u09DD":u"\u09A2",	#ADDED
+                u"\u09DF":u"\u09AF"	#ADDED
                 }
         self.hashta_u2i = { 
                 u"\u0B82":u"\xA2",      #Vowel-modifier ANUSWAR
@@ -1594,8 +1595,8 @@ class wxilp():
                 u"\u0BCB":u"\xE5",      #Vowel ோ
                 u"\u0BCC":u"\xE6",      #Vowel ௌ
                 u"\u0BCD":u"\xE8",      #Halant
-                u"\u0BE4":u"\xEA",      #Consonant
-                u"\u0BE5":u"\xEA", 
+                u"\u0BE4":u"\xEA",      #PURNA VIRAM Reserved
+                u"\u0BE5":u"\xEA", 	#DEERGH VIRAM #ADDED
                 u"\u0BE6":u"\xF1",      #Consonant
                 u"\u0BE7":u"\xF2",      #Consonant
                 u"\u0BE8":u"\xF3",      #Consonant
@@ -1667,8 +1668,9 @@ class wxilp():
                 u"\u0B48":u"\xE2",      #Vowel
                 u"\u0B4B":u"\xE5",      #Vowel O
                 u"\u0B4C":u"\xE6",      #Vowel OU
-                u"\u0B4D":u"\xE8",      # Halant
-                u"\u0964":u"\xEA",      #Full stop use Devanagri
+                u"\u0B4D":u"\xE8",      #Halant
+                u"\u0B64":u"\xEA",      #PURNA VIRAM Reserved #ADDED
+                u"\u0B65":u"\xEA",      #DEERGH VIRAM #ADDED
                 u"\u0B66":u"\xF1",      # Digit 0
                 u"\u0B67":u"\xF2",      # Digit 1
                 u"\u0B68":u"\xF3",      # Digit 2
@@ -1679,6 +1681,11 @@ class wxilp():
                 u"\u0B6D":u"\xF8",      # Digit 7
                 u"\u0B6E":u"\xF9",      # Digit 8
                 u"\u0B6F":u"\xFA",      # Digit 9
+                }
+        self.unicode_norm_hasho_u2i = {
+                u"\u0B5C":u"\u0B21",	#ADDED
+                u"\u0B5D":u"\u0B22",	#ADDED
+                u"\u0B5F":u"\u0B2F"	#ADDED FOR EASE
                 }
         self.hashg_u2i = {
                 u"\u0A81":u"\xA1",      #Vowel-modifier CHANDRABINDU
@@ -1745,6 +1752,8 @@ class wxilp():
                 u"\u0ACC":u"\xE6",      #Vowel
                 u"\u0ACD":u"\xE8",      #Halant
                 u"\u0AE0":u"\xAA",      #Vowel Sanskrit
+                u"\u0AE4":u"\xEA",      #PURNA VIRAM Reserved #ADDED
+                u"\u0AE5":u"\xEA",      #DEERGH VIRAM #ADDED
                 u"\u0AE6":u"\xF1",      #Digit 0
                 u"\u0AE7":u"\xF2",      #Digit 1
                 u"\u0AE8":u"\xF3",      #Digit 2
@@ -1773,18 +1782,19 @@ class wxilp():
         self.cmmd = re.compile(u"([\xB3-\xD8])([\xDA-\xE7])([\xA1-\xA3])")
         self.cnmmd = re.compile(u"([\xB3-\xD8])\xE9([\xDA-\xE7])([\xA1-\xA3])")
 
-        self.u2i_hn = re.compile(u"([\u0958-\u095F])")
         self.u2i_h = re.compile(u"([\u0900-\u097F])")
         self.u2i_t = re.compile(u"([\u0C01-\u0C6F])")
         self.u2i_k = re.compile(u"([\u0C80-\u0CFF])")
         self.u2i_m = re.compile(u"([\u0D00-\u0D6F])")
-        self.u2i_b = re.compile(u"([\u0980-\u09EF\u0964])")
-        self.u2i_o = re.compile(u"([\u0B00-\u0B7F\u0964])")
+        self.u2i_b = re.compile(u"([\u0980-\u09EF])")
+        self.u2i_o = re.compile(u"([\u0B00-\u0B7F])")
         self.u2i_p = re.compile(u"([\u0A01-\u0A75])")
-        self.u2i_ta = re.compile(u"([\u0B82-\u0BEF])")
-        self.u2i_kn = re.compile(u"([\u0958-\u095F])")
-        self.u2i_pn = re.compile(u"([\u0A59-\u0A5B\u0A5E])")
         self.u2i_g = re.compile(u"([\u0A80-\u0AFF])")
+        self.u2i_ta = re.compile(u"([\u0B82-\u0BEF])")
+        self.u2i_hn = re.compile(u"([\u0958-\u095F])")
+        self.u2i_on = re.compile(u"([\u0B5C\u0B5D\u0B5F])")
+        self.u2i_bn = re.compile(u"([\u09DC\u09DD\u09DF])")
+        self.u2i_pn = re.compile(u"([\u0A59-\u0A5B\u0A5E])")
         
         #NOTE Handle Roman strings
         self.mask_rom = re.compile(r'([0-9%s]*[a-zA-Z][0-9a-zA-Z%s]*)' %((self.punctuation,)*2))
@@ -1801,6 +1811,10 @@ class wxilp():
         text = text.replace(u'\u00AD', '')  #SOFT_HYPHEN
         text = text.replace(u'\u200C', '')  #ZERO_WIDTH_NON_JOINER
         text = text.replace(u'\u200D', '')  #ZERO_WIDTH_JOINER
+	
+	#Convert Devanagari VIRAM and Deergh Viram to "fullstop" for all scripts
+	text = text.replace(u'\u0964', '.') 
+	text = text.replace(u'\u0965', '.')
 
         return text
 
@@ -2030,6 +2044,7 @@ class wxilp():
     
     def iscii2unicode_kan(self, iscii):
         unicode_ = self.i2u.sub(lambda m: self.hashk_i2u.get(m.group(1), u""), iscii)
+	unicode_ = unicode_.replace(u'\u0CAB\u0CBC', u'\u0CDE')
         return unicode_
     
     def iscii2unicode_mal(self, iscii):
@@ -2046,6 +2061,7 @@ class wxilp():
     
     def iscii2unicode_ori(self, iscii):
         unicode_ = self.i2u.sub(lambda m: self.hasho_i2u.get(m.group(1), u""), iscii)
+	unicode_ = unicode_.replace(u'\u0B2F\u0B3C', u'\u0B5F')
         return unicode_
 
     def iscii2unicode_guj(self, iscii):
@@ -2116,56 +2132,75 @@ class wxilp():
                                 
     def unicode2iscii_hin(self, unicode_):
         # Normalize Unicode values (NUKTA variations)
-        iscii_hin = self.u2i_hn.sub(lambda m:self.unicode_norm_hashh_u2i.get(m.group(1), u"")+u"\u093C", unicode_)
+        unicode_ = self.u2i_hn.sub(lambda m:self.unicode_norm_hashh_u2i.get(m.group(1), u"") + u"\u093C", unicode_)
         # Convert Unicode values to ISCII values
-        iscii_hin = self.u2i_h.sub(lambda m:self.hashh_u2i.get(m.group(1), u""), iscii_hin)
+        iscii_hin = self.u2i_h.sub(lambda m:self.hashh_u2i.get(m.group(1), u""), unicode_)
         return iscii_hin
     
     def unicode2iscii_tel(self, unicode_):
+        # dependent vowels
+        unicode_ = unicode_.replace(u'\u0c46\u0c56',u'\u0c48')
         # Convert Telugu Unicode values to ISCII values
         iscii_tel = self.u2i_t.sub(lambda m:self.hasht_u2i.get(m.group(1), u""), unicode_)
         return iscii_tel
     
     def unicode2iscii_pan(self, unicode_):
         # Normalize Unicode values (NUKTA variations)
-        iscii_pan = self.u2i_pn.sub(lambda m:self.unicode_norm_hashp_u2i.get(m.group(1), u"")+u"\u0A3C", unicode_)
+        unicode_ = self.u2i_pn.sub(lambda m:self.unicode_norm_hashp_u2i.get(m.group(1), u"") + u"\u0A3C", unicode_)
         #Convert Unicode values 0x0A5C to ISCII 
-        iscii_pan = iscii_pan.replace(u"\u0A5C", u"\xBF\xE9")
-        #Convert Unicode Devanagari VIRAM to ISCII
-        iscii_pan = iscii_pan.replace(u"\u0964", u"\xEA")
-        #Convert Unicode Punjabi values to ISCII values
-        iscii_pan = self.u2i_p.sub(lambda m:self.hashp_u2i.get(m.group(1), u""), iscii_pan)
+        unicode_ = unicode_.replace(u"\u0A5C", u"\xBF\xE9")
+	#Convert Unicode Punjabi values to ISCII values
+        iscii_pan = self.u2i_p.sub(lambda m:self.hashp_u2i.get(m.group(1), u""), unicode_)
         return iscii_pan
     
     def unicode2iscii_kan(self, unicode_):
-        # Normalize Unicode values (NUKTA variations), needs to be modified yet, PAWAN
-        #iscii_kan = self.u2i_kn.sub(lambda m:self.unicode_norm_hashk_u2i.get(m.group(1), u""), unicode_)
+        # Normalize Unicode values (NUKTA variations)
+	unicode_ = unicode_.replace(u'\u0CDE', u'\u0CAB\u0CBC')	#ADDED
+        # Normalize two-part dependent vowels
+        unicode_ = unicode_.replace(u'\u0cbf\u0cd5',u'\u0cc0')
+        unicode_ = unicode_.replace(u'\u0cc6\u0cd5',u'\u0cc7')
+        unicode_ = unicode_.replace(u'\u0cc6\u0cd6',u'\u0cc8')
+        unicode_ = unicode_.replace(u'\u0cc6\u0cc2',u'\u0cca')
+        unicode_ = unicode_.replace(u'\u0cca\u0cd5',u'\u0ccb')
         # Convert Unicode values to ISCII values
         iscii_kan = self.u2i_k.sub(lambda m:self.hashk_u2i.get(m.group(1), u""), unicode_)
         return iscii_kan
     
     def unicode2iscii_mal(self, unicode_):
+        # Normalize two-part dependent vowels
+        unicode_ = unicode_.replace(u'\u0d46\u0d3e',u'\u0d4a')
+        unicode_ = unicode_.replace(u'\u0d47\u0d3e',u'\u0d4b')
+        unicode_ = unicode_.replace(u'\u0d46\u0d57',u'\u0d57')
         # Convert Unicode values to ISCII values
         iscii_mal = self.u2i_m.sub(lambda m:self.hashm_u2i.get(m.group(1), u""), unicode_)
         return iscii_mal
     
     def unicode2iscii_ben(self, unicode_):
+        # Normalize Unicode values (NUKTA variations)
+        unicode_ = self.u2i_bn.sub(lambda m:self.unicode_norm_hashb_u2i.get(m.group(1), u"") + u"\u09BC", unicode_)
+        # Normalize two part dependent vowels
+        unicode_ = unicode_.replace(u'\u09c7\u09be',u'\u09cb')
+        unicode_ = unicode_.replace(u'\u09c7\u0bd7',u'\u09cc')
         # Convert Unicode values to ISCII values
         iscii_ben = self.u2i_b.sub(lambda m:self.hashb_u2i.get(m.group(1), u""), unicode_)
         return iscii_ben
     
     def unicode2iscii_tam(self, unicode_):
+        # Normalizetwo part dependent vowels
+        unicode_ = unicode_.replace(u'\u0b92\u0bd7',u'\u0b94')
+        unicode_ = unicode_.replace(u'\u0bc6\u0bbe',u'\u0bca')
+        unicode_ = unicode_.replace(u'\u0bc7\u0bbe',u'\u0bcb')
+        unicode_ = unicode_.replace(u'\u0bc6\u0bd7',u'\u0bcc')
         # Convert Unicode values to ISCII values
-        # Rashid added normalize case for tamil as per feedback
-        # normalize two-part dependent vowel sign o ொ 
-        iscii_tam = unicode_.replace(u"\u0BC6\u0BBE", u"\xE4")
-        # normalize two-part dependent vowel sign oo ோ 
-        iscii_tam = iscii_tam.replace(u"\u0BC7\u0BBE", u"\xE5")
-        iscii_tam = self.u2i_ta.sub(lambda m:self.hashta_u2i.get(m.group(1), u"") , iscii_tam)
+        iscii_tam = self.u2i_ta.sub(lambda m:self.hashta_u2i.get(m.group(1), u"") , unicode_)
         return iscii_tam
     
     def unicode2iscii_ori(self, unicode_):
         # Normalize Unicode values (NUKTA variations)
+        unicode_ = self.u2i_on.sub(lambda m:self.unicode_norm_hasho_u2i.get(m.group(1), u"") + u"\u0B3C", unicode_)
+        # Normalize two part dependent vowels
+        unicode_ = unicode_.replace(u'\u0b47\u0b3e',u'\u0b4b')
+        unicode_ = unicode_.replace(u'\u0b47\u0b57',u'\u0b4c')
         # Convert Unicode values to ISCII values
         iscii_ori = self.u2i_o.sub(lambda m:self.hasho_u2i.get(m.group(1), u""), unicode_)
         return iscii_ori
