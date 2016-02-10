@@ -10,7 +10,7 @@ from .ilp import wxConvert
 __name__       = "converter-indic"
 __doc__        = "python-converter-indic: Converts Indian languages to WX (ASCII) and vice-versa"
 __author__     = "Irshad Ahmad"
-__version__    = "1.0"
+__version__    = "1.0.3"
 __license__    = "MIT"
 __maintainer__ = "Irshad Ahmad"
 __email__      = "irshad.bhat@research.iiit.ac.in"
@@ -46,7 +46,7 @@ def main():
     parser = argparse.ArgumentParser(prog="converter-indic", 
                                     description="wx-utf converter for Indain languages", 
                                     formatter_class=RawTextHelpFormatter)
-    parser.add_argument('--v', action="version", version="%(prog)s 1.5")
+    parser.add_argument('--v', action="version", version="%(prog)s 1.0.3")
     parser.add_argument('--l', metavar='language', dest="lang", choices=languages, default="hin", help="%s" %lang_help)
     parser.add_argument('--s', metavar='source', dest="src_enc", choices=["utf","wx"], default="utf", help="%s" %src_enc_help)
     parser.add_argument('--f', metavar='format', dest="format_", choices=format_list, default="text", help="%s" %format_help)
