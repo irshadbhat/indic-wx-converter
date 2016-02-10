@@ -903,7 +903,8 @@ class wxilp():
         self.ceVmd = re.compile(u"([%s])eV([MHz])" %const)
 
         self.ceV = re.compile(u"([%s])eV" %const)
-        self.cZeV = re.compile(u"([%s])ZeV" %const)  #NOTE consonant+ZeV case added for Bengali -Irshad
+        self.cZeV = re.compile(u"([%s])ZeV" %const)  #NOTE const+nukta+eV added for Bengali -Irshad
+        self.cZeVmd = re.compile(u"([%s])ZeV([MHz])" %const)  #NOTE const+nukta+eV+modifier added for Bengali -Irshad
 
         self.cEYmd = re.compile(u"([%s])EY([MHz])" %const)
 
@@ -914,7 +915,8 @@ class wxilp():
         self.coVmd = re.compile(u"([%s])oV([MHz])" %const)
 
         self.coV = re.compile(u"([%s])oV" %const)
-        self.cZoV = re.compile(u"([%s])ZoV" %const)  #NOTE consonant+ZoV case added for Bengali -Irshad
+        self.cZoV = re.compile(u"([%s])ZoV" %const)  #NOTE const+nukta+oV added for Bengali -Irshad
+        self.cZoVmd = re.compile(u"([%s])ZoV([MHz])" %const)  #NOTE const+nukta+oV+modifier added for Bengali -Irshad
 
         self.cOY = re.compile(u"([%s])OY" %const)
         self.cZOY = re.compile(u"([%s])ZOY" %const)  #NOTE consonant+ZOY case added
@@ -942,7 +944,7 @@ class wxilp():
         self.qmd = re.compile(u"q([MHz])")    #NOTE q+[MHz]
 
         self.dig = re.compile(u"([0-9])")
-        self.i2u = re.compile(u'([\xA1-\xFA])')
+        self.i2u = re.compile(u'([\xA1-\xFB])')
         
         #NOTE Handle Roman strings
         self.unmask_rom = re.compile(r'(_[a-zA-Z0-9%s]+_)' %(self.punctuation)) 
@@ -1827,7 +1829,9 @@ class wxilp():
             my_string = my_string.replace(u'EY', self.hashv_w2i[u"E"]+'Y')
         if eV:
             if Z: #NOTE added
-                my_string = self.cZeV.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+self.hashm_w2i[u"eV"], my_string)
+                my_string = self.cZeVmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+self.hashm_w2i[u"eV"]
+			+self.hashmd_w2i[m.group(2)], my_string)
+                my_string = self.cZeV.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+self.hashm_w2i[u"eV"], my_string)
             my_string = self.ceVmd.sub(lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"eV"]
                         +self.hashmd_w2i[m.group(2)], my_string)
             my_string = self.ceV.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"eV"], my_string)
@@ -1836,6 +1840,8 @@ class wxilp():
             my_string = self.cEY.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"EY"], my_string)
         if oV:
             if Z: #NOTE added
+                my_string = self.cZoVmd.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+self.hashm_w2i[u"oV"]
+			+self.hashmd_w2i[m.group(2)], my_string)
                 my_string = self.cZoV.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashc_w2i[u"Z"]+self.hashm_w2i[u"oV"], my_string)
             my_string = self.coVmd.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"oV"]+self.hashmd_w2i[m.group(2)], my_string)
             my_string = self.coV.sub( lambda m: self.hashc_w2i[m.group(1)]+self.hashm_w2i[u"oV"], my_string)
@@ -1999,6 +2005,9 @@ class wxilp():
         my_string = re.sub(u'([aAiIuUeEoO])([MHz])', lambda m: self.hashv_w2i[m.group(1)]+self.hashmd_w2i[m.group(2)], my_string)
         my_string = re.sub(u'([aAiIuUeEoO])', lambda m: self.hashv_w2i[m.group(1)], my_string)
         my_string = my_string.replace(u'.', self.hashc_w2i[u"."])
+
+        #For PUNJABI ADDAK 
+        my_string = my_string.replace(u"Y", u"\xFB")
 
         #Replace Roman Digits with ISCII
         my_string = self.dig.sub(lambda m:self.digits_w2i[m.group(1)], my_string)
