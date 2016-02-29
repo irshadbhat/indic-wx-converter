@@ -62,7 +62,7 @@ else:
     }
     params['entry_points'] = {'console_scripts': ['converter-indic = converter_indic:main']}
 
-# Get the version from youtube_dl/version.py without importing the package
+# Get the package version
 exec(compile(open('converter_indic/version.py').read(),
              'converter_indic/version.py', 'exec'))
 
@@ -84,11 +84,16 @@ setup(
     package_data={'converter_indic': ['mapping/*']},
 
     classifiers=[
-        "Topic :: Indian Languages :: Text Processing",
+        "Topic :: Text Processing :: Linguistic",
+        "Topic :: Software Development :: Libraries :: Python Modules",
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
-        "License :: Public Domain",
-        "Programming Language :: Python :: 2.7"
+        "Intended Audience :: Science/Research",
+        "License :: OSI Approved :: MIT License",
+        "Natural Language :: English",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.3",
+        "Operating System :: OS Independent"
     ],
 
     **params
