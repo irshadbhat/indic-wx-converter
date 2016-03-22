@@ -105,9 +105,11 @@ class SSFReader():
             feats[attribute] = value
 
         return feats
-
+        
     def getAnnotations(self):
         for line in self.sentence.split("\n"):
+            if '\t' not in line:
+                raise ValueError('Corrupted ssf: Tabs broken into spaces')    
             line = line.split('\t')
             if line[0].isdigit():
                 assert len(line) == 4 # no need to process trash! FIXME
