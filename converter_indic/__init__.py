@@ -92,7 +92,7 @@ def main():
 
     # parse command line arguments 
     parser = argparse.ArgumentParser(prog="converter-indic", 
-                                    description="wx-utf converter for Indain languages", 
+                                    description="wx-utf converter for Indian languages", 
                                     formatter_class=RawTextHelpFormatter)
     parser.add_argument('--v', action="version", version="%(prog)s 1.0.3")
     parser.add_argument('--l', metavar='language', dest="lang", choices=languages, default="hin", help="%s" %lang_help)
