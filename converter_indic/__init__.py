@@ -71,7 +71,7 @@ def main():
     # help messages
     src_enc_help = "select input-file encoding [utf|wx]"
     #trg_enc_help = "select output-file encoding [utf|wx]"
-    format_help  = "select output format [text|ssf|conll|bio|tnt]"
+    format_help  = "select input-file format [text|ssf|conll|bio|tnt]"
     lang_help = """select language (3 letter ISO-639 code)
                 Hindi       : hin
                 Telugu      : tel
