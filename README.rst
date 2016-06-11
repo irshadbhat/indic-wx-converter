@@ -2,6 +2,15 @@
 indic-wx-converter
 ==================
 
+|Build Status| |Coverage Status|
+
+.. |Build Status| image:: https://travis-ci.org/ltrc/indic-wx-converter.svg?branch=master 
+   :target: https://travis-ci.org/ltrc/indic-wx-converter
+
+.. |Coverage Status| image:: https://coveralls.io/repos/github/ltrc/indic-wx-converter/badge.svg?branch=master 
+   :target: https://coveralls.io/github/ltrc/indic-wx-converter?branch=master
+
+
 Python library for UTF to WX conversion and vice-versa for Indian languages.
 
 Installation
