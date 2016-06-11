@@ -1,0 +1,14 @@
+language: python
+python:
+  - "2.7"
+
+sudo: false
+
+install:
+  - pip install pbr
+  - pip install -r test-requirements.txt
+
+script:
+  - make travis
+
+after_success: coveralls
