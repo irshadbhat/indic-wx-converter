@@ -29,7 +29,7 @@ Example
 
 .. parsed-literal::
 
-    converter-indic --f ssf --t intra --n --l hin --s utf --i tests/text/hin-utf.txt --o tests/text/hin-wx.txt
+    wxconv --f ssf --t intra --n --l hin --s utf --i hin-utf.ssf --o hin-wx.ssf
 
     --l language  select language (3 letter ISO-639 code)
                     Hindi       : hin
@@ -60,7 +60,7 @@ Example
 
 .. code:: python
 
-    >>> from converter_indic import wxConvert
+    >>> from wxconv import wxConvert
     >>> 
     >>> # class wxConvert(order="utf2wx", format_="text", lang="hin")
     ... # Parameters: order:str, (default="utf2wx"), source2target encoding [wx2utf|utf2wx]
