@@ -2,6 +2,8 @@
 
 # Copyright Riyaz Ahmad Bhat, Irshad Ahmad Bhat 2015.
 
+from __future__ import unicode_literals
+
 import re
 from collections import namedtuple, OrderedDict
 
@@ -123,9 +125,7 @@ class SSFReader():
             self.node(
                 id_,
                 wordForm_,
-                Tag_.decode(
-                    "ascii",
-                    'ignore').encode("ascii"),
+                Tag_,
                 features_,
                 feats_dict.get('name', ''),
                 feats_dict.get('head', ''),
