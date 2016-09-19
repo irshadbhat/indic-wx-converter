@@ -149,7 +149,7 @@ def main():
         dest='mask',
         action='store_false',
         help="set this flag to keep off masking of"
-        " roman strings in Indic text")
+             " roman strings in Indic text")
     parser.add_argument(
         '-i',
         '--input',
@@ -169,7 +169,8 @@ def main():
         '--normalize',
         dest='norm',
         action='store_true',
-        help="set this flag for utf normalizations")
+        help="set this flag for utf normalizations"
+             " without WX-Conversion")
     parser.add_argument(
         '-d',
         '--daemonize',

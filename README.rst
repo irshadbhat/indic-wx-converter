@@ -2,13 +2,16 @@
 indic-wx-converter
 ==================
 
-|Build Status| |Coverage Status|
+|Build Status| |Coverage Status| |CircleCI|
 
 .. |Build Status| image:: https://travis-ci.org/ltrc/indic-wx-converter.svg?branch=master 
    :target: https://travis-ci.org/ltrc/indic-wx-converter
 
 .. |Coverage Status| image:: https://coveralls.io/repos/github/ltrc/indic-wx-converter/badge.svg?branch=master 
    :target: https://coveralls.io/github/ltrc/indic-wx-converter?branch=master
+
+.. |CircleCI| image:: https://circleci.com/gh/ltrc/indic-wx-converter.svg?style=shield&circle-token=:circle-token 
+    :target: https://circleci.com/gh/ltrc/indic-wx-converter
 
 
 Python library for UTF to WX conversion and vice-versa for Indian languages.
@@ -40,29 +43,30 @@ Example
 
     wxconv --f ssf --t intra --n --l hin --s utf --i hin-utf.ssf --o hin-wx.ssf
 
-    --l language  select language (3 letter ISO-639 code)
-                    Hindi       : hin
-                    Telugu      : tel
-                    Tamil       : tam
-                    Malayalam   : mal
-                    Kannada     : kan
-                    Bengali     : ben
-                    Oriya       : ori
-                    Punjabi     : pan
-                    Marathi     : mar
-                    Nepali      : nep
-                    Gujarati    : guj
-                    Bodo        : bod
-                    Konkani     : kok
-                    Assamese    : asm
-                    Urdu	: urd
-    --s source    select input-file encoding [utf|wx]
-    --f format    select input-file format [text|ssf|conll|bio|tnt]
-    --t ssf-type  specify ssf-type [inter|intra] in case file format (--f) is ssf
-    --n           set this flag for nested ssf
-    --m           set this flag to keep off masking of roman strings in Indic text
-    --i input     <input-file>
-    --o output    <output-file>
+    -l , --language     select language (3 letter ISO-639 code)
+                                        Hindi       : hin
+                                        Telugu      : tel
+                                        Tamil       : tam
+                                        Malayalam   : mal
+                                        Kannada     : kan
+                                        Bengali     : ben
+                                        Oriya       : ori
+                                        Punjabi     : pan
+                                        Marathi     : mar
+                                        Nepali      : nep
+                                        Gujarati    : guj
+                                        Bodo        : bod
+                                        Konkani     : kok
+                                        Assamese    : asm
+                                        Urdu        : urd
+    -s , --source-enc   {utf, wx} select input-file encoding
+    -f , --format       {text, ssf, conll, bio, tnt} select input-file format
+    -t , --ssf-type     {inter, intra} specify ssf-type if file format (-f) is ssf
+    -n, --nested        set this flag for nested ssf
+    -m, --no-mask       set this flag to keep off masking of roman strings in Indic text
+    -i , --input        <input-file>
+    -o , --output       <output-file>
+    -z, --normalize     set this flag for utf normalizations without WX-Conversion
 
 2. utf to wx (plain text):
 """"""""""""""""""""""""""
