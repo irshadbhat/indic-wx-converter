@@ -27,11 +27,17 @@ Download **indic-wx-converter**  from `github`_.
 .. _`github`: https://github.com/irshadbhat/indic-wx-converter
 
 Install
-~~~~~~~
+^^^^^^^
 
 ::
 
-    pip install git+git://github.com/irshadbhat/indic-wx-converter.git
+    Clone the repository:
+        git clone https://github.com/ltrc/indic-wx-converter
+
+    Change to the cloned directory:
+        cd indic-wx-converter
+        pip install -r requirements.txt
+        python setup.py install
 
 Example
 ~~~~~~~
