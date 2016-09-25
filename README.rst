@@ -1,4 +1,3 @@
-==================
 indic-wx-converter
 ==================
 
@@ -17,10 +16,10 @@ indic-wx-converter
 Python library for UTF to WX conversion and vice-versa for Indian languages.
 
 Installation
-============
+------------
 
 Download
-~~~~~~~~
+^^^^^^^^
 
 Download **indic-wx-converter**  from `github`_.
 
@@ -39,11 +38,11 @@ Install
         pip install -r requirements.txt
         python setup.py install
 
-Example
-~~~~~~~
+Examples
+--------
 
 1. work with files:
-"""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^
 
 .. parsed-literal::
 
@@ -75,7 +74,7 @@ Example
     -z, --normalize     set this flag for utf normalizations without WX-Conversion
 
 2. utf to wx (plain text):
-""""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
@@ -125,7 +124,7 @@ Example
     >>> 
 
 3. wx to utf:
-"""""""""""""
+^^^^^^^^^^^^^
 
 .. code:: python
 
@@ -150,7 +149,7 @@ Example
     >>> 
 
 4. work with conll:
-"""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
@@ -177,7 +176,7 @@ Example
     >>> 
 
 5. work with tnt:
-"""""""""""""""""
+^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
@@ -218,14 +217,14 @@ Example
     >>> 
 
 6. work with bio:
-"""""""""""""""""
+^^^^^^^^^^^^^^^^^
 
 ::
 
     same as tnt or conll
 
 7. work with ssf:
-"""""""""""""""""
+^^^^^^^^^^^^^^^^^
 
 ::
     
