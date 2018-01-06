@@ -2808,6 +2808,10 @@ class WX():
         text = text.replace('\u0627\u0654', '\u0623')
         text = text.replace('\u06c1\u0654', '\u06c0')
         text = text.replace('\u06d5\u0654', '\u06c0')
+        # vowel removal
+        text = text.replace('\u0650', '')
+        text = text.replace('\u064e', '')
+        text = text.replace('\u064f', '')
         # unicode_equivalence normalization
         text = text.translate(self.norm_tbl)
         if self.norm:
