@@ -78,6 +78,12 @@ class WX():
                 self.initialize_wx2utf_hash()
         else:
             raise ValueError('invalid source/target encoding\n')
+        # Mask Roman text in Indic scripts
+        self.mask_rom = re.compile(
+            r'([0-9%s]*[a-zA-Z][0-9a-zA-Z%s]*)' %
+            ((self.punctuation,) * 2))
+        # Unask Roman text in Indic scripts
+        self.unmask_rom = re.compile(r'(_[a-zA-Z0-9%s]+_)' % self.punctuation)
 
     def initialize_wx2utf_hash(self):
         # CONSONANTS
@@ -932,8 +938,6 @@ class WX():
         self.qmd = re.compile("q([MHz])")
         self.dig = re.compile("([0-9])")
         self.i2u = re.compile('([\xA1-\xFB])')
-        # Unask Roman text in Indic scripts
-        self.unmask_rom = re.compile(r'(_[a-zA-Z0-9%s]+_)' % self.punctuation)
 
     def initialize_utf2wx_hash(self):
         self.hashc_i2w = {
@@ -1785,10 +1789,6 @@ class WX():
         self.u2i_on = re.compile("([\u0B5C\u0B5D\u0B5F])")
         self.u2i_bn = re.compile("([\u09DC\u09DD\u09DF])")
         self.u2i_pn = re.compile("([\u0A59-\u0A5B\u0A5E])")
-        # Mask Roman text in Indic scripts
-        self.mask_rom = re.compile(
-            r'([0-9%s]*[a-zA-Z][0-9a-zA-Z%s]*)' %
-            ((self.punctuation,) * 2))
 
     def normalize(self, text):
         """Performs some common normalization, which includes:
@@ -2920,9 +2920,6 @@ class WX():
     def utf2wx(self, unicode_):
         """Convert UTF string to WX-Roman"""
         unicode_ = self.normalize(unicode_)
-        if self.lang == 'urd':
-            wx = self.utf2wx_urd(unicode_)
-            return wx
         # Mask iscii characters (if any)
         if not self.norm:
             unicode_ = self.mask_isc.sub(lambda m: self.iscii_num[m.group(1)],
@@ -2930,6 +2927,9 @@ class WX():
         # Mask Roman characters
         if self.rmask:
             unicode_ = self.mask_rom.sub(r'_\1_', unicode_)
+        if self.lang == 'urd':
+            wx = self.utf2wx_urd(unicode_)
+            return wx
         # Convert Unicode values to ISCII values
         iscii = self.unicode2iscii(unicode_)
         if self.norm:
@@ -2944,9 +2944,6 @@ class WX():
 
     def wx2utf(self, wx):
         """Convert WX-Roman to UTF"""
-        if self.lang == 'urd':
-            unicode_ = self.wx2utf_urd(wx)
-            return unicode_
         unicode_ = ''
         wx_list = self.unmask_rom.split(wx)
         for wx in wx_list:
@@ -2959,9 +2956,12 @@ class WX():
                 wx = self.mask_isc.sub(
                     lambda m: self.iscii_num[
                         m.group(1)], wx)
-                iscii = self.wx2iscii(wx)
-                # Convert ISCII to Unicode
-                unicode_t = self.iscii2unicode(iscii)
+                if self.lang == 'urd':
+                    unicode_t = self.wx2utf_urd(wx)
+                else:
+                    iscii = self.wx2iscii(wx)
+                    # Convert ISCII to Unicode
+                    unicode_t = self.iscii2unicode(iscii)
                 # Unmask iscii characters
                 unicode_ += self.unmask_isc.sub(
                     lambda m: self.num_iscii[
