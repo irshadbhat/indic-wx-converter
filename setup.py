@@ -10,4 +10,5 @@ os.environ['SKIP_GENERATE_AUTHORS'] = '1'
 setup(
     setup_requires=['pbr'],
     pbr=True,
+    include_package_data=True
 )
