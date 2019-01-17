@@ -49,12 +49,12 @@ def processInput(ifp, ofp, args, con):
     if args.format_ == "ssf":
         if args.nested:
             sentences = re.finditer(
-                "(<Sentence id=.*?>\s*\n.*?)\n(.*?)\)\)\s*\n</Sentence>",
+                r"(<Sentence id=.*?>\s*\n.*?)\n(.*?)\)\)\s*\n</Sentence>",
                 ifp.read(),
                 re.S)
         else:
             sentences = re.finditer(
-                "(<Sentence id=.*?>)(.*?)</Sentence>", ifp.read(), re.S)
+                r"(<Sentence id=.*?>)(.*?)</Sentence>", ifp.read(), re.S)
         for sid_sentence in sentences:
             sid = sid_sentence.group(1)
             sentence = sid_sentence.group(2).strip()
