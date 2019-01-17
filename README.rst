@@ -3,14 +3,14 @@ indic-wx-converter
 
 |Build Status| |Coverage Status| |CircleCI|
 
-.. |Build Status| image:: https://travis-ci.org/ltrc/indic-wx-converter.svg?branch=master 
-   :target: https://travis-ci.org/ltrc/indic-wx-converter
+.. |Build Status| image:: https://travis-ci.org/irshadbhat/indic-wx-converter.svg?branch=master 
+   :target: https://travis-ci.org/irshadbhat/indic-wx-converter
 
-.. |Coverage Status| image:: https://coveralls.io/repos/github/ltrc/indic-wx-converter/badge.svg?branch=master 
-   :target: https://coveralls.io/github/ltrc/indic-wx-converter?branch=master
+.. |Coverage Status| image:: https://coveralls.io/repos/github/irshadbhat/indic-wx-converter/badge.svg?branch=master 
+   :target: https://coveralls.io/github/irshadbhat/indic-wx-converter?branch=master
 
-.. |CircleCI| image:: https://circleci.com/gh/ltrc/indic-wx-converter.svg?style=shield&circle-token=:circle-token 
-    :target: https://circleci.com/gh/ltrc/indic-wx-converter
+.. |CircleCI| image:: https://circleci.com/gh/irshadbhat/indic-wx-converter.svg?style=shield&circle-token=:circle-token 
+    :target: https://circleci.com/gh/irshadbhat/indic-wx-converter
 
 
 Python library for UTF to WX conversion and vice-versa for Indian languages.
@@ -31,7 +31,7 @@ Install
 ::
 
     Clone the repository:
-        git clone https://github.com/ltrc/indic-wx-converter
+        git clone https://github.com/irshadbhat/indic-wx-converter
 
     Change to the cloned directory:
         cd indic-wx-converter
