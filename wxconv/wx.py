@@ -678,6 +678,7 @@ class WX():
             "\xE4": "\u09CB",  # Vowel Sign O
             "\xE6": "\u09CC",  # Vowel Sign AU
             "\xE8": "\u09CD",  # Vowel Omission Sign (Halant)
+            "\xD4": "\u09F1",   #NOTE ADDED 24MAR2022
             "\xE9": "\u09BC",
             "\xEA": ".",  # Fullstop
             "\xF1": "\u09E6",  # Digit 0
@@ -1534,6 +1535,8 @@ class WX():
             "\u09ED": "\xF8",
             "\u09EE": "\xF9",
             "\u09EF": "\xFA",
+            "\u09F0": "\xCF",  #NOTE ADDED 24MAR2022
+            "\u09F1": "\xD4"   #NOTE ADDED 24MAR2022
         }
         self.unicode_norm_hashb_u2i = {
             "\u09DC": "\u09A1",  # ADDED
@@ -1780,7 +1783,7 @@ class WX():
         self.u2i_t = re.compile("([\u0C01-\u0C6F])")
         self.u2i_k = re.compile("([\u0C80-\u0CFF])")
         self.u2i_m = re.compile("([\u0D00-\u0D6F])")
-        self.u2i_b = re.compile("([\u0980-\u09EF])")
+        self.u2i_b = re.compile("([\u0980-\u09F1])")  #NOTE Added 24MAR2022
         self.u2i_o = re.compile("([\u0B00-\u0B7F])")
         self.u2i_p = re.compile("([\u0A01-\u0A75])")
         self.u2i_g = re.compile("([\u0A80-\u0AFF])")
@@ -2873,6 +2876,8 @@ class WX():
             unicode_ = self.iscii2unicode_tel(iscii)
         elif self.lang in ["ben", "asm"]:
             unicode_ = self.iscii2unicode_ben(iscii)
+            if self.lang == 'asm':
+                unicode_ = unicode_.replace('\u09B0', '\u09F0')
         elif self.lang == "kan":
             unicode_ = self.iscii2unicode_kan(iscii)
         elif self.lang == "pan":
